@@ -1,0 +1,71 @@
+[gd_scene load_steps=6 format=1]
+
+[ext_resource path="res://backgrounds/EndingScreen.png" type="Texture" id=1]
+[ext_resource path="res://buttons/Exit.png" type="Texture" id=2]
+[ext_resource path="res://buttons/ExitPressed.png" type="Texture" id=3]
+[ext_resource path="res://buttons/BackNormal.png" type="Texture" id=4]
+[ext_resource path="res://buttons/BackPressed.png" type="Texture" id=5]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="TextureFrame" type="TextureFrame" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 1024.0
+margin/bottom = 896.0
+texture = ExtResource( 1 )
+stretch_mode = 0
+
+[node name="EndingScreen" type="Label" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 396.0
+margin/top = 33.0
+margin/right = 436.0
+margin/bottom = 47.0
+text = "Ending Screen"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Exit" type="TextureButton" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 788.0
+margin/top = 751.0
+margin/right = 908.0
+margin/bottom = 815.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 2 )
+textures/pressed = ExtResource( 3 )
+
+[node name="Back" type="TextureButton" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 89.0
+margin/top = 751.0
+margin/right = 209.0
+margin/bottom = 815.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 4 )
+textures/pressed = ExtResource( 5 )
+
+
