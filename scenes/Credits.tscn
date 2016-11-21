@@ -1,10 +1,16 @@
-[gd_scene load_steps=4 format=1]
+[gd_scene load_steps=5 format=1]
 
 [ext_resource path="res://backgrounds/Credits.png" type="Texture" id=1]
 [ext_resource path="res://buttons/BackNormal.png" type="Texture" id=2]
 [ext_resource path="res://buttons/BackPressed.png" type="Texture" id=3]
 
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Node2D\n\n# member variables here, example:\n# var a=2\n# var b=\"textvar\"\n\nfunc _ready():\n\t# Initalization here\n\tpass\n\n#add to scene_a.gd\n\nfunc _on_Back_pressed():\n\tget_node(\"/root/global\").goto_scene(\"res://scenes/MainMenu.tscn\")"
+
 [node name="Node2D" type="Node2D"]
+
+script/script = SubResource( 1 )
 
 [node name="TextureFrame" type="TextureFrame" parent="."]
 
@@ -49,5 +55,7 @@ enabled_focus_mode = 2
 shortcut = null
 textures/normal = ExtResource( 2 )
 textures/pressed = ExtResource( 3 )
+
+[connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
 
 
