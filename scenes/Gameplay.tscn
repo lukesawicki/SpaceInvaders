@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=1]
+[gd_scene load_steps=16 format=1]
 
 [ext_resource path="res://scripts/Gameplay.gd" type="Script" id=1]
 [ext_resource path="res://backgrounds/Gameplay.png" type="Texture" id=2]
@@ -6,8 +6,37 @@
 [ext_resource path="res://buttons/BackPressed.png" type="Texture" id=4]
 [ext_resource path="res://buttons/EndingNormal.png" type="Texture" id=5]
 [ext_resource path="res://buttons/EndingPressed.png" type="Texture" id=6]
+[ext_resource path="res://scripts/ShipScript.gd" type="Script" id=7]
+[ext_resource path="res://materials/gShip.png" type="Texture" id=8]
+[ext_resource path="res://materials/gLaser.png" type="Texture" id=9]
+[ext_resource path="res://materials/bShelter.png" type="Texture" id=10]
 
-[node name="Node2D" type="Node2D"]
+[sub_resource type="RectangleShape2D" id=5]
+
+custom_solver_bias = 0.0
+extents = Vector2( 2, 8 )
+
+[sub_resource type="ConvexPolygonShape2D" id=6]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 96.181, -29.6881, 97.5414, 62.8173, 47.2075, 64.1777, 27.0083, 25.3174, 47.2075, -62.3371 )
+
+[sub_resource type="ConvexPolygonShape2D" id=7]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -52.8806, -62.1082, 47.2075, -62.3371, 27.0083, 25.3174, -3.12634, 11.1231 )
+
+[sub_resource type="ConvexPolygonShape2D" id=8]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -52.8806, -62.1082, -3.12634, 11.1231, -35.7753, 24.7268, -94.2714, -32.4089 )
+
+[sub_resource type="ConvexPolygonShape2D" id=9]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -95.6318, 62.8173, -94.2714, -32.4089, -35.7753, 24.7268, -48.0187, 64.1777 )
+
+[node name="GameplayNode2D" type="Node2D"]
 
 script/script = ExtResource( 1 )
 
@@ -45,10 +74,10 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 25.0
-margin/top = 310.0
-margin/right = 145.0
-margin/bottom = 374.0
+margin/left = 33.0
+margin/top = 780.0
+margin/right = 153.0
+margin/bottom = 844.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -61,15 +90,100 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 868.0
-margin/top = 317.0
-margin/right = 988.0
-margin/bottom = 381.0
+margin/left = 870.0
+margin/top = 799.0
+margin/right = 990.0
+margin/bottom = 863.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
 textures/normal = ExtResource( 5 )
 textures/pressed = ExtResource( 6 )
+
+[node name="Ship" type="KinematicBody2D" parent="."]
+
+material/use_parent = true
+transform/pos = Vector2( 477.827, 719.001 )
+input/pickable = true
+collision/layers = 1
+collision/mask = 1
+collision/margin = 0.08
+script/script = ExtResource( 7 )
+
+[node name="ShipSprite" type="Sprite" parent="Ship"]
+
+transform/pos = Vector2( -1.50726, -19.5954 )
+texture = ExtResource( 8 )
+
+[node name="Misille" type="RigidBody2D" parent="."]
+
+transform/pos = Vector2( 463.198, 617.279 )
+input/pickable = false
+shapes/0/shape = SubResource( 5 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, -0.069397 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+mode = 2
+mass = 1.0
+friction = 0.0
+bounce = 0.0
+gravity_scale = 0.0
+custom_integrator = false
+continuous_cd = 0
+contacts_reported = 0
+contact_monitor = false
+sleeping = false
+can_sleep = true
+velocity/linear = Vector2( 0, -150 )
+velocity/angular = 0.0
+damp_override/linear = 0.0
+damp_override/angular = 0.0
+
+[node name="MisilleSprite" type="Sprite" parent="Misille"]
+
+texture = ExtResource( 9 )
+
+[node name="MisilleCollision" type="CollisionShape2D" parent="Misille"]
+
+transform/pos = Vector2( 0, -0.069397 )
+shape = SubResource( 5 )
+trigger = false
+_update_shape_index = 0
+
+[node name="Bunker" type="StaticBody2D" parent="."]
+
+transform/pos = Vector2( 500, 500 )
+input/pickable = false
+shapes/0/shape = SubResource( 6 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+shapes/1/shape = SubResource( 7 )
+shapes/1/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/1/trigger = false
+shapes/2/shape = SubResource( 8 )
+shapes/2/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/2/trigger = false
+shapes/3/shape = SubResource( 9 )
+shapes/3/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/3/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 0.0
+bounce = 0.0
+
+[node name="BunkerSprite" type="Sprite" parent="Bunker"]
+
+texture = ExtResource( 10 )
+
+[node name="BunkerCollision" type="CollisionPolygon2D" parent="Bunker"]
+
+build_mode = 0
+polygon = Vector2Array( -48.0187, 64.1777, -95.6318, 62.8173, -94.2714, -32.4089, -52.8806, -62.1082, 47.2075, -62.3371, 96.181, -29.6881, 97.5414, 62.8173, 47.2075, 64.1777, 27.0083, 25.3174, -3.12634, 11.1231, -35.7753, 24.7268 )
+shape_range = Vector2( 0, 3 )
+trigger = false
 
 [connection signal="pressed" from="Main Menu" to="." method="_on_Main_Menu_pressed"]
 
