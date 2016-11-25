@@ -1,13 +1,25 @@
-
 extends KinematicBody2D
 
-# member variables here, example:
-# var a=2
-# var b="textvar"
+const SHIP_VELOCITY = 150
 
+var shipVelocityVector = Vector2()
+	
+func _fixed_process(delta):
+	
+	shipVelocityVector.y=0
+	
+	if(Input.is_action_pressed("ship_left")):
+		if(not is_colliding()):
+			shipVelocityVector.x = -SHIP_VELOCITY
+	elif(Input.is_action_pressed("ship_right")):
+		if(not is_colliding()):
+			shipVelocityVector.x = SHIP_VELOCITY
+	else:
+		shipVelocityVector.x = 0
+	
+	var motion = shipVelocityVector * delta
+	move(motion)
+	
+	
 func _ready():
-	# Called every time the node is added to the scene.
-	# Initialization here
-	pass
-
-
+	set_fixed_process(true)
