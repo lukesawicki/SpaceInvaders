@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=1]
+[gd_scene load_steps=15 format=1]
 
 [ext_resource path="res://scripts/Gameplay.gd" type="Script" id=1]
 [ext_resource path="res://backgrounds/Gameplay.png" type="Texture" id=2]
@@ -9,26 +9,27 @@
 [ext_resource path="res://scripts/ShipScript.gd" type="Script" id=7]
 [ext_resource path="res://materials/gShip.png" type="Texture" id=8]
 [ext_resource path="res://materials/bShelter.png" type="Texture" id=9]
+[ext_resource path="res://scripts/ShipSkr.gd" type="Script" id=10]
 
-[sub_resource type="RectangleShape2D" id=1]
+[sub_resource type="ConvexPolygonShape2D" id=1]
 
 custom_solver_bias = 0.0
-extents = Vector2( 19.7475, 10 )
+points = Vector2Array( -4.85303, -4.01852, -2.31384, -12.9441, 2.31946, -11.468, 4.95465, -3.56241 )
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="ConvexPolygonShape2D" id=2]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 19.1847, 0.917389, 19.3846, 11.986, -19.7803, 12.2938, -19.7033, -0.479065, -16.4717, -4.09546, -4.85303, -4.01852, 4.95465, -3.56241, 16.0225, -2.77185 )
+
+[sub_resource type="RectangleShape2D" id=3]
 
 custom_solver_bias = 0.0
 extents = Vector2( 2.10406, 2.42921 )
 
-[sub_resource type="ConvexPolygonShape2D" id=3]
-
-custom_solver_bias = 0.0
-points = Vector2Array( 10.454, -26.1795, 37.3864, -31.2284, 7.19382, 18.3141 )
-
 [sub_resource type="ConvexPolygonShape2D" id=4]
 
 custom_solver_bias = 0.0
-points = Vector2Array( -16.1604, -24.3704, 10.454, -26.1795, 7.19382, 18.3141, -33.3257, 23.7621, -33.3257, -12.6563 )
+points = Vector2Array( 32.2933, -20.6549, 32.5301, 24.4069, 7.19803, 28.0961, -33.3257, 23.7621, -33.3257, -12.6563, -16.1604, -24.3704 )
 
 [node name="GameplayNode2D" type="Node2D"]
 
@@ -96,8 +97,14 @@ textures/pressed = ExtResource( 6 )
 
 [node name="Ship" type="KinematicBody2D" parent="."]
 
-transform/pos = Vector2( 436.89, 275.412 )
+transform/pos = Vector2( 318.195, 415.563 )
 input/pickable = false
+shapes/0/shape = SubResource( 1 )
+shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/0/trigger = false
+shapes/1/shape = SubResource( 2 )
+shapes/1/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
+shapes/1/trigger = false
 collision/layers = 1
 collision/mask = 1
 collision/margin = 0.08
@@ -108,21 +115,20 @@ script/script = ExtResource( 7 )
 texture = ExtResource( 8 )
 __meta__ = { "_edit_lock_":true }
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ship"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ship"]
 
-transform/pos = Vector2( -0.139191, 0 )
-transform/scale = Vector2( 0.993881, 1 )
-shape = SubResource( 1 )
+build_mode = 0
+polygon = Vector2Array( 2.31946, -11.468, 4.95465, -3.56241, 16.0225, -2.77185, 19.1847, 0.917389, 19.3846, 11.986, -19.7803, 12.2938, -19.7033, -0.479065, -16.4717, -4.09546, -4.85303, -4.01852, -2.31384, -12.9441 )
+shape_range = Vector2( 0, 1 )
 trigger = false
-_update_shape_index = 0
 __meta__ = { "_edit_lock_":true }
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
 transform/pos = Vector2( 517.321, 299.799 )
 input/pickable = false
-shapes/0/shape = SubResource( 2 )
-shapes/0/transform = Matrix32( 15.611, 0, 0, 9.94894, -0.14114, 0.787039 )
+shapes/0/shape = SubResource( 3 )
+shapes/0/transform = Matrix32( 15.611, 0, 0, 9.94894, 0.122344, 0.787039 )
 shapes/0/trigger = false
 collision/layers = 1
 collision/mask = 1
@@ -137,9 +143,9 @@ texture = ExtResource( 9 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 
-transform/pos = Vector2( -0.14114, 0.787039 )
+transform/pos = Vector2( 0.122344, 0.787039 )
 transform/scale = Vector2( 15.611, 9.94894 )
-shape = SubResource( 2 )
+shape = SubResource( 3 )
 trigger = false
 _update_shape_index = 0
 
@@ -148,12 +154,9 @@ _update_shape_index = 0
 transform/pos = Vector2( 358.203, 298.829 )
 transform/scale = Vector2( 1.11308, 1 )
 input/pickable = false
-shapes/0/shape = SubResource( 3 )
+shapes/0/shape = SubResource( 4 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
 shapes/0/trigger = false
-shapes/1/shape = SubResource( 4 )
-shapes/1/transform = Matrix32( 1, 0, 0, 1, 0, 0 )
-shapes/1/trigger = false
 collision/layers = 1
 collision/mask = 1
 constant_linear_velocity = Vector2( 0, 0 )
@@ -169,36 +172,16 @@ __meta__ = { "_edit_lock_":true }
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D1"]
 
 build_mode = 0
-polygon = Vector2Array( 10.454, -26.1795, 37.3864, -31.2284, 7.19382, 18.3141, -33.3257, 23.7621, -33.3257, -12.6563, -16.1604, -24.3704 )
-shape_range = Vector2( 0, 1 )
+polygon = Vector2Array( 32.2933, -20.6549, 32.5301, 24.4069, 7.19803, 28.0961, -33.3257, 23.7621, -33.3257, -12.6563, -16.1604, -24.3704 )
+shape_range = Vector2( 0, 0 )
 trigger = false
-
-[node name="RigidBody2D" type="RigidBody2D" parent="."]
-
-transform/pos = Vector2( 604.635, 302.094 )
-input/pickable = false
-collision/layers = 1
-collision/mask = 1
-mode = 0
-mass = 1.0
-friction = 1.0
-bounce = 0.0
-gravity_scale = 0.0
-custom_integrator = false
-continuous_cd = 0
-contacts_reported = 0
-contact_monitor = false
-sleeping = false
-can_sleep = true
-velocity/linear = Vector2( 0, 0 )
-velocity/angular = 0.0
-damp_override/linear = -1.0
-damp_override/angular = -1.0
-
-[node name="Sprite" type="Sprite" parent="RigidBody2D"]
-
-texture = ExtResource( 8 )
 __meta__ = { "_edit_lock_":true }
+
+[node name="MyKurwaShip" type="Sprite" parent="."]
+
+transform/pos = Vector2( 491.297, 388.382 )
+texture = ExtResource( 8 )
+script/script = ExtResource( 10 )
 
 [connection signal="pressed" from="Main Menu" to="." method="_on_Main_Menu_pressed"]
 
