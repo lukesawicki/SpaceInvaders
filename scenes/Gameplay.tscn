@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=1]
+[gd_scene load_steps=9 format=1]
 
 [ext_resource path="res://scripts/Gameplay.gd" type="Script" id=1]
 [ext_resource path="res://backgrounds/Gameplay.png" type="Texture" id=2]
@@ -8,7 +8,6 @@
 [ext_resource path="res://buttons/EndingPressed.png" type="Texture" id=6]
 [ext_resource path="res://materials/aInvader3-2.png" type="Texture" id=7]
 [ext_resource path="res://materials/gShip.png" type="Texture" id=8]
-[ext_resource path="res://scripts/ShipScript.gd" type="Script" id=9]
 
 [node name="GameplayNode2D" type="Node2D"]
 
@@ -296,9 +295,8 @@ texture = ExtResource( 7 )
 
 [node name="Ship" type="Sprite" parent="."]
 
-transform/pos = Vector2( 122.504, 543.93 )
+transform/pos = Vector2( 336.354, 527.31 )
 texture = ExtResource( 8 )
-script/script = ExtResource( 9 )
 
 [connection signal="pressed" from="Main Menu" to="." method="_on_Main_Menu_pressed"]
 

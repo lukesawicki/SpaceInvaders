@@ -12,8 +12,25 @@ var counter = 0
 var positionX = 0
 var positionY = 40
 var space=24
+var moving = false
+
+
+var SHIP_VELOCITY = 150
+var SHIP_Y = 704
+var MARGIN_LEFT = 20
+var MARGIN_RIGHT = 20
+var MARGIN_TOP = 20
+var MARGIN_BOTTOM = 64
+var SCREEN_WIDTH = 672
+var SCREEN_HIGHT = 768
+
+var shipVelocityVector = Vector2()
+
 func _ready():
 #	screen_size = get_viewport().
+	
+
+
 	var invader_width = 24
 	var invader_hight = 24
 	
@@ -59,7 +76,22 @@ func _ready():
 	set_process(true)
 
 func _process(delta):
-	pass
+	if(Input.is_action_pressed("ship_left")):
+		shipVelocityVector.x = -SHIP_VELOCITY
+		moving = true
+	elif(Input.is_action_pressed("ship_right")):
+		shipVelocityVector.x = SHIP_VELOCITY
+		moving = true
+	else:
+		shipVelocityVector.x = 0
+		moving = false
+		
+	if(moving && get_node("Ship").get_pos().x > MARGIN_LEFT && get_node("Ship").get_pos().x < SCREEN_WIDTH - MARGIN_RIGHT):
+		get_node("Ship").set_pos(Vector2(get_node("Ship").get_pos().x + delta * shipVelocityVector.x, get_node("Ship").get_pos().y));
+	elif(get_node("Ship").get_pos().x < MARGIN_LEFT):
+		get_node("Ship").set_pos(Vector2(MARGIN_LEFT+1, SHIP_Y))
+	elif(get_node("Ship").get_pos().x >  SCREEN_WIDTH - MARGIN_RIGHT):
+		get_node("Ship").set_pos(Vector2( SCREEN_WIDTH - (MARGIN_RIGHT+1), SHIP_Y))
 	
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")

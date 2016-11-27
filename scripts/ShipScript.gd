@@ -15,7 +15,7 @@ func _fixed_process(delta):
 	else:
 		shipVelocityVector.x = 0
 	
-	var motion = shipVelocityVector * delta
+	get_node(Ship
 
 	
 	

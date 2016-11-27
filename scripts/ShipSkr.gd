@@ -16,7 +16,7 @@ func _fixed_process(delta):
 		shipVelocityVector.x = 0
 	
 	#get_node("Ship1").get_viewport(). = shipVelocityVector * delta
-	get_node("Ship1").get_pos().x = get_node("Ship1").get_global_pos().x + delta * SHIP_VELOCITY
+	get_node("Ship1"). = get_node("Ship1").get_global_pos().x + SHIP_VELOCITY
 	
 	
 func _ready():
