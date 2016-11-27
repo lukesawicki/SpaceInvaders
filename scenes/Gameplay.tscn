@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=1]
+[gd_scene load_steps=10 format=1]
 
 [ext_resource path="res://scripts/Gameplay.gd" type="Script" id=1]
 [ext_resource path="res://backgrounds/Gameplay.png" type="Texture" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://buttons/EndingNormal.png" type="Texture" id=5]
 [ext_resource path="res://buttons/EndingPressed.png" type="Texture" id=6]
 [ext_resource path="res://materials/aInvader3-2.png" type="Texture" id=7]
+[ext_resource path="res://materials/gShip.png" type="Texture" id=8]
+[ext_resource path="res://scripts/ShipScript.gd" type="Script" id=9]
 
 [node name="GameplayNode2D" type="Node2D"]
 
@@ -46,10 +48,10 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 33.0
-margin/top = 780.0
-margin/right = 153.0
-margin/bottom = 844.0
+margin/left = 30.0
+margin/top = 619.0
+margin/right = 150.0
+margin/bottom = 683.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -62,10 +64,10 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 870.0
-margin/top = 799.0
-margin/right = 990.0
-margin/bottom = 863.0
+margin/left = 392.0
+margin/top = 633.0
+margin/right = 512.0
+margin/bottom = 697.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -76,19 +78,19 @@ textures/pressed = ExtResource( 6 )
 
 texture = ExtResource( 7 )
 
-[node name="Invader1Row2" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader1Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader1Row3" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader1Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader1Row4" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader1Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader1Row5" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader1Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
@@ -96,19 +98,19 @@ texture = ExtResource( 7 )
 
 texture = ExtResource( 7 )
 
-[node name="Invader2Row2" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader2Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader2Row3" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader2Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader2Row4" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader2Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader2Row5" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader2Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
@@ -116,19 +118,19 @@ texture = ExtResource( 7 )
 
 texture = ExtResource( 7 )
 
-[node name="Invader3Row2" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader3Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader3Row3" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader3Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader3Row4" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader3Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader3Row5" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader3Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
@@ -136,19 +138,19 @@ texture = ExtResource( 7 )
 
 texture = ExtResource( 7 )
 
-[node name="Invader4Row2" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader4Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader4Row3" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader4Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader4Row4" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader4Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader4Row5" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader4Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
@@ -156,19 +158,19 @@ texture = ExtResource( 7 )
 
 texture = ExtResource( 7 )
 
-[node name="Invader5Row2" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader5Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader5Row3" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader5Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader5Row4" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader5Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader5Row5" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader5Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
@@ -176,19 +178,19 @@ texture = ExtResource( 7 )
 
 texture = ExtResource( 7 )
 
-[node name="Invader6Row2" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader6Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader6Row3" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader6Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader6Row4" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader6Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader6Row5" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader6Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
@@ -196,19 +198,19 @@ texture = ExtResource( 7 )
 
 texture = ExtResource( 7 )
 
-[node name="Invader7Row2" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader7Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader7Row3" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader7Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader7Row4" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader7Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader7Row5" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader7Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
@@ -216,19 +218,19 @@ texture = ExtResource( 7 )
 
 texture = ExtResource( 7 )
 
-[node name="Invader8Row2" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader8Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader8Row3" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader8Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader8Row4" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader8Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader8Row5" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader8Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
@@ -236,19 +238,19 @@ texture = ExtResource( 7 )
 
 texture = ExtResource( 7 )
 
-[node name="Invader9Row2" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader9Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader9Row3" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader9Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader9Row4" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader9Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader9Row5" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader9Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
@@ -256,19 +258,19 @@ texture = ExtResource( 7 )
 
 texture = ExtResource( 7 )
 
-[node name="Invader10Row2" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader10Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader10Row3" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader10Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader10Row4" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader10Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader10Row5" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader10Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
@@ -276,21 +278,27 @@ texture = ExtResource( 7 )
 
 texture = ExtResource( 7 )
 
-[node name="Invader11Row2" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader11Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader11Row3" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader11Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader11Row4" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader11Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
 
-[node name="Invader11Row5" type="Sprite" parent="." groups=[ "InvadersG" ]]
+[node name="Invader11Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
 
 texture = ExtResource( 7 )
+
+[node name="Ship" type="Sprite" parent="."]
+
+transform/pos = Vector2( 122.504, 543.93 )
+texture = ExtResource( 8 )
+script/script = ExtResource( 9 )
 
 [connection signal="pressed" from="Main Menu" to="." method="_on_Main_Menu_pressed"]
 
