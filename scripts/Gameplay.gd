@@ -78,10 +78,11 @@ func _ready():
 	set_process(true)
 
 func _process(delta):
-	if(Input.is_action_pressed("ship_shoot")):
-		shipLaser = get_node("ShipLaser").get_pos().x
-		shipLaser.set_pos(Vector2(330,330))
-		
+	#if(Input.is_action_pressed("ship_shoot")):
+		#shipLaser = get_node("ShipLaser").get_pos().x
+		#shipLaser.set_pos(Vector2(330,330))
+	get_node("Ship").movingShip(delta)
+	#get_node("ShipLaser").kurwa()
 	
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")

@@ -13,7 +13,9 @@ var SCREEN_HIGHT = 768
 var shipVelocityVector = Vector2()
 var moving = false
 
-func movingShip(delta):
+
+func _process(delta):
+	
 	if(Input.is_action_pressed("ship_left")):
 		shipVelocityVector.x = -SHIP_VELOCITY
 		moving = true
@@ -24,6 +26,8 @@ func movingShip(delta):
 		shipVelocityVector.x = 0
 		moving = false
 		
+		
+
 			
 	if(get_pos().x < MARGIN_LEFT):
 		set_pos(Vector2(MARGIN_LEFT+1, SHIP_Y))
@@ -32,9 +36,6 @@ func movingShip(delta):
 	if(moving && get_pos().x > MARGIN_LEFT && get_pos().x < SCREEN_WIDTH - MARGIN_RIGHT):
 		set_pos(Vector2(get_pos().x + delta * shipVelocityVector.x, get_pos().y));
 
-
-#func _process(delta):
-#	pass
 	
 func _ready():
 	set_pos(Vector2(SHIP_X, SHIP_Y));

@@ -76,10 +76,6 @@ shortcut = null
 textures/normal = ExtResource( 5 )
 textures/pressed = ExtResource( 6 )
 
-[node name="Invader1Row1" type="Sprite" parent="." groups=[ "InvadersG" ]]
-
-texture = ExtResource( 7 )
-
 [node name="Invader1Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
 
 texture = ExtResource( 7 )
@@ -298,12 +294,15 @@ texture = ExtResource( 7 )
 
 [node name="Ship" type="Sprite" parent="."]
 
+visibility/visible = false
 transform/pos = Vector2( 336.354, 527.31 )
 texture = ExtResource( 8 )
 script/script = ExtResource( 9 )
 
-[node name="ShipLaser" type="Sprite" parent="."]
+[node name="ShipLaser" type="Sprite" parent="Ship"]
 
+transform/pos = Vector2( -336.354, -527.31 )
+z/z = 3
 texture = ExtResource( 10 )
 script/script = ExtResource( 11 )
 
