@@ -1,5 +1,10 @@
 extends Node2D
 
+var laserBeam = preload("res://scenes/LaserBeamShootScene.tscn")
+var laserBeamCount = 0
+var laserBeamArray = []
+#var laserBeamPosition
+
 var screen_size
 
 var invader_width = 24
@@ -14,8 +19,9 @@ var positionY = 40
 var space=24
 var moving = false
 var shipLaserMoving = true
-var shipLaser
 
+
+var isShootPressed = false
 
 var MARGIN_LEFT = 150
 var MARGIN_RIGHT = 150
@@ -31,6 +37,7 @@ var shipVelocityVector = Vector2()
 func _ready():
 #	screen_size = get_viewport().
 	#get_node("Ship").set_pos(Vector2(SHIP_X, SHIP_Y));
+
 
 
 	var invader_width = 24
@@ -76,14 +83,48 @@ func _ready():
 		
 
 	set_process(true)
+	#### end _ready() function ####
+	
 
 func _process(delta):
 	#if(Input.is_action_pressed("ship_shoot")):
 		#shipLaser = get_node("ShipLaser").get_pos().x
 		#shipLaser.set_pos(Vector2(330,330))
-	get_node("Ship").movingShip(delta)
-	#get_node("ShipLaser").kurwa()
 	
+	get_node("Ship").movingShip(delta)
+	var ex = get_node("Ship").get_pos().x
+	if Input.is_action_pressed("ship_shoot"):
+		if !isShootPressed:
+			fire()
+			print(ex)
+			isShootPressed = true
+	else:
+		isShootPressed = false
+		
+	var laserId = 0
+	for laser in laserBeamArray:
+		var laserPos = get_node(laser).get_pos()
+		laserPos.y = laserPos.y - 150 * delta
+		get_node(laser).set_pos(laserPos)
+		if laserPos.y < 0:
+			remove_child(get_node(laser))
+			laserBeamArray.remove(laserId)
+		laserId = laserId + 1
+func fire():
+	laserBeamCount = laserBeamCount + 1
+	var laserBeamInstance = laserBeam.instance()
+	laserBeamInstance.set_name("laser" + str(laserBeamCount))
+	#print("fire"+laserBeamInstance.get_name())
+	add_child(laserBeamInstance)
+	var laserBeamPosition = get_node("laser"+str(laserBeamCount)).get_pos()
+	laserBeamPosition.y= get_node("Ship").get_pos().y
+	laserBeamPosition.x = get_node("Ship").get_pos().x
+	get_node("laser" + str(laserBeamCount)).set_pos(laserBeamPosition)
+	laserBeamArray.push_back("laser" + str(laserBeamCount))
+	
+	#print(laserBeamArray)
+	
+
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
 	

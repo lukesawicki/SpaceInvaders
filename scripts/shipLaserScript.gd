@@ -38,7 +38,7 @@ var nodeTest
 		#set_pos(Vector2( SCREEN_WIDTH - (MARGIN_RIGHT+1), LACER_Y))
 	#if(moving && get_pos().x > MARGIN_LEFT && get_pos().x < SCREEN_WIDTH - MARGIN_RIGHT):
 		#set_pos(Vector2(get_pos().x + delta * shipVelocityVector.x, get_pos().y));
-func kurwa():
+func some():
 		#set_pos(Vector2(366, 384));
 	#set_pos(Vector2(get_tree().get_root().get_node("Ship").get_pos().x, get_tree().get_root().get_node("ship").get_pos().y))
 	pass
@@ -47,4 +47,4 @@ func _ready():
 	
 	#nodeTest = get_node("/root/scripts/Ship");
 	var sss = Vector2(get_node(".").get_pos().x, get_node(".").get_pos().y);
-	set_pos(sss)s
+	pass #set_pos(sss)s
