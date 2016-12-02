@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=1]
+[gd_scene load_steps=11 format=1]
 
 [ext_resource path="res://scripts/Gameplay.gd" type="Script" id=1]
 [ext_resource path="res://backgrounds/Gameplay.png" type="Texture" id=2]
@@ -6,11 +6,10 @@
 [ext_resource path="res://buttons/BackPressed.png" type="Texture" id=4]
 [ext_resource path="res://buttons/EndingNormal.png" type="Texture" id=5]
 [ext_resource path="res://buttons/EndingPressed.png" type="Texture" id=6]
-[ext_resource path="res://materials/aInvader3-2.png" type="Texture" id=7]
-[ext_resource path="res://materials/gShip.png" type="Texture" id=8]
-[ext_resource path="res://scripts/ShipScript.gd" type="Script" id=9]
-[ext_resource path="res://materials/gLaser.png" type="Texture" id=10]
-[ext_resource path="res://scripts/shipLaserScript.gd" type="Script" id=11]
+[ext_resource path="res://materials/gShip.png" type="Texture" id=7]
+[ext_resource path="res://scripts/ShipScript.gd" type="Script" id=8]
+[ext_resource path="res://materials/gLaser.png" type="Texture" id=9]
+[ext_resource path="res://scripts/shipLaserScript.gd" type="Script" id=10]
 
 [node name="GameplayNode2D" type="Node2D"]
 
@@ -76,233 +75,17 @@ shortcut = null
 textures/normal = ExtResource( 5 )
 textures/pressed = ExtResource( 6 )
 
-[node name="Invader1Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader1Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader1Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader1Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader2Row1" type="Sprite" parent="." groups=[ "InvadersG" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader2Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader2Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader2Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader2Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader3Row1" type="Sprite" parent="." groups=[ "InvadersG" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader3Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader3Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader3Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader3Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader4Row1" type="Sprite" parent="." groups=[ "InvadersG" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader4Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader4Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader4Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader4Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader5Row1" type="Sprite" parent="." groups=[ "InvadersG" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader5Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader5Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader5Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader5Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader6Row1" type="Sprite" parent="." groups=[ "InvadersG" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader6Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader6Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader6Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader6Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader7Row1" type="Sprite" parent="." groups=[ "InvadersG" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader7Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader7Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader7Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader7Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader8Row1" type="Sprite" parent="." groups=[ "InvadersG" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader8Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader8Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader8Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader8Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader9Row1" type="Sprite" parent="." groups=[ "InvadersG" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader9Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader9Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader9Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader9Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader10Row1" type="Sprite" parent="." groups=[ "InvadersG" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader10Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader10Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader10Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader10Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader11Row1" type="Sprite" parent="." groups=[ "InvadersG" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader11Row2" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader11Row3" type="Sprite" parent="." groups=[ "InvadersF" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader11Row4" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
-[node name="Invader11Row5" type="Sprite" parent="." groups=[ "InvadersE" ]]
-
-texture = ExtResource( 7 )
-
 [node name="Ship" type="Sprite" parent="."]
 
 transform/pos = Vector2( 336.354, 527.31 )
-texture = ExtResource( 8 )
-script/script = ExtResource( 9 )
+texture = ExtResource( 7 )
+script/script = ExtResource( 8 )
 
 [node name="ShipLaser" type="Sprite" parent="."]
 
 z/z = 3
-texture = ExtResource( 10 )
-script/script = ExtResource( 11 )
+texture = ExtResource( 9 )
+script/script = ExtResource( 10 )
 
 [connection signal="pressed" from="Main Menu" to="." method="_on_Main_Menu_pressed"]
 
