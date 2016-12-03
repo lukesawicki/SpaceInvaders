@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=1]
+[gd_scene load_steps=7 format=1]
 
 [ext_resource path="res://scripts/Gameplay.gd" type="Script" id=1]
 [ext_resource path="res://backgrounds/Gameplay.png" type="Texture" id=2]
@@ -6,8 +6,6 @@
 [ext_resource path="res://buttons/BackPressed.png" type="Texture" id=4]
 [ext_resource path="res://buttons/EndingNormal.png" type="Texture" id=5]
 [ext_resource path="res://buttons/EndingPressed.png" type="Texture" id=6]
-[ext_resource path="res://materials/gShip.png" type="Texture" id=7]
-[ext_resource path="res://scripts/ShipScript.gd" type="Script" id=8]
 
 [node name="GameplayNode2D" type="Node2D"]
 
@@ -72,12 +70,6 @@ enabled_focus_mode = 2
 shortcut = null
 textures/normal = ExtResource( 5 )
 textures/pressed = ExtResource( 6 )
-
-[node name="Ship" type="Sprite" parent="."]
-
-transform/pos = Vector2( 336.354, 527.31 )
-texture = ExtResource( 7 )
-script/script = ExtResource( 8 )
 
 [connection signal="pressed" from="Main Menu" to="." method="_on_Main_Menu_pressed"]
 

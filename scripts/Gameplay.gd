@@ -1,10 +1,12 @@
 extends Node2D
 
+var terranShipScene = preload("res://scenes/TerranShipScene.tscn")
+var terranShipp
 var laserBeam = preload("res://scenes/LaserBeamShootScene.tscn")
 
-var invaders_g = preload("res://scenes/Ginvaders.tscn")
-var invaders_f = preload("res://scenes/Finvaders.tscn")
-var invaders_e = preload("res://scenes/Einvaders.tscn")
+var invaders_g = preload("res://scenes/G_Invaders.tscn")
+var invaders_f = preload("res://scenes/F_Invaders.tscn")
+var invaders_e = preload("res://scenes/E_Invaders.tscn")
 
 var allInvaders = []
 
@@ -59,6 +61,7 @@ var shipVelocityVector = Vector2()
 
 
 
+
 func _ready():
 #	screen_size = get_viewport().
 	#get_node("Ship").set_pos(Vector2(SHIP_X, SHIP_Y));
@@ -80,6 +83,10 @@ func _ready():
 	#	get_node("laser" + str(laserBeamCount)).set_pos(laserBeamPosition)
 	#	laserBeamArray.push_back("laser" + str(laserBeamCount))
 	
+	terranShipp = terranShipScene.instance()
+	terranShipp.set_name("myShip")
+	add_child(terranShipp)
+	
 	for i in range(3):
 		var laserBeamInstance = laserBeam.instance()
 		laserBeamInstance.set_name("LaserBeam" + str(i))
@@ -93,9 +100,9 @@ func _ready():
 	
 	#### tworzenie invadersow
 	
-	var nodesInGroupG = get_tree().get_nodes_in_group("InvadersG")
-	var nodesInGroupE = get_tree().get_nodes_in_group("InvadersF")
-	var nodesInGroupF = get_tree().get_nodes_in_group("InvadersE")
+#	var nodesInGroupG = get_tree().get_nodes_in_group("InvadersG")
+#	var nodesInGroupE = get_tree().get_nodes_in_group("InvadersF")
+#	var nodesInGroupF = get_tree().get_nodes_in_group("InvadersE")
 	
 
 	positionY = MARGIN_TOP
@@ -147,7 +154,7 @@ func _process(delta):
 #			invaderPositionToCheck = get_node("InvaderE" + str(i)).get_pos()
 		
 	
-	get_node("Ship").movingShip(delta)
+	get_node("myShip").movingShip(delta)
 	if Input.is_action_pressed("ship_shoot"):
 		if !isShootPressed:
 			for oneLaserBeam in laserBeamArray:
@@ -156,8 +163,8 @@ func _process(delta):
 				laserBeamPosition = get_node(oneLaserBeam).get_pos()
 				if laserBeamPosition.y < 0:
 					print("out of screen")
-					laserBeamPosition.y = get_node("Ship").get_pos().y
-					laserBeamPosition.x = get_node("Ship").get_pos().x
+					laserBeamPosition.y = get_node("myShip").get_pos().y
+					laserBeamPosition.x = get_node("myShip").get_pos().x
 					get_node(oneLaserBeam).set_pos(laserBeamPosition)
 					get_node(oneLaserBeam).moving = true
 					print("ustawione ", laserBeamPosition)
@@ -184,7 +191,11 @@ func _process(delta):
 	var i = 0
 	for OneInvader in allInvaders:
 		if i < 11:
-			get_node("InvaderG" + str(i)).get_pos()
+			var invaderPosition = get_node("InvaderG" + str(i)).get_pos()
+			for laserBeamOne in laserBeamArray:
+				var laserBeamPosition = get_node(laserBeamOne).get_pos()
+#				if laserBeamPosition.x+INVADERS_G_WIDTH/2 > invaderPosition.x-INVADERS_G_WIDTH/2 && laserBeamPosition.x-INVADERS_G_WIDTH/2 > invaderPosition.x-INVADERS_G_WIDTH/2 || laserBeamPosition.y-INVADERS_G_HIGHT/2
+			
 		elif i>10 && i<33:  
 			get_node("InvaderF" + str(i)).get_pos()
 		elif i>32 && i<55:
