@@ -13,6 +13,7 @@ var allInvaders = []
 #var nodesInTheDominion
 var laserBeamCount = 0
 var laserBeamArray = []
+var temporaryLaserBeam
 #var laserBeamPosition
 
 var screen_size
@@ -28,8 +29,8 @@ var positionX = 0
 var positionY = 40
 var space=24
 var moving = false
-var shipLaserMoving = true
-
+var shipLaserMoving = false
+var laserBeamPosition
 
 var isShootPressed = false
 
@@ -67,12 +68,35 @@ func _ready():
 	#var invader_width = 24
 	#var invader_hight = 24
 	
+		#if laserBeamCount < 3:
+	#	laserBeamCount = laserBeamCount + 1
+	#	var laserBeamInstance = laserBeam.instance()
+	#	laserBeamInstance.set_name("laser" + str(laserBeamCount))
+	#	#print("fire"+laserBeamInstance.get_name())
+	#	add_child(laserBeamInstance)
+	#	var laserBeamPosition = get_node("laser"+str(laserBeamCount)).get_pos()
+	#	laserBeamPosition.y= get_node("Ship").get_pos().y
+	#	laserBeamPosition.x = get_node("Ship").get_pos().x
+	#	get_node("laser" + str(laserBeamCount)).set_pos(laserBeamPosition)
+	#	laserBeamArray.push_back("laser" + str(laserBeamCount))
+	
+	for i in range(3):
+		var laserBeamInstance = laserBeam.instance()
+		laserBeamInstance.set_name("LaserBeam" + str(i))
+		add_child(laserBeamInstance)
+		var laserBeamPosition = get_node("LaserBeam"+str(i)).get_pos()
+		laserBeamPosition.y= -32#400#get_node("Ship").get_pos().y
+		laserBeamPosition.x = -32 #500+i*20#get_node("Ship").get_pos().x
+		get_node("LaserBeam" + str(i)).set_pos(laserBeamPosition)
+		laserBeamArray.push_back("LaserBeam" + str(i))
+		print("tworze stateczek numer", i)
+	
+	#### tworzenie invadersow
+	
 	var nodesInGroupG = get_tree().get_nodes_in_group("InvadersG")
 	var nodesInGroupE = get_tree().get_nodes_in_group("InvadersF")
 	var nodesInGroupF = get_tree().get_nodes_in_group("InvadersE")
 	
-	#### tworzenie invadersow
-
 
 	positionY = MARGIN_TOP
 	positionX = MARGIN_LEFT
@@ -124,25 +148,38 @@ func _process(delta):
 		
 	
 	get_node("Ship").movingShip(delta)
-	var ex = get_node("Ship").get_pos().x
 	if Input.is_action_pressed("ship_shoot"):
 		if !isShootPressed:
-			fire()
-			print(ex)
-			isShootPressed = true
+			for oneLaserBeam in laserBeamArray:
+				laserBeamCount = laserBeamCount + 1
+				print("first in for loop")
+				laserBeamPosition = get_node(oneLaserBeam).get_pos()
+				if laserBeamPosition.y < 0:
+					print("out of screen")
+					laserBeamPosition.y = get_node("Ship").get_pos().y
+					laserBeamPosition.x = get_node("Ship").get_pos().x
+					get_node(oneLaserBeam).set_pos(laserBeamPosition)
+					get_node(oneLaserBeam).moving = true
+					print("ustawione ", laserBeamPosition)
+					break
+			isShootPressed = true	
 	else:
 		isShootPressed = false
+	
+	for oneLaserBeam in laserBeamArray:
+		get_node(oneLaserBeam).shooting(delta)
 		
-	var laserId = 0
-	for laser in laserBeamArray:
-		var laserPos = get_node(laser).get_pos()
-		laserPos.y = laserPos.y - 150 * delta
-		get_node(laser).set_pos(laserPos)
-		if laserPos.y < 0:
-			remove_child(get_node(laser))
-			laserBeamArray.remove(laserId)
-			laserBeamCount = laserBeamCount - 1
-		laserId = laserId + 1
+	
+	#var laserId = 0
+	#for laser in laserBeamArray:
+	#	var laserPos = get_node(laser).get_pos()
+	#	laserPos.y = laserPos.y - 150 * delta
+	#	get_node(laser).set_pos(laserPos)
+	#	if laserPos.y < 0:
+	#		remove_child(get_node(laser))
+	#		laserBeamArray.remove(laserId)
+	#		laserBeamCount = laserBeamCount - 1
+	#	laserId = laserId + 1
 	
 	var i = 0
 	for OneInvader in allInvaders:
@@ -155,17 +192,18 @@ func _process(delta):
 		i=i+1
 			
 func fire():
-	if laserBeamCount < 3:
-		laserBeamCount = laserBeamCount + 1
-		var laserBeamInstance = laserBeam.instance()
-		laserBeamInstance.set_name("laser" + str(laserBeamCount))
-		#print("fire"+laserBeamInstance.get_name())
-		add_child(laserBeamInstance)
-		var laserBeamPosition = get_node("laser"+str(laserBeamCount)).get_pos()
-		laserBeamPosition.y= get_node("Ship").get_pos().y
-		laserBeamPosition.x = get_node("Ship").get_pos().x
-		get_node("laser" + str(laserBeamCount)).set_pos(laserBeamPosition)
-		laserBeamArray.push_back("laser" + str(laserBeamCount))
+	laserBeamCount = laserBeamCount+1
+	#if laserBeamCount < 3:
+	#	laserBeamCount = laserBeamCount + 1
+	#	var laserBeamInstance = laserBeam.instance()
+	#	laserBeamInstance.set_name("laser" + str(laserBeamCount))
+	#	#print("fire"+laserBeamInstance.get_name())
+	#	add_child(laserBeamInstance)
+	#	var laserBeamPosition = get_node("laser"+str(laserBeamCount)).get_pos()
+	#	laserBeamPosition.y= get_node("Ship").get_pos().y
+	#	laserBeamPosition.x = get_node("Ship").get_pos().x
+	#	get_node("laser" + str(laserBeamCount)).set_pos(laserBeamPosition)
+	#	laserBeamArray.push_back("laser" + str(laserBeamCount))
 	
 	#print(laserBeamArray)
 	
