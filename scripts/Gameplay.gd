@@ -41,16 +41,18 @@ var SCREEN_WIDTH = 672
 var SCREEN_HIGHT = 768
 
 var INVADERS_G_WIDTH = 24
-var INVADERS_F_WIDTH = 36
+var INVADERS_F_WIDTH = 33
 var INVADERS_E_WIDTH = 36
 
-var INVADERS_HIGHT = 8
+var INVADERS_HIGHT = 24
 
 var INVADERS_ROWS_SPACE = 24
 
 var SPACE_BETWEEN_G = 24
 var SPACE_BETWEEN_F = 15
 var SPACE_BETWEEN_E = 12
+
+var invaderPositionToCheck
 
 var shipVelocityVector = Vector2()
 
@@ -62,8 +64,8 @@ func _ready():
 
 
 
-	var invader_width = 24
-	var invader_hight = 24
+	#var invader_width = 24
+	#var invader_hight = 24
 	
 	var nodesInGroupG = get_tree().get_nodes_in_group("InvadersG")
 	var nodesInGroupE = get_tree().get_nodes_in_group("InvadersF")
@@ -87,7 +89,7 @@ func _ready():
 		elif i>10 && i<33:
 			if i == 11 || i == 22:
 				positionX = MARGIN_LEFT
-				positionY = positionY+INVADERS_ROWS_SPACE
+				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
 			var invaderFinstance = invaders_f.instance()
 			invaderFinstance.set_name("InvaderF" + str(i))
 			add_child(invaderFinstance)
@@ -99,7 +101,7 @@ func _ready():
 		elif i>32 && i<55:
 			if i==33 || i == 44:
 				positionX = MARGIN_LEFT
-				positionY = positionY+INVADERS_ROWS_SPACE
+				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
 			var invaderEinstance = invaders_e.instance()
 			invaderEinstance.set_name("InvaderE" + str(i))
 			add_child(invaderEinstance)
@@ -111,6 +113,15 @@ func _ready():
 	set_process(true)
 
 func _process(delta):
+	
+#	for i in range(55):
+#		if i < 11:
+#			invaderPositionToCheck = get_node("InvaderG" + str(i)).get_pos()
+#		elif i>10 && i<33:
+#			invaderPositionToCheck = get_node("InvaderF" + str(i)).get_pos()
+#		elif i>32 && i<55:
+#			invaderPositionToCheck = get_node("InvaderE" + str(i)).get_pos()
+		
 	
 	get_node("Ship").movingShip(delta)
 	var ex = get_node("Ship").get_pos().x
@@ -130,29 +141,31 @@ func _process(delta):
 		if laserPos.y < 0:
 			remove_child(get_node(laser))
 			laserBeamArray.remove(laserId)
+			laserBeamCount = laserBeamCount - 1
 		laserId = laserId + 1
 	
 	var i = 0
 	for OneInvader in allInvaders:
 		if i < 11:
-			get_node("InvaderG" + str(i)).get_pos().x
-		elif i>10 && i<33:
-			pass
+			get_node("InvaderG" + str(i)).get_pos()
+		elif i>10 && i<33:  
+			get_node("InvaderF" + str(i)).get_pos()
 		elif i>32 && i<55:
-			pass
+			get_node("InvaderE" + str(i)).get_pos()
 		i=i+1
 			
 func fire():
-	laserBeamCount = laserBeamCount + 1
-	var laserBeamInstance = laserBeam.instance()
-	laserBeamInstance.set_name("laser" + str(laserBeamCount))
-	#print("fire"+laserBeamInstance.get_name())
-	add_child(laserBeamInstance)
-	var laserBeamPosition = get_node("laser"+str(laserBeamCount)).get_pos()
-	laserBeamPosition.y= get_node("Ship").get_pos().y
-	laserBeamPosition.x = get_node("Ship").get_pos().x
-	get_node("laser" + str(laserBeamCount)).set_pos(laserBeamPosition)
-	laserBeamArray.push_back("laser" + str(laserBeamCount))
+	if laserBeamCount < 3:
+		laserBeamCount = laserBeamCount + 1
+		var laserBeamInstance = laserBeam.instance()
+		laserBeamInstance.set_name("laser" + str(laserBeamCount))
+		#print("fire"+laserBeamInstance.get_name())
+		add_child(laserBeamInstance)
+		var laserBeamPosition = get_node("laser"+str(laserBeamCount)).get_pos()
+		laserBeamPosition.y= get_node("Ship").get_pos().y
+		laserBeamPosition.x = get_node("Ship").get_pos().x
+		get_node("laser" + str(laserBeamCount)).set_pos(laserBeamPosition)
+		laserBeamArray.push_back("laser" + str(laserBeamCount))
 	
 	#print(laserBeamArray)
 	
