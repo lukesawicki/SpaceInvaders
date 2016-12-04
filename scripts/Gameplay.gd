@@ -189,18 +189,18 @@ func _process(delta):
 	#	laserId = laserId + 1
 	
 	var i = 0
-	for OneInvader in allInvaders:
-		if i < 11:
-			var invaderPosition = get_node("InvaderG" + str(i)).get_pos()
-			for laserBeamOne in laserBeamArray:
-				var laserBeamPosition = get_node(laserBeamOne).get_pos()
-				if laserBeamPosition.x+INVADERS_G_WIDTH/2 > invaderPosition.x-INVADERS_G_WIDTH/2 && laserBeamPosition.x-INVADERS_G_WIDTH/2 > invaderPosition.x-INVADERS_G_WIDTH/2 || laserBeamPosition.y-INVADERS_G_HIGHT/2:
-					pass
-		elif i>10 && i<33:  
-			get_node("InvaderF" + str(i)).get_pos()
-		elif i>32 && i<55:
-			get_node("InvaderE" + str(i)).get_pos()
-		i=i+1
+#	for OneInvader in allInvaders:
+#		if i < 11:
+#			var invaderPosition = get_node("InvaderG" + str(i)).get_pos()
+#			for laserBeamOne in laserBeamArray:
+#				var laserBeamPosition = get_node(laserBeamOne).get_pos()
+#				if laserBeamPosition.x+INVADERS_G_WIDTH/2 > invaderPosition.x-INVADERS_G_WIDTH/2 && laserBeamPosition.x-INVADERS_G_WIDTH/2 > invaderPosition.x-INVADERS_G_WIDTH/2 || laserBeamPosition.y-INVADERS_G_HIGHT/2:
+#					pass
+#		elif i>10 && i<33:  
+#			get_node("InvaderF" + str(i)).get_pos()
+#		elif i>32 && i<55:
+#			get_node("InvaderE" + str(i)).get_pos()
+#		i=i+1
 			
 func fire():
 	laserBeamCount = laserBeamCount+1
