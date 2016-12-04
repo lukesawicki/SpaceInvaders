@@ -12,3 +12,6 @@ func _ready():
 
 func _on_Next_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
+
+func _on_StartGame_pressed():
+	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
