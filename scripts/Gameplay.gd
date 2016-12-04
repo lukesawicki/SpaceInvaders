@@ -87,7 +87,7 @@ func _ready():
 	terranShipp.set_name("myShip")
 	add_child(terranShipp)
 	
-	for i in range(3):
+	for i in range(1):
 		var laserBeamInstance = laserBeam.instance()
 		laserBeamInstance.set_name("LaserBeam" + str(i))
 		add_child(laserBeamInstance)
@@ -194,8 +194,8 @@ func _process(delta):
 			var invaderPosition = get_node("InvaderG" + str(i)).get_pos()
 			for laserBeamOne in laserBeamArray:
 				var laserBeamPosition = get_node(laserBeamOne).get_pos()
-#				if laserBeamPosition.x+INVADERS_G_WIDTH/2 > invaderPosition.x-INVADERS_G_WIDTH/2 && laserBeamPosition.x-INVADERS_G_WIDTH/2 > invaderPosition.x-INVADERS_G_WIDTH/2 || laserBeamPosition.y-INVADERS_G_HIGHT/2
-			
+				if laserBeamPosition.x+INVADERS_G_WIDTH/2 > invaderPosition.x-INVADERS_G_WIDTH/2 && laserBeamPosition.x-INVADERS_G_WIDTH/2 > invaderPosition.x-INVADERS_G_WIDTH/2 || laserBeamPosition.y-INVADERS_G_HIGHT/2:
+					pass
 		elif i>10 && i<33:  
 			get_node("InvaderF" + str(i)).get_pos()
 		elif i>32 && i<55:
