@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=1]
+[gd_scene load_steps=7 format=1]
 
 [ext_resource path="res://scripts/TitleScreen.gd" type="Script" id=1]
 [ext_resource path="res://backgrounds/bg-stars.png" type="Texture" id=2]
@@ -6,6 +6,13 @@
 [ext_resource path="res://fonts/Roboto Thin 34px.fnt" type="BitmapFont" id=4]
 
 [sub_resource type="StyleBoxEmpty" id=1]
+
+content_margin/left = -1.0
+content_margin/right = -1.0
+content_margin/top = -1.0
+content_margin/bottom = -1.0
+
+[sub_resource type="StyleBoxEmpty" id=2]
 
 content_margin/left = -1.0
 content_margin/right = -1.0
@@ -52,6 +59,7 @@ margin/top = 435.0
 margin/right = 439.0
 margin/bottom = 477.0
 custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
 custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0, 1, 1 )
