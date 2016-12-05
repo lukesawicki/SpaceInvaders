@@ -1,0 +1,61 @@
+[gd_scene load_steps=5 format=1]
+
+[ext_resource path="res://backgrounds/Credits.png" type="Texture" id=1]
+[ext_resource path="res://buttons/BackNormal.png" type="Texture" id=2]
+[ext_resource path="res://buttons/BackPressed.png" type="Texture" id=3]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Node2D\n\n# member variables here, example:\n# var a=2\n# var b=\"textvar\"\n\nfunc _ready():\n\t# Initalization here\n\tpass\n\n#add to scene_a.gd\n\nfunc _on_Back_pressed():\n\tget_node(\"/root/global\").goto_scene(\"res://scenes/MainMenu.tscn\")"
+
+[node name="Node2D" type="Node2D"]
+
+script/script = SubResource( 1 )
+
+[node name="TextureFrame" type="TextureFrame" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 1024.0
+margin/bottom = 896.0
+texture = ExtResource( 1 )
+stretch_mode = 0
+
+[node name="Credits" type="Label" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 45.0
+margin/bottom = 14.0
+text = "Credits"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Back" type="TextureButton" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 838.0
+margin/top = 655.0
+margin/right = 958.0
+margin/bottom = 719.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 2 )
+textures/pressed = ExtResource( 3 )
+
+[connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
+
+
