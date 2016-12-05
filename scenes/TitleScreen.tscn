@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=1]
+[gd_scene load_steps=8 format=1]
 
 [ext_resource path="res://scripts/TitleScreen.gd" type="Script" id=1]
 [ext_resource path="res://backgrounds/bg-no-stars.png" type="Texture" id=2]
-[ext_resource path="res://backgrounds/logo.png" type="Texture" id=3]
-[ext_resource path="res://fonts/Roboto Thin 34px.fnt" type="BitmapFont" id=4]
+[ext_resource path="res://backgrounds/stars.png" type="Texture" id=3]
+[ext_resource path="res://backgrounds/logo.png" type="Texture" id=4]
+[ext_resource path="res://fonts/Roboto Thin 34px.fnt" type="BitmapFont" id=5]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -28,6 +29,24 @@ script/script = ExtResource( 1 )
 transform/pos = Vector2( 336, 384 )
 texture = ExtResource( 2 )
 
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+layer = -1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+scroll/offset = Vector2( 0, 0 )
+scroll/base_offset = Vector2( 0, 0 )
+scroll/base_scale = Vector2( 1, 1 )
+scroll/limit_begin = Vector2( 0, 0 )
+scroll/limit_end = Vector2( 0, 0 )
+scroll/ignore_camera_zoom = true
+
+[node name="stars" type="Sprite" parent="ParallaxBackground"]
+
+transform/pos = Vector2( 428.384, 436.846 )
+texture = ExtResource( 3 )
+
 [node name="TitleScreen" type="Label" parent="."]
 
 focus/ignore_mouse = true
@@ -46,7 +65,7 @@ max_lines_visible = -1
 [node name="logo" type="Sprite" parent="."]
 
 transform/pos = Vector2( 334.545, 311.224 )
-texture = ExtResource( 3 )
+texture = ExtResource( 4 )
 
 [node name="StartGame" type="Button" parent="."]
 
@@ -60,7 +79,7 @@ margin/right = 439.0
 margin/bottom = 477.0
 custom_styles/hover = SubResource( 1 )
 custom_styles/pressed = SubResource( 2 )
-custom_fonts/font = ExtResource( 4 )
+custom_fonts/font = ExtResource( 5 )
 custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0, 1, 1 )
 toggle_mode = true
@@ -69,8 +88,8 @@ shortcut = null
 text = "START GAME"
 flat = true
 
-[connection signal="pressed" from="StartGame" to="." method="_on_StartGame_pressed"]
-
 [connection signal="pressed" from="StartGame" to="." method="_on_Button_pressed"]
+
+[connection signal="pressed" from="StartGame" to="." method="_on_StartGame_pressed"]
 
 
