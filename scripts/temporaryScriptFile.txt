@@ -1,0 +1,25 @@
+	
+	
+		
+			
+					
+	var i = 0
+	####
+	laserBeamPositionToCheck = get_node(laserBeamArray[0]).get_pos()
+	shipLaserMoving = get_node(laserBeamArray[0]).moving
+	if laserBeamPositionToCheck.x < 0 || laserBeamPositionToCheck.y<0:
+		get_node(laserBeamArray[0]).moving = false
+	########################## get_node("LaserBeam"+str(i)).get_pos()
+	for i in range(55):
+		if i < 11:
+			invaderPositionToCheck = get_node("InvaderG" + str(i)).get_pos()
+			if (shipLaserMoving && (laserBeamPositionToCheck.y - LASER_BEAM_HIGHT/2) < (invaderPositionToCheck.y + INVADERS_HIGHT/2)) && (laserBeamPositionToCheck.x > invaderPositionToCheck.x - INVADERS_G_WIDTH/2 && laserBeamPositionToCheck.x < invaderPositionToCheck.x + INVADERS_G_WIDTH/2 ) :
+				print("KOLIZJA invaders: ", i)
+				
+			else:
+				get_node(laserBeamArray[0]).moving = true
+			
+		elif i>10 && i<33:
+			invaderPositionToCheck = get_node("InvaderF" + str(i)).get_pos()
+		elif i>32 && i<55:
+			invaderPositionToCheck = get_node("InvaderE" + str(i)).get_pos()
