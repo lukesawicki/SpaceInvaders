@@ -175,8 +175,8 @@ func _process(delta):
 	
 	for oneLaserBeam in laserBeamArray:
 		get_node(oneLaserBeam).shooting(delta)
-		
-	
+		for i in range(2,8):
+			pass #get_node("InvaderG" + str(i)).get
 	#var laserId = 0
 	#for laser in laserBeamArray:
 	#	var laserPos = get_node(laser).get_pos()
