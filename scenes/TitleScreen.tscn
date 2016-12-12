@@ -88,8 +88,8 @@ shortcut = null
 text = "START GAME"
 flat = true
 
-[connection signal="pressed" from="StartGame" to="." method="_on_Button_pressed"]
-
 [connection signal="pressed" from="StartGame" to="." method="_on_StartGame_pressed"]
+
+[connection signal="pressed" from="StartGame" to="." method="_on_Button_pressed"]
 
 

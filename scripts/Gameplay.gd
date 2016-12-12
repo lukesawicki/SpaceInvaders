@@ -59,6 +59,8 @@ var laserBeamPositionToCheck
 
 var shipVelocityVector = Vector2()
 
+
+
 func _ready():
 
 	
@@ -118,14 +120,27 @@ func _ready():
 
 func _process(delta):
 	# checking if any bullet is out of level if it is then shoot
+	for i in range(55):
+		var laserPos = get_node(laserBeamArray[0]).get_pos()
+		var someInvader = get_node(allInvaders[i]).get_pos()
+		if i < 11:#G
+			if colide(INVADERS_G_WIDTH, INVADERS_HIGHT, someInvader, LASER_BEAM_WIDTH, LASER_BEAM_HIGHT, laserPos):
+				break
+		elif i>10 && i<33:#F
+			if colide(INVADERS_F_WIDTH, INVADERS_HIGHT, someInvader, LASER_BEAM_WIDTH, LASER_BEAM_HIGHT, laserPos):
+				break
+		elif i>32 && i<55:#E
+			if colide(INVADERS_E_WIDTH, INVADERS_HIGHT, someInvader, LASER_BEAM_WIDTH, LASER_BEAM_HIGHT, laserPos):
+				break
+	get_node(laserBeamArray[0]).moving = shipLaserMoving
 	get_node("myShip").movingShip(delta)
+	
 	if Input.is_action_pressed("ship_shoot"):
 		if !isShootPressed:
 			for oneLaserBeam in laserBeamArray:
 				laserBeamCount = laserBeamCount + 1
 				laserBeamPosition = get_node(oneLaserBeam).get_pos()
-				if laserBeamPosition.y < 0:
-					print("out of screen")
+				if !shipLaserMoving:#laserBeamPosition.y < 0:
 					laserBeamPosition.y = get_node("myShip").get_pos().y
 					laserBeamPosition.x = get_node("myShip").get_pos().x
 					get_node(oneLaserBeam).set_pos(laserBeamPosition) #set laser position to the same position as ship position
@@ -140,6 +155,13 @@ func _process(delta):
 func fire():
 	laserBeamCount = laserBeamCount+1
 	
+func colide(width, hight, position, widthLaserBeam, hightLaserBeam, positionLaserBeam):
+	if (positionLaserBeam.y < 0) || (positionLaserBeam.x > position.x - width/2) && (positionLaserBeam.x < position.x+width/2) && (positionLaserBeam.y - hightLaserBeam/2 < position.y + hight/2) && (positionLaserBeam.y - hightLaserBeam/2 > position.y - hight/2):
+		shipLaserMoving=false
+		return true
+	else:
+		shipLaserMoving=true
+		return false
 	
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
