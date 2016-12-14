@@ -7,7 +7,7 @@ var isShootPressed = false
 # ENVIRONMENT
 
 var MARGIN_LEFT = 20
-var MARGIN_RIGHT = 150
+var MARGIN_RIGHT = 672
 var MARGIN_TOP = 20
 var MARGIN_BOTTOM = 64
 var SCREEN_WIDTH = 672
@@ -19,7 +19,9 @@ var SPACE_BETWEEN_E = 12
 
 var screen_size
 
-# INVADERS PROPERTIES
+# INVADERS PROPERTIES AND OTHER
+
+const STEP = 6
 
 var INVADERS_G_WIDTH = 24
 var INVADERS_F_WIDTH = 33
@@ -61,13 +63,21 @@ var laserBeam = preload("res://scenes/LaserBeamShootScene.tscn")
 var laserBeamName
 # OTHER VARIABLES
 
+var player = preload("res://scenes/AllSoundsPlayer.tscn")
 var stopCheckingCollisions
+
+var timer = null
+var stepDelayTime = 1
+var stepDelayTimeF = 1
+var stepDelayTimeE = 1
+var canStep = true
+const STEP = 6
 
 func _ready():
 	
 	#variables which are using to set start position all invaders
-	var positionX = MARGIN_TOP
-	var positionY = MARGIN_LEFT
+	var positionX = MARGIN_LEFT
+	var positionY = MARGIN_TOP
 
 	#Create ship instance and 
 	terranShipp = terranShipScene.instance()
@@ -121,27 +131,58 @@ func _ready():
 			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
 			allInvadersNames.push_back("InvaderE" + str(i))
 
+	#OTHER
+	timer = Timer.new()
+	timer.set_wait_time(stepDelayTime)
+	timer.set_active(true)
+	timer.connect("timeout", self, "waitForStep")
+	timer.start()
+	add_child(timer)
+	
+	var soundsPlayer = player.instance()
+	soundsPlayer.set_name("invadersSoundsPlayer")
+	add_child(soundsPlayer)
 	set_process(true)
 
+	
+	
+
+	
 func _process(delta):
 	# checking if any bullet is out of level if it is then shoot
 	for i in range(55):
 		var laserPos = get_node(laserBeamName).get_pos()
 		var someInvader = get_node(allInvadersNames[i]).get_pos()
+		#if canStep:
+		#	get_node(allInvadersNames[i]).set_pos(Vector2(someInvader.x + STEP, someInvader.y))
+		
+			
+			
+			
 		if i < 11:#G
+			if canStep:
+				get_node(allInvadersNames[i]).step(STEP)
 			current_invader_width = INVADERS_G_WIDTH
 			if colide(someInvader, laserPos):
 				get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+				get_node("invadersSoundsPlayer").invaderHit()
 				break
 		elif i>10 && i<33:#F
+			if canStep:
+				get_node(allInvadersNames[i]).step(STEP)
 			current_invader_width = INVADERS_F_WIDTH
 			if colide(someInvader, laserPos):
 				get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+				get_node("invadersSoundsPlayer").invaderHit()
 				break
 		elif i>32 && i<55:#E
+			if canStep:
+				get_node(allInvadersNames[i]).step(STEP)
 			current_invader_width = INVADERS_E_WIDTH
+			#get_node(allInvadersNames[i]).step()
 			if colide(someInvader, laserPos):
 				get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+				get_node("invadersSoundsPlayer").invaderHit()
 				break
 
 	get_node(laserBeamName).moving = shipLaserMoving
@@ -155,18 +196,26 @@ func _process(delta):
 			laserBeamPosition.x = get_node("myShip").get_pos().x
 			get_node(laserBeamName).set_pos(laserBeamPosition) #set laser position to the same position as ship position
 			shipLaserMoving = true
+			get_node("invadersSoundsPlayer").shot()
 
 	get_node(laserBeamName).movingLaserBeam(delta)
-	
+	canStep = false
 func colide(invaderPosition, positionLaserBeam):
 	if (positionLaserBeam.y < MARGIN_TOP) || ((positionLaserBeam.x > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x < invaderPosition.x+current_invader_width/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < invaderPosition.y + INVADERS_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > invaderPosition.y - INVADERS_HIGHT/2) ):
 		shipLaserMoving=false
-		print("K")
+		#print("K")
 		return true
 	else:
-		print("N")
+		#print("N")
 		return false
+
+func waitForStep():
+	canStep = true
+	print("waitForStep")
 	
+
+
+
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
 	
