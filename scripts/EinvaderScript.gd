@@ -2,9 +2,10 @@ extends Node2D
 
 var timer
 var canStep = false
-var stepDelayTime = 2
+var stepDelayTime = 1
 const LASER_BEAM_VELOCITY = -150
 var isAlive=true
+
 onready var anim = get_node("InvEanim")
 	
 func _ready():
@@ -20,7 +21,6 @@ func _ready():
 	anim.play("EInvaderAnim")
 	
 func step(step):
-
 	if(canStep):
 		set_pos(Vector2(get_pos().x + step, get_pos().y))
 	#canStep = false

@@ -72,6 +72,7 @@ var stepDelayTimeF = 1
 var stepDelayTimeE = 1
 var canStep = true
 const STEP = 6
+var stepNumber = 0
 
 func _ready():
 	
@@ -159,7 +160,7 @@ func _process(delta):
 			
 			
 			
-		if i < 11:#G
+		if i < 11 && stepNumber==2:#G
 			if canStep:
 				get_node(allInvadersNames[i]).step(STEP)
 			current_invader_width = INVADERS_G_WIDTH
@@ -167,7 +168,7 @@ func _process(delta):
 				get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 				get_node("invadersSoundsPlayer").invaderHit()
 				break
-		elif i>10 && i<33:#F
+		elif i>10 && i<33 && stepNumber==1:#F		
 			if canStep:
 				get_node(allInvadersNames[i]).step(STEP)
 			current_invader_width = INVADERS_F_WIDTH
@@ -175,7 +176,7 @@ func _process(delta):
 				get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 				get_node("invadersSoundsPlayer").invaderHit()
 				break
-		elif i>32 && i<55:#E
+		elif i>32 && i<55 && stepNumber==0:#E
 			if canStep:
 				get_node(allInvadersNames[i]).step(STEP)
 			current_invader_width = INVADERS_E_WIDTH
@@ -185,6 +186,9 @@ func _process(delta):
 				get_node("invadersSoundsPlayer").invaderHit()
 				break
 
+
+
+		
 	get_node(laserBeamName).moving = shipLaserMoving
 		
 	get_node("myShip").movingShip(delta)
@@ -200,6 +204,9 @@ func _process(delta):
 
 	get_node(laserBeamName).movingLaserBeam(delta)
 	canStep = false
+	stepNumber = stepNumber +1
+	if( stepNumber == 3):
+		stepNumber = 0
 func colide(invaderPosition, positionLaserBeam):
 	if (positionLaserBeam.y < MARGIN_TOP) || ((positionLaserBeam.x > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x < invaderPosition.x+current_invader_width/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < invaderPosition.y + INVADERS_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > invaderPosition.y - INVADERS_HIGHT/2) ):
 		shipLaserMoving=false
@@ -211,6 +218,9 @@ func colide(invaderPosition, positionLaserBeam):
 
 func waitForStep():
 	canStep = true
+	stepNumber = stepNumber + 1
+	if( stepNumber == 3):
+		stepNumber = 0
 	print("waitForStep")
 	
 
