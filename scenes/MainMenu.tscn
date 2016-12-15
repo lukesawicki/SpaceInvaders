@@ -115,15 +115,13 @@ custom_colors/font_color_hover = Color( 1, 0, 1, 1 )
 toggle_mode = true
 enabled_focus_mode = 2
 shortcut = null
-text = "ENDING"
+text = "EXIT"
 flat = true
 
 [node name="logo" type="Sprite" parent="."]
 
 transform/pos = Vector2( 334.545, 311.224 )
 texture = ExtResource( 4 )
-
-[connection signal="button_down" from="StartNormal" to="." method="_on_StartNormal_button_down"]
 
 [connection signal="pressed" from="StartNormal" to="." method="_on_StartNormal_pressed"]
 
