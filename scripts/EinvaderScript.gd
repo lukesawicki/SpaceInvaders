@@ -5,7 +5,8 @@ var canStep = false
 var stepDelayTime = 1
 const LASER_BEAM_VELOCITY = -150
 var isAlive=true
-onready var anim = get_node("InvGanim")
+
+onready var anim = get_node("InvEanim")
 	
 func _ready():
 	timer = Timer.new()
@@ -15,14 +16,15 @@ func _ready():
 	timer.set_one_shot(true)
 	timer.start()
 	add_child(timer)
-	
+
 	set_process(true)
-	anim.play("GInvaderAnim")
+	anim.play("EInvaderAnim")
 	
 func step(step):
 	if(canStep):
 		set_pos(Vector2(get_pos().x + step, get_pos().y))
 	#canStep = false
+	
 func waitForStep():
 	canStep = true
 	print("waitForStep")
