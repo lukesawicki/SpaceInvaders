@@ -58,6 +58,7 @@ var shipLaserMoving = false
 var laserBeamPosition = Vector2(1024, 1024)
 var laserBeamPositionOutOfView = Vector2(1024, 1024)
 
+var shipLaserBeamHitInvader = false
 
 var laserBeam = preload("res://scenes/LaserBeamShootScene.tscn")
 var laserBeamName
@@ -67,9 +68,7 @@ var player = preload("res://scenes/AllSoundsPlayer.tscn")
 var stopCheckingCollisions
 
 var timer = null
-var stepDelayTime = 1
-var stepDelayTimeF = 1
-var stepDelayTimeE = 1
+var stepDelayTime = 0.2
 var canStep = true
 const STEP = 6
 var stepNumber = 0
@@ -146,7 +145,7 @@ func _ready():
 	set_process(true)
 
 	
-	
+
 
 	
 func _process(delta):
@@ -156,37 +155,65 @@ func _process(delta):
 		var someInvader = get_node(allInvadersNames[i]).get_pos()
 		#if canStep:
 		#	get_node(allInvadersNames[i]).set_pos(Vector2(someInvader.x + STEP, someInvader.y))
-		
-			
-			
-			
-		if i < 11 && stepNumber==2:#G
-			if canStep:
+		if i < 11:#G
+			if canStep && stepNumber==4:
 				get_node(allInvadersNames[i]).step(STEP)
 			current_invader_width = INVADERS_G_WIDTH
 			if colide(someInvader, laserPos):
 				get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-				get_node("invadersSoundsPlayer").invaderHit()
+				shipLaserBeamHitInvader = true
+				#get_node("invadersSoundsPlayer").invaderHit()
 				break
-		elif i>10 && i<33 && stepNumber==1:#F		
-			if canStep:
+		elif i>10 && i<22:#F		
+			if canStep && stepNumber==3:
 				get_node(allInvadersNames[i]).step(STEP)
 			current_invader_width = INVADERS_F_WIDTH
 			if colide(someInvader, laserPos):
 				get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-				get_node("invadersSoundsPlayer").invaderHit()
+				shipLaserBeamHitInvader = true
+				#get_node("invadersSoundsPlayer").invaderHit()
 				break
-		elif i>32 && i<55 && stepNumber==0:#E
-			if canStep:
+		elif i>21 && i<33:#F		
+			if canStep && stepNumber==2:
+				get_node(allInvadersNames[i]).step(STEP)
+			current_invader_width = INVADERS_F_WIDTH
+			if colide(someInvader, laserPos):
+				get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+				shipLaserBeamHitInvader = true
+				#get_node("invadersSoundsPlayer").invaderHit()
+				break
+		elif i>32 && i<44:#E
+			if canStep && stepNumber==1:
 				get_node(allInvadersNames[i]).step(STEP)
 			current_invader_width = INVADERS_E_WIDTH
 			#get_node(allInvadersNames[i]).step()
 			if colide(someInvader, laserPos):
 				get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-				get_node("invadersSoundsPlayer").invaderHit()
+				shipLaserBeamHitInvader = true
+				#get_node("invadersSoundsPlayer").invaderHit()
 				break
-
-
+		elif i>43 && i<55:#E
+			if canStep && stepNumber==0:
+				get_node(allInvadersNames[i]).step(STEP)
+			current_invader_width = INVADERS_E_WIDTH
+			#get_node(allInvadersNames[i]).step()
+			if colide(someInvader, laserPos):
+				get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+				shipLaserBeamHitInvader = true
+				#get_node("invadersSoundsPlayer").invaderHit()
+				break
+		if canStep && i == 10 && stepNumber==0:
+			get_node("invadersSoundsPlayer").invader1()
+		if canStep && i == 21 && stepNumber==1:
+			get_node("invadersSoundsPlayer").invader2()
+		if canStep && i == 32 && stepNumber==2:
+			get_node("invadersSoundsPlayer").invader3()
+		if canStep && i == 43 && stepNumber==3:
+			get_node("invadersSoundsPlayer").invader4()
+	
+	if shipLaserBeamHitInvader:
+		get_node("invadersSoundsPlayer").invaderHit()
+	shipLaserBeamHitInvader = false
 
 		
 	get_node(laserBeamName).moving = shipLaserMoving
@@ -204,9 +231,6 @@ func _process(delta):
 
 	get_node(laserBeamName).movingLaserBeam(delta)
 	canStep = false
-	stepNumber = stepNumber +1
-	if( stepNumber == 3):
-		stepNumber = 0
 func colide(invaderPosition, positionLaserBeam):
 	if (positionLaserBeam.y < MARGIN_TOP) || ((positionLaserBeam.x > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x < invaderPosition.x+current_invader_width/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < invaderPosition.y + INVADERS_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > invaderPosition.y - INVADERS_HIGHT/2) ):
 		shipLaserMoving=false
@@ -219,8 +243,9 @@ func colide(invaderPosition, positionLaserBeam):
 func waitForStep():
 	canStep = true
 	stepNumber = stepNumber + 1
-	if( stepNumber == 3):
+	if( stepNumber == 5):
 		stepNumber = 0
+	
 	print("waitForStep")
 	
 
