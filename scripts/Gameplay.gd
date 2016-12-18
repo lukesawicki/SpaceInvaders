@@ -24,7 +24,7 @@ var screen_size
 const STEP = 6
 
 var INVADERS_G_WIDTH = 24
-var INVADERS_F_WIDTH = 33
+var INVADERS_F_WIDTH = 34
 var INVADERS_E_WIDTH = 36
 var INVADERS_HIGHT = 24
 
