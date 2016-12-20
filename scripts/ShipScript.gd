@@ -29,7 +29,7 @@ func movingShip(delta):
 		moving = false
 		
 			
-	if(get_pos().x < MARGIN_LEFT):
+	if(get_pos().x < MARGIN_LEFT+SHIP_WIDTH/2):
 		set_pos(Vector2(MARGIN_LEFT + (SHIP_WIDTH/2 + 1), SHIP_Y))
 	if(get_pos().x >  MARGIN_RIGHT - SHIP_WIDTH/2):
 		set_pos(Vector2( MARGIN_RIGHT - (SHIP_WIDTH/2 + 1), SHIP_Y))
