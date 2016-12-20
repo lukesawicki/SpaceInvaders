@@ -1,8 +1,3 @@
-	
-	
-		
-			
-					
 	var i = 0
 	####
 	laserBeamPositionToCheck = get_node(laserBeamArray[0]).get_pos()
@@ -23,3 +18,9 @@
 			invaderPositionToCheck = get_node("InvaderF" + str(i)).get_pos()
 		elif i>32 && i<55:
 			invaderPositionToCheck = get_node("InvaderE" + str(i)).get_pos()
+			
+
+
+positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
+
+positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT		

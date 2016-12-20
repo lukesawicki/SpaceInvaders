@@ -5,7 +5,7 @@
 
 [node name="SamplePlayer" type="SamplePlayer"]
 
-config/polyphony = 1
+config/polyphony = 4
 config/samples = ExtResource( 1 )
 default/volume_db = 0.0
 default/pitch_scale = 1.0
