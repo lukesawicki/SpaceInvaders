@@ -4,16 +4,16 @@ var isShootPressed = false
 
 # ENVIRONMENT
 
-var MARGIN_LEFT = 0
-var MARGIN_RIGHT = 672
-var MARGIN_TOP = 216
-var MARGIN_BOTTOM = 64
-var SCREEN_WIDTH = 672
-var SCREEN_HIGHT = 768
-var INVADERS_ROWS_SPACE = 24
-var SPACE_BETWEEN_G = 24
-var SPACE_BETWEEN_F = 14
-var SPACE_BETWEEN_E = 12
+const MARGIN_LEFT = 0
+const MARGIN_RIGHT = 672
+const MARGIN_TOP = 216
+const MARGIN_BOTTOM = 64
+const SCREEN_WIDTH = 672
+const SCREEN_HIGHT = 768
+const INVADERS_ROWS_SPACE = 24
+const SPACE_BETWEEN_G = 24
+const SPACE_BETWEEN_F = 14
+const SPACE_BETWEEN_E = 12
 
 var screen_size
 
@@ -70,6 +70,7 @@ var shipLaserBeamHitShelter = false
 
 var laserBeam = preload("res://scenes/LaserBeamShootScene.tscn")
 var laserBeamName
+var laserBeamHitTheWall = false
 # OTHER VARIABLES
 
 var player = preload("res://scenes/AllSoundsPlayer.tscn")
@@ -87,6 +88,13 @@ var youDied = false
 
 var positionX = MARGIN_LEFT
 var positionY = MARGIN_TOP + INVADERS_HIGHT
+
+#GAMEPLAY
+const ePoints = 10
+const fPoints = 20
+const gPoints = 30
+var points = 0
+
 
 func _ready():
 	
@@ -144,6 +152,8 @@ func _process(delta):
 	#INVADERS MOVING AND COLLISIONS WITH LASER BEAM
 	invadersProcess()
 	
+	wallProcess()
+	
 	if shipLaserBeamHitInvader:
 		get_node("invadersSoundsPlayer").invaderHit()
 	shipLaserBeamHitInvader = false
@@ -151,7 +161,10 @@ func _process(delta):
 	if shipLaserBeamHitShelter:
 		get_node("invadersSoundsPlayer").invaderHit()
 	shipLaserBeamHitShelter = false
-
+	
+	if laserBeamHitTheWall:
+		get_node("invadersSoundsPlayer").invaderHit()
+	laserBeamHitTheWall = false
 		
 	get_node(laserBeamName).moving = shipLaserMoving
 		
@@ -171,7 +184,7 @@ func _process(delta):
 	
 #CHECK COLLISIONS WITH INVADERS
 func colide(invaderPosition, positionLaserBeam):
-	if (positionLaserBeam.y < MARGIN_TOP) || ((positionLaserBeam.x > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x < invaderPosition.x+current_invader_width/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < invaderPosition.y + INVADERS_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > invaderPosition.y - INVADERS_HIGHT/2) ):
+	if ((positionLaserBeam.x > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x < invaderPosition.x+current_invader_width/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < invaderPosition.y + INVADERS_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > invaderPosition.y - INVADERS_HIGHT/2) ):
 		shipLaserMoving=false
 		#print("K")
 		return true
@@ -179,10 +192,17 @@ func colide(invaderPosition, positionLaserBeam):
 		#print("N")
 		return false
 #CHECK COLLISIONS WITH SHELTERS
-func clideWithShelter(shelterPosition, positionLaserBeam):
+func colideWithShelter(shelterPosition, positionLaserBeam):
 	if ( positionLaserBeam.x > shelterPosition.x - SHELTER_WIDTH/2) && (positionLaserBeam.x < shelterPosition.x+SHELTER_WIDTH/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < shelterPosition.y + SHELTER_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > shelterPosition.y - SHELTER_HIGHT/2):
 		shipLaserMoving=false
 		return true
+	else:
+		return false
+#CHECK COLLISIONS WITH TOP WALL
+func colideWithWall(positionLaserBeam):
+	if (positionLaserBeam.y < MARGIN_TOP):
+		shipLaserMoving=false
+		return true;
 	else:
 		return false
 
@@ -249,13 +269,14 @@ func shelterProcess():
 	for i in range(4):
 		var laserPos = get_node(laserBeamName).get_pos()
 		var someShelter = get_node(allSheltersNames[i]).get_pos()
-		if clideWithShelter(someShelter, laserPos):
+		if colideWithShelter(someShelter, laserPos):
 			shipLaserBeamHitShelter=true
 			get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 			break
 			
 func invadersProcess():
 	for i in range(55):
+		print(points)
 		var laserPos = get_node(laserBeamName).get_pos()
 		var someInvader = get_node(allInvadersNames[i]).get_pos()
 		var isAlive = get_node(allInvadersNames[i]).isAlive
@@ -274,6 +295,7 @@ func invadersProcess():
 					shipLaserBeamHitInvader = true
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
+					points = points + gPoints
 					break
 			elif i>10 && i<22:#F
 				if someInvader.x + INVADERS_F_WIDTH/2 > MARGIN_RIGHT:
@@ -290,6 +312,7 @@ func invadersProcess():
 					#get_node("invadersSoundsPlayer").invaderHit()
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
+					points = points + fPoints
 					break
 			elif i>21 && i<33:#F
 				if someInvader.x + INVADERS_F_WIDTH/2 > MARGIN_RIGHT:
@@ -306,6 +329,7 @@ func invadersProcess():
 					#get_node("invadersSoundsPlayer").invaderHit()
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
+					points = points + fPoints
 					break
 			elif i>32 && i<44:#E
 				if someInvader.x + INVADERS_E_WIDTH/2 > MARGIN_RIGHT:
@@ -323,6 +347,7 @@ func invadersProcess():
 					#get_node("invadersSoundsPlayer").invaderHit()
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
+					points = points + ePoints
 					break
 			elif i>43 && i<55:#E
 				if someInvader.x + INVADERS_E_WIDTH/2 > MARGIN_RIGHT:
@@ -339,6 +364,7 @@ func invadersProcess():
 					#get_node("invadersSoundsPlayer").invaderHit()
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
+					points = points + ePoints
 					break
 					
 			if canDoVerticalStep:
@@ -358,7 +384,13 @@ func invadersProcess():
 			get_node("invadersSoundsPlayer").invader3()
 		if canStep && i == 43 && stepNumber==3:
 			get_node("invadersSoundsPlayer").invader4()
-	
+
+func wallProcess():
+	var laserPos = get_node(laserBeamName).get_pos()
+	if colideWithWall(laserPos):
+		laserBeamHitTheWall=true
+		get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+
 func setInvadersPositions():
 	var invaderPosition = Vector2(0, 0)
 	positionX = MARGIN_LEFT
