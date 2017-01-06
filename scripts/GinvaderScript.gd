@@ -23,6 +23,7 @@ func step(step):
 	if(canStep):
 		set_pos(Vector2(get_pos().x + step, get_pos().y))
 	#canStep = false
+	
 func waitForStep():
 	canStep = true
-	print("waitForStep")
+	#print("waitForStep")

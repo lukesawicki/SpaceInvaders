@@ -7,7 +7,7 @@ var isShootPressed = false
 const MARGIN_LEFT = 0
 const MARGIN_RIGHT = 672
 const MARGIN_TOP = 216
-const MARGIN_BOTTOM = 64
+const MARGIN_BOTTOM = 768
 const SCREEN_WIDTH = 672
 const SCREEN_HIGHT = 768
 const INVADERS_ROWS_SPACE = 24
@@ -53,6 +53,7 @@ var terranShipp
 
 # LASER BEAM AND ROCKETS PROPERTIES
 
+#****laser beam
 const NUMBER_OF_LASER_BEAM_INSTANCES = 1
 
 const LASER_BEAM_WIDTH = 4
@@ -71,6 +72,30 @@ var shipLaserBeamHitShelter = false
 var laserBeam = preload("res://scenes/LaserBeamShootScene.tscn")
 var laserBeamName
 var laserBeamHitTheWall = false
+
+#****rockets
+const NUMBER_OF_ROCKET_INSTANCES = 3
+
+const ROCKED_WIDTH = 4
+const ROCKED_HIGHT = 15
+
+var rocket1Position = Vector2(88, 88)
+var rocket2Position = Vector2(88, 88)
+var rocket3Position = Vector2(88, 88)
+
+var rocket1Moving = false
+var rocket2Moving = false
+var rocket3Moving = false
+
+var rocketsPositionOutOfView = Vector2(88, 88)
+
+var rocketNamesArray = []
+var rocketMovingArray = []
+
+var rocketScene1 = preload("res://scenes/InvaderRocket1Scene.tscn")
+var rocketScene2 = preload("res://scenes/InvaderRocket2Scene.tscn")
+var rocketScene3 = preload("res://scenes/InvaderRocket3Scene.tscn")
+
 # OTHER VARIABLES
 
 var player = preload("res://scenes/AllSoundsPlayer.tscn")
@@ -88,6 +113,13 @@ var youDied = false
 
 var positionX = MARGIN_LEFT
 var positionY = MARGIN_TOP + INVADERS_HIGHT
+
+# INVADERS SHOOTING
+
+#var shootingTimer = null
+#var minimumTimeBetweenShooting = 0.1
+#var canShoot = true
+#var rocketLaserMoving = false
 
 #GAMEPLAY
 const ePoints = 10
@@ -123,10 +155,50 @@ func _ready():
 	get_node("LaserBeam").set_pos(laserBeamPositionOutOfView)
 	laserBeamName = "LaserBeam"
 	
+	#Create rockets instances
+	
+	# rocket 1
+	#rocketNamesArray
+	var rocketInstance
+	var rocketName
+	for i in range(3):
+		rocketName = "Rocket1" + str(i)
+		rocketInstance = rocketScene1.instance()
+		rocketInstance.set_name(rocketName)
+		add_child(rocketInstance)
+		get_node(rocketName).set_pos(rocketsPositionOutOfView)
+	# rocket 2
+	for i in range(3):
+		rocketName = "Rocket2" + str(i)
+		rocketInstance = rocketScene2.instance()
+		rocketInstance.set_name(rocketName)
+		add_child(rocketInstance)
+		get_node(rocketName).set_pos(rocketsPositionOutOfView)
+	
+	# rocket 3
+	for i in range(3):
+		rocketName = "Rocket3" + str(i)
+		rocketInstance = rocketScene3.instance()
+		rocketInstance.set_name(rocketName)
+		add_child(rocketInstance)
+		get_node(rocketName).set_pos(rocketsPositionOutOfView)
+# SHOTING
+#	shootingTimer = Timer.new()
+#	shootingTimer.set_wait_time(minimumTimeBetweenShooting)
+#	shootingTimer.set_active(true)
+#	shootingTimer.connect("timeout", self, "waitForStep")
+#	shootingTimer.start()
+#	add_child(shootingTimer)
+	
+	
+	#get_node("LaserBeam").set_pos(laserBeamPositionOutOfView)
+	#laserBeamName = "LaserBeam"
+
 	#Create all invaders ships
 	#setInvadersPositions()
 	initializeInvaders()
 	wasVerticalStep = false
+
 
 	#OTHER
 	timer = Timer.new()
@@ -140,11 +212,18 @@ func _ready():
 	soundsPlayer.set_name("invadersSoundsPlayer")
 	add_child(soundsPlayer)
 	set_process(true)
-
 	
+	# UWAGA UWAGA LOSOWANIE WYLACZONE DNIA 06-01-2017
+	#for i in range(3):
+	var randomRocket = randi()%3
+	var randomRocketType = randi()%3
+	#rocketMovingArray.push_back("Rocket" + str(randomRocketType) + str(randomRocket))
+	rocketMovingArray.push_back("Rocket10")# + str(randomRocketType) + str(randomRocket))
+	rocketMovingArray.push_back("Rocket21")
+	rocketMovingArray.push_back("Rocket32")
+	for i in range(3):
+		print(rocketMovingArray[i])
 
-
-	
 func _process(delta):
 	#SHELTER COLLISIONS WITH LASER BEAM
 	shelterProcess()
@@ -153,6 +232,8 @@ func _process(delta):
 	invadersProcess()
 	
 	wallProcess()
+	
+	wallRocketProcess()
 	
 	if shipLaserBeamHitInvader:
 		get_node("invadersSoundsPlayer").invaderHit()
@@ -167,18 +248,45 @@ func _process(delta):
 	laserBeamHitTheWall = false
 		
 	get_node(laserBeamName).moving = shipLaserMoving
+	get_node(rocketMovingArray[0]).moving = rocket1Moving
+	get_node(rocketMovingArray[1]).moving = rocket2Moving
+	get_node(rocketMovingArray[2]).moving = rocket3Moving
+		
 		
 	get_node("myShip").movingShip(delta)
 	
 	if Input.is_action_pressed("ship_shoot"):
 		laserBeamPosition = get_node(laserBeamName).get_pos()
+		rocket1Position = get_node(rocketMovingArray[0]).get_pos()
 		if !shipLaserMoving:
 			laserBeamPosition.y = get_node("myShip").get_pos().y
 			laserBeamPosition.x = get_node("myShip").get_pos().x
 			get_node(laserBeamName).set_pos(laserBeamPosition) #set laser position to the same position as ship position
 			shipLaserMoving = true
 			get_node("invadersSoundsPlayer").shot()
-
+		if !rocket1Moving:
+			rocket1Position.x = get_node("myShip").get_pos().x
+			get_node(rocketMovingArray[0]).set_pos(rocket1Position)
+			rocket1Moving = true
+		if !rocket2Moving:
+			rocket2Position.x = get_node("myShip").get_pos().x+25
+			get_node(rocketMovingArray[1]).set_pos(rocket2Position)
+			rocket2Moving = true
+		if !rocket3Moving:
+			rocket3Position.x = get_node("myShip").get_pos().x+50
+			get_node(rocketMovingArray[2]).set_pos(rocket3Position)
+			rocket3Moving = true
+	# shooting
+	###var r = randi()%9
+	#for i in range(3):
+	###rocket1Position = get_node(rocketMovingArray[0]).get_pos()
+	###if !rocket1Moving && r == 3:
+		#####rocket1Position.y = 60
+		###rocket1Position.x = get_node("myShip").get_pos().x
+		###get_node(rocketMovingArray[0]).set_pos(rocket1Position)
+		###rocket1Moving = true
+	for i in range(3):
+		get_node(rocketMovingArray[i]).movingRocket(delta)
 	get_node(laserBeamName).movingLaserBeam(delta)
 	canStep = false
 	
@@ -206,13 +314,25 @@ func colideWithWall(positionLaserBeam):
 	else:
 		return false
 
+func rocketColideWithWall(rocketPosition, rocketNumber):
+	if (rocketPosition.y > MARGIN_BOTTOM):
+		if rocketNumber == 1:
+			rocket1Moving=false
+		elif rocketNumber == 2:
+			rocket2Moving=false
+		elif rocketNumber == 3:
+			rocket3Moving=false
+		return true;
+	else:
+		return false
+
 func waitForStep():
 	canStep = true
 	stepNumber = stepNumber + 1
 	if( stepNumber == 5):
 		stepNumber = 0
 	
-	print("waitForStep")
+	#print("waitForStep")
 	
 func initializeInvaders():
 	var invaderPosition = Vector2(0, 0)
@@ -276,7 +396,7 @@ func shelterProcess():
 			
 func invadersProcess():
 	for i in range(55):
-		print(points)
+		#print(points)
 		var laserPos = get_node(laserBeamName).get_pos()
 		var someInvader = get_node(allInvadersNames[i]).get_pos()
 		var isAlive = get_node(allInvadersNames[i]).isAlive
@@ -390,6 +510,22 @@ func wallProcess():
 	if colideWithWall(laserPos):
 		laserBeamHitTheWall=true
 		get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+
+func wallRocketProcess():
+	var poz = get_node(rocketMovingArray[0]).get_pos()
+	if rocketColideWithWall(poz,1):
+		#laserBeamHitTheWall=true
+		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
+	if rocketColideWithWall(poz,2):
+		#laserBeamHitTheWall=true
+		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
+	if rocketColideWithWall(poz,3):
+		#laserBeamHitTheWall=true
+		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
+
+
+				#if colide(someInvader, laserPos):
+				#	get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 
 func setInvadersPositions():
 	var invaderPosition = Vector2(0, 0)

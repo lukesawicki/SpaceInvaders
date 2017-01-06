@@ -8,7 +8,6 @@ var isAlive=true
 onready var anim = get_node("InvFanim")
 	
 func _ready():
-	
 	timer = Timer.new()
 	timer.set_wait_time(stepDelayTime)
 	timer.set_active(true)
@@ -27,4 +26,4 @@ func step(step):
 	
 func waitForStep():
 	canStep = true
-	print("waitForStep")
+	#print("waitForStep")
