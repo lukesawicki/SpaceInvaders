@@ -215,12 +215,26 @@ func _ready():
 	
 	# UWAGA UWAGA LOSOWANIE WYLACZONE DNIA 06-01-2017
 	#for i in range(3):
-	var randomRocket = randi()%3
+	var randomRocket = randi()%3+1
 	var randomRocketType = randi()%3
 	#rocketMovingArray.push_back("Rocket" + str(randomRocketType) + str(randomRocket))
-	rocketMovingArray.push_back("Rocket10")# + str(randomRocketType) + str(randomRocket))
-	rocketMovingArray.push_back("Rocket21")
-	rocketMovingArray.push_back("Rocket32")
+#	rocketMovingArray.push_back("Rocket10")# + str(randomRocketType) + str(randomRocket))
+#	rocketMovingArray.push_back("Rocket21")
+#	rocketMovingArray.push_back("Rocket32")
+
+	var randomRocketType = (randi()%3)+1
+	var randomRocket = randi()%3
+	rocketMovingArray.push_back("Rocket"+str(randomRocketType)+str(randomRocket))
+	var i = 0
+	while i < 3:
+		randomize()
+		randomRocketType = (randi()%3)+1
+		randomRocket = randi()%3
+		for rocket in rocketMovingArray:
+			if !( rocket == "Rocket"+str(randomRocketType)+str(randomRocket) ):
+				rocketMovingArray.push_back("Rocket"+str(randomRocketType)+str(randomRocket))
+				i = i+1
+	
 	for i in range(3):
 		print(rocketMovingArray[i])
 
@@ -316,11 +330,11 @@ func colideWithWall(positionLaserBeam):
 
 func rocketColideWithWall(rocketPosition, rocketNumber):
 	if (rocketPosition.y > MARGIN_BOTTOM):
-		if rocketNumber == 1:
+		if rocketNumber == 0:
 			rocket1Moving=false
-		elif rocketNumber == 2:
+		if rocketNumber == 1:
 			rocket2Moving=false
-		elif rocketNumber == 3:
+		if rocketNumber == 2:
 			rocket3Moving=false
 		return true;
 	else:
@@ -513,17 +527,9 @@ func wallProcess():
 
 func wallRocketProcess():
 	var poz = get_node(rocketMovingArray[0]).get_pos()
-	if rocketColideWithWall(poz,1):
-		#laserBeamHitTheWall=true
-		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
-	if rocketColideWithWall(poz,2):
-		#laserBeamHitTheWall=true
-		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
-	if rocketColideWithWall(poz,3):
-		#laserBeamHitTheWall=true
-		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
-
-
+	for i in range(3):
+		if rocketColideWithWall(poz,i):
+			get_node(rocketMovingArray[i]).set_pos(rocketsPositionOutOfView)
 				#if colide(someInvader, laserPos):
 				#	get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 
