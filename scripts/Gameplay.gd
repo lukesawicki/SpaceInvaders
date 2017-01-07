@@ -117,6 +117,8 @@ var positionX = MARGIN_LEFT
 var positionY = MARGIN_TOP + INVADERS_HIGHT
 
 # INVADERS SHOOTING
+var invaderWhichAreShootingNow = randi()%55
+var shootingInvaderPosition = Vector2(0, 0)
 
 #GAMEPLAY
 const ePoints = 10
@@ -225,26 +227,26 @@ func _process(delta):
 			get_node("invadersSoundsPlayer").shot()
 		
 		if !rocket1Moving:
-			rocket1Position.y = get_node(rocketMovingArray[0]).get_pos().y
-			rocket1Position.x = get_node("myShip").get_pos().x
+			setPositionOfShootingInvader()
+			rocket1Position = shootingInvaderPosition
 			get_node(rocketMovingArray[0]).set_pos(rocket1Position)
 			rocket1Moving = true
 		
 		if !rocket2Moving:
-			rocket2Position.y = get_node(rocketMovingArray[1]).get_pos().y
-			rocket2Position.x = get_node("myShip").get_pos().x+25
+			setPositionOfShootingInvader()
+			rocket2Position = shootingInvaderPosition
 			get_node(rocketMovingArray[1]).set_pos(rocket2Position)
 			rocket2Moving = true
 		
 		if !rocket3Moving:
-			rocket3Position.y = get_node(rocketMovingArray[2]).get_pos().y
-			rocket3Position.x = get_node("myShip").get_pos().x+50
+			setPositionOfShootingInvader()
+			rocket3Position = shootingInvaderPosition
 			get_node(rocketMovingArray[2]).set_pos(rocket3Position)
 			rocket3Moving = true
 		
 		if !rocket4Moving:
-			rocket4Position.y = get_node(rocketMovingArray[3]).get_pos().y
-			rocket4Position.x = get_node("myShip").get_pos().x+75
+			setPositionOfShootingInvader()
+			rocket4Position = shootingInvaderPosition
 			get_node(rocketMovingArray[3]).set_pos(rocket4Position)
 			rocket4Moving = true
 
@@ -302,6 +304,16 @@ func waitForStep():
 		stepNumber = 0
 	
 	#print("waitForStep")
+	
+func setPositionOfShootingInvader():
+	var alive = false
+	
+	while !alive:
+		randomize()
+		invaderWhichAreShootingNow = randi()%55
+		alive = get_node(allInvadersNames[invaderWhichAreShootingNow]).isAlive
+	if alive:
+		shootingInvaderPosition = get_node(allInvadersNames[invaderWhichAreShootingNow]).get_pos()
 	
 func initializeInvaders():
 	var invaderPosition = Vector2(0, 0)
