@@ -74,18 +74,20 @@ var laserBeamName
 var laserBeamHitTheWall = false
 
 #****rockets
-const NUMBER_OF_ROCKET_INSTANCES = 3
+const NUMBER_OF_ROCKET_INSTANCES = 4
 
 const ROCKED_WIDTH = 4
 const ROCKED_HIGHT = 15
 
 var rocket1Position = Vector2(88, 88)
-var rocket2Position = Vector2(88, 88)
-var rocket3Position = Vector2(88, 88)
+var rocket2Position = Vector2(188, 88)
+var rocket3Position = Vector2(288, 88)
+var rocket4Position = Vector2(388, 88)
 
 var rocket1Moving = false
 var rocket2Moving = false
 var rocket3Moving = false
+var rocket4Moving = false
 
 var rocketsPositionOutOfView = Vector2(88, 88)
 
@@ -157,48 +159,11 @@ func _ready():
 	
 	#Create rockets instances
 	
-	# rocket 1
-	#rocketNamesArray
-	var rocketInstance
-	var rocketName
-	for i in range(3):
-		rocketName = "Rocket1" + str(i)
-		rocketInstance = rocketScene1.instance()
-		rocketInstance.set_name(rocketName)
-		add_child(rocketInstance)
-		get_node(rocketName).set_pos(rocketsPositionOutOfView)
-	# rocket 2
-	for i in range(3):
-		rocketName = "Rocket2" + str(i)
-		rocketInstance = rocketScene2.instance()
-		rocketInstance.set_name(rocketName)
-		add_child(rocketInstance)
-		get_node(rocketName).set_pos(rocketsPositionOutOfView)
-	
-	# rocket 3
-	for i in range(3):
-		rocketName = "Rocket3" + str(i)
-		rocketInstance = rocketScene3.instance()
-		rocketInstance.set_name(rocketName)
-		add_child(rocketInstance)
-		get_node(rocketName).set_pos(rocketsPositionOutOfView)
-# SHOTING
-#	shootingTimer = Timer.new()
-#	shootingTimer.set_wait_time(minimumTimeBetweenShooting)
-#	shootingTimer.set_active(true)
-#	shootingTimer.connect("timeout", self, "waitForStep")
-#	shootingTimer.start()
-#	add_child(shootingTimer)
-	
-	
-	#get_node("LaserBeam").set_pos(laserBeamPositionOutOfView)
-	#laserBeamName = "LaserBeam"
+	createListOfRockets()
 
-	#Create all invaders ships
 	#setInvadersPositions()
 	initializeInvaders()
 	wasVerticalStep = false
-
 
 	#OTHER
 	timer = Timer.new()
@@ -213,30 +178,7 @@ func _ready():
 	add_child(soundsPlayer)
 	set_process(true)
 	
-	# UWAGA UWAGA LOSOWANIE WYLACZONE DNIA 06-01-2017
-	#for i in range(3):
-	var randomRocket = randi()%3+1
-	var randomRocketType = randi()%3
-	#rocketMovingArray.push_back("Rocket" + str(randomRocketType) + str(randomRocket))
-#	rocketMovingArray.push_back("Rocket10")# + str(randomRocketType) + str(randomRocket))
-#	rocketMovingArray.push_back("Rocket21")
-#	rocketMovingArray.push_back("Rocket32")
-
-	var randomRocketType = (randi()%3)+1
-	var randomRocket = randi()%3
-	rocketMovingArray.push_back("Rocket"+str(randomRocketType)+str(randomRocket))
-	var i = 0
-	while i < 3:
-		randomize()
-		randomRocketType = (randi()%3)+1
-		randomRocket = randi()%3
-		for rocket in rocketMovingArray:
-			if !( rocket == "Rocket"+str(randomRocketType)+str(randomRocket) ):
-				rocketMovingArray.push_back("Rocket"+str(randomRocketType)+str(randomRocket))
-				i = i+1
-	
-	for i in range(3):
-		print(rocketMovingArray[i])
+	createListOfRandomMovingRockets()
 
 func _process(delta):
 	#SHELTER COLLISIONS WITH LASER BEAM
@@ -262,45 +204,47 @@ func _process(delta):
 	laserBeamHitTheWall = false
 		
 	get_node(laserBeamName).moving = shipLaserMoving
+	
 	get_node(rocketMovingArray[0]).moving = rocket1Moving
 	get_node(rocketMovingArray[1]).moving = rocket2Moving
 	get_node(rocketMovingArray[2]).moving = rocket3Moving
+	get_node(rocketMovingArray[3]).moving = rocket4Moving
 		
 		
 	get_node("myShip").movingShip(delta)
 	
 	if Input.is_action_pressed("ship_shoot"):
 		laserBeamPosition = get_node(laserBeamName).get_pos()
-		rocket1Position = get_node(rocketMovingArray[0]).get_pos()
 		if !shipLaserMoving:
 			laserBeamPosition.y = get_node("myShip").get_pos().y
 			laserBeamPosition.x = get_node("myShip").get_pos().x
 			get_node(laserBeamName).set_pos(laserBeamPosition) #set laser position to the same position as ship position
 			shipLaserMoving = true
 			get_node("invadersSoundsPlayer").shot()
+		
 		if !rocket1Moving:
 			rocket1Position.x = get_node("myShip").get_pos().x
 			get_node(rocketMovingArray[0]).set_pos(rocket1Position)
 			rocket1Moving = true
+		
 		if !rocket2Moving:
 			rocket2Position.x = get_node("myShip").get_pos().x+25
 			get_node(rocketMovingArray[1]).set_pos(rocket2Position)
 			rocket2Moving = true
+		
 		if !rocket3Moving:
 			rocket3Position.x = get_node("myShip").get_pos().x+50
 			get_node(rocketMovingArray[2]).set_pos(rocket3Position)
 			rocket3Moving = true
-	# shooting
-	###var r = randi()%9
-	#for i in range(3):
-	###rocket1Position = get_node(rocketMovingArray[0]).get_pos()
-	###if !rocket1Moving && r == 3:
-		#####rocket1Position.y = 60
-		###rocket1Position.x = get_node("myShip").get_pos().x
-		###get_node(rocketMovingArray[0]).set_pos(rocket1Position)
-		###rocket1Moving = true
-	for i in range(3):
+		
+		if !rocket4Moving:
+			rocket4Position.x = get_node("myShip").get_pos().x+75
+			get_node(rocketMovingArray[3]).set_pos(rocket4Position)
+			rocket4Moving = true
+
+	for i in range(4):
 		get_node(rocketMovingArray[i]).movingRocket(delta)
+		
 	get_node(laserBeamName).movingLaserBeam(delta)
 	canStep = false
 	
@@ -336,6 +280,8 @@ func rocketColideWithWall(rocketPosition, rocketNumber):
 			rocket2Moving=false
 		if rocketNumber == 2:
 			rocket3Moving=false
+		if rocketNumber == 3:
+			rocket4Moving=false
 		return true;
 	else:
 		return false
@@ -526,12 +472,10 @@ func wallProcess():
 		get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 
 func wallRocketProcess():
-	var poz = get_node(rocketMovingArray[0]).get_pos()
-	for i in range(3):
+	for i in range(4):
+		var poz = get_node(rocketMovingArray[i]).get_pos()
 		if rocketColideWithWall(poz,i):
 			get_node(rocketMovingArray[i]).set_pos(rocketsPositionOutOfView)
-				#if colide(someInvader, laserPos):
-				#	get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 
 func setInvadersPositions():
 	var invaderPosition = Vector2(0, 0)
@@ -571,6 +515,55 @@ func setInvadersPositions():
 			invaderPosition.x = positionX
 			invaderPosition.y = positionY
 			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
+
+
+func createListOfRockets():
+	var rocketInstance
+	for i in range(4):
+		var rocketName = "Rocket1" + str(i)
+		rocketNamesArray.push_back(rocketName)
+		var rocketInstance = rocketScene1.instance()
+		rocketInstance.set_name(rocketName)
+		add_child(rocketInstance)
+		get_node(rocketName).set_pos(rocketsPositionOutOfView)
+	# rocket 2
+	for i in range(4):
+		var rocketName = "Rocket2" + str(i)
+		rocketNamesArray.push_back(rocketName)
+		var rocketInstance = rocketScene2.instance()
+		rocketInstance.set_name(rocketName)
+		add_child(rocketInstance)
+		get_node(rocketName).set_pos(rocketsPositionOutOfView)
+	
+	# rocket 3
+	for i in range(4):
+		var rocketName = "Rocket3" + str(i)
+		rocketNamesArray.push_back(rocketName)
+		var rocketInstance = rocketScene3.instance()
+		rocketInstance.set_name(rocketName)
+		add_child(rocketInstance)
+		get_node(rocketName).set_pos(rocketsPositionOutOfView)
+		
+		#rocketNamesArray
+		
+	for i in rocketNamesArray:
+		print(i)
+		
+func createListOfRandomMovingRockets():
+	var randomRocket = randi()%12
+	
+	rocketMovingArray.push_back(rocketNamesArray[randomRocket])
+	
+	var i = 0
+	while i < 4:
+		randomize()
+		randomRocket = randi()%12
+		for rocket in rocketMovingArray:
+			if rocket != rocketNamesArray[randomRocket]:#"Rocket"+str(randomRocketType)+str(randomRocket) ):
+				rocketMovingArray.push_back(rocketNamesArray[randomRocket])
+				i = i+1
+	for i in range(4):
+		print("aaaaaa:   " +rocketMovingArray[i])
 
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")

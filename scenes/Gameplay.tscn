@@ -66,10 +66,26 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 497.0
-margin/top = 566.0
-margin/right = 617.0
-margin/bottom = 630.0
+margin/left = 499.0
+margin/top = 644.0
+margin/right = 619.0
+margin/bottom = 708.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 5 )
+textures/pressed = ExtResource( 6 )
+
+[node name="Exit Game1" type="TextureButton" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 499.0
+margin/top = 644.0
+margin/right = 619.0
+margin/bottom = 708.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
