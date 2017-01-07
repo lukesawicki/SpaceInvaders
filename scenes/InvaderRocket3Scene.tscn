@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=1]
 
 [ext_resource path="res://materials/invaderRocket3.png" type="Texture" id=1]
-[ext_resource path="res://scripts/RocketShooting.gd" type="Script" id=2]
+[ext_resource path="res://scripts/Rocket3Shooting.gd" type="Script" id=2]
 
 [node name="InvaderRocket3" type="Sprite"]
 
