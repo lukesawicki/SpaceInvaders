@@ -1,7 +1,7 @@
 extends Node2D
 
 
-const ROCKET_VELOCITY = 160
+const ROCKET_VELOCITY = 190
 var moving = false
 
 func movingRocket(delta):

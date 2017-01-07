@@ -79,17 +79,17 @@ const NUMBER_OF_ROCKET_INSTANCES = 4
 const ROCKED_WIDTH = 4
 const ROCKED_HIGHT = 15
 
-var rocket1Position = Vector2(88, 88)
-var rocket2Position = Vector2(188, 88)
-var rocket3Position = Vector2(288, 88)
-var rocket4Position = Vector2(388, 88)
+var rocketsPositionOutOfView = Vector2(-64, -64)
+
+var rocket1Position = Vector2(-64, -64)
+var rocket2Position = Vector2(-64, -64)
+var rocket3Position = Vector2(-64, -64)
+var rocket4Position = Vector2(-64, -64)
 
 var rocket1Moving = false
 var rocket2Moving = false
 var rocket3Moving = false
 var rocket4Moving = false
-
-var rocketsPositionOutOfView = Vector2(88, 88)
 
 var rocketNamesArray = []
 var rocketMovingArray = []
@@ -181,6 +181,10 @@ func _ready():
 func _process(delta):
 	#SHELTER COLLISIONS WITH LASER BEAM
 	shelterProcess()
+	
+	rocketShelterProcess()
+
+	laserRocketProcess()
 
 	#INVADERS MOVING AND COLLISIONS WITH LASER BEAM
 	invadersProcess()
@@ -225,30 +229,31 @@ func _process(delta):
 			get_node(laserBeamName).set_pos(laserBeamPosition) #set laser position to the same position as ship position
 			shipLaserMoving = true
 			get_node("invadersSoundsPlayer").shot()
-		
-		if !rocket1Moving:
-			setPositionOfShootingInvader()
-			rocket1Position = shootingInvaderPosition
-			get_node(rocketMovingArray[0]).set_pos(rocket1Position)
-			rocket1Moving = true
-		
-		if !rocket2Moving:
-			setPositionOfShootingInvader()
-			rocket2Position = shootingInvaderPosition
-			get_node(rocketMovingArray[1]).set_pos(rocket2Position)
-			rocket2Moving = true
-		
-		if !rocket3Moving:
-			setPositionOfShootingInvader()
-			rocket3Position = shootingInvaderPosition
-			get_node(rocketMovingArray[2]).set_pos(rocket3Position)
-			rocket3Moving = true
-		
-		if !rocket4Moving:
-			setPositionOfShootingInvader()
-			rocket4Position = shootingInvaderPosition
-			get_node(rocketMovingArray[3]).set_pos(rocket4Position)
-			rocket4Moving = true
+			
+	if !rocket1Moving:
+		setPositionOfShootingInvader()
+		rocket1Position = shootingInvaderPosition
+		get_node(rocketMovingArray[0]).set_pos(rocket1Position)
+		rocket1Moving = true
+	
+	if !rocket2Moving:
+		setPositionOfShootingInvader()
+		rocket2Position = shootingInvaderPosition
+		get_node(rocketMovingArray[1]).set_pos(rocket2Position)
+		rocket2Moving = true
+	
+	if !rocket3Moving:
+		setPositionOfShootingInvader()
+		rocket3Position = shootingInvaderPosition
+		get_node(rocketMovingArray[2]).set_pos(rocket3Position)
+		rocket3Moving = true
+	
+	if !rocket4Moving:
+		setPositionOfShootingInvader()
+		rocket4Position = shootingInvaderPosition
+		get_node(rocketMovingArray[3]).set_pos(rocket4Position)
+		rocket4Moving = true
+
 
 	#for rocket in rocketMovingArray:
 	get_node(rocketMovingArray[0]).movingRocket(delta)
@@ -285,6 +290,20 @@ func colideWithWall(positionLaserBeam):
 
 func rocketColideWithWall(rocketPosition, rocketNumber):
 	if (rocketPosition.y > MARGIN_BOTTOM):
+		if rocketNumber == 0:
+			rocket1Moving=false
+		elif rocketNumber == 1:
+			rocket2Moving=false
+		elif rocketNumber == 2:
+			rocket3Moving=false
+		elif rocketNumber == 3:
+			rocket4Moving=false
+		return true;
+	else:
+		return false
+		
+func rocketColideWithShelter(rocketPosition, rocketNumber, shelterPosition):
+	if ( rocketPosition.x > shelterPosition.x - SHELTER_WIDTH/2) && (rocketPosition.x < shelterPosition.x+SHELTER_WIDTH/2) && (rocketPosition.y + ROCKED_HIGHT/2 > shelterPosition.y - SHELTER_HIGHT/2) && (rocketPosition.y + ROCKED_HIGHT/2 < shelterPosition.y + SHELTER_HIGHT/2):
 		if rocketNumber == 0:
 			rocket1Moving=false
 		elif rocketNumber == 1:
@@ -515,7 +534,32 @@ func wallRocketProcess():
 		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
 		swapDestoryedRocketWithNewRandom(3)
 
+#rocketColideWithShelter
+func rocketShelterProcess():
+	for i in range(4):
+		var someShelterPosition = get_node(allSheltersNames[i]).get_pos()
+		var poz = get_node(rocketMovingArray[0]).get_pos()
+		if rocketColideWithShelter(poz,0,someShelterPosition):
+			get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
+			swapDestoryedRocketWithNewRandom(0)
 
+		poz = get_node(rocketMovingArray[1]).get_pos()
+		if rocketColideWithShelter(poz,1,someShelterPosition):
+			get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
+			swapDestoryedRocketWithNewRandom(1)
+
+		poz = get_node(rocketMovingArray[2]).get_pos()
+		if rocketColideWithShelter(poz,2,someShelterPosition):
+			get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
+			swapDestoryedRocketWithNewRandom(2)
+
+		poz = get_node(rocketMovingArray[3]).get_pos()
+		if rocketColideWithShelter(poz,3,someShelterPosition):
+			get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
+			swapDestoryedRocketWithNewRandom(3)
+
+		
+		
 func setInvadersPositions():
 	var invaderPosition = Vector2(0, 0)
 	positionX = MARGIN_LEFT
@@ -613,6 +657,7 @@ func createListOfRandomMovingRockets():
 			brakuje = true
 		elif licznikDodanych == 4:
 			brakuje = false
+			
 func swapDestoryedRocketWithNewRandom(destroyed):
 	var wrzucilemNowa = false
 	var randomRocket
@@ -631,6 +676,42 @@ func swapDestoryedRocketWithNewRandom(destroyed):
 			wrzucilemNowa = true
 		else:
 			wrzucilemNowa = false
+
+func laserRocketCollision(rocketPosition, rocketNumber, laserBeamPosition):
+	if (laserBeamPosition.x - LASER_BEAM_WIDTH/2 < rocketPosition.x + ROCKED_WIDTH/2) && (laserBeamPosition.x - LASER_BEAM_WIDTH/2 > rocketPosition.x - ROCKED_WIDTH/2) && (laserBeamPosition.y - LASER_BEAM_HIGHT/2 < rocketPosition.y + ROCKED_HIGHT/2) && (laserBeamPosition.y - LASER_BEAM_HIGHT/2 > rocketPosition.y - ROCKED_HIGHT/2) || (laserBeamPosition.x + LASER_BEAM_WIDTH/2 > rocketPosition.x - ROCKED_WIDTH/2) && (laserBeamPosition.x + LASER_BEAM_WIDTH/2 < rocketPosition.x + ROCKED_WIDTH/2) && (laserBeamPosition.y - LASER_BEAM_HIGHT/2 < rocketPosition.y + ROCKED_HIGHT/2) && (laserBeamPosition.y - LASER_BEAM_HIGHT/2 > rocketPosition.y - ROCKED_HIGHT/2):
+		if rocketNumber == 0:
+			rocket1Moving=false
+		elif rocketNumber == 1:
+			rocket2Moving=false
+		elif rocketNumber == 2:
+			rocket3Moving=false
+		elif rocketNumber == 3:
+			rocket4Moving=false
+		return true;
+	else:
+		return false
+	
+func laserRocketProcess():
+	var laserPosition = get_node(laserBeamName).get_pos()
+	var poz = get_node(rocketMovingArray[0]).get_pos()
+	if laserRocketCollision(poz,0,laserPosition):
+		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(0)
+
+	poz = get_node(rocketMovingArray[1]).get_pos()
+	if laserRocketCollision(poz,1,laserPosition):
+		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(1)
+
+	poz = get_node(rocketMovingArray[2]).get_pos()
+	if laserRocketCollision(poz,2,laserPosition):
+		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(2)
+
+	poz = get_node(rocketMovingArray[3]).get_pos()
+	if laserRocketCollision(poz,3,laserPosition):
+		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(3)
 
 
 func _on_Main_Menu_pressed():
