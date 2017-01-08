@@ -136,8 +136,14 @@ var shootingInvaderPosition = Vector2(0, 0)
 const ePoints = 10
 const fPoints = 20
 const gPoints = 30
-var points = 0
+var mysteryPoints = [50, 100, 150, 300]
+#var points = 0
+#var highScore = 0
 
+var playSound1 = false
+var playSound2 = false
+var playSound3 = false
+var playSound4 = false
 
 func _ready():
 	
@@ -200,8 +206,13 @@ func _ready():
 	add_child(soundsPlayer)
 	set_process(true)
 	
-	
-
+	get_node("CurrentPoints").set_text("Current Points: " +str(get_node("/root/global").points))#  + str(points))
+	get_node("CurrentPoints").update()
+	get_node("HightScore").set_text("Hi-Score Points: " + str(get_node("/root/global").hiscore))#  + str(points))
+	get_node("HightScore").update()
+	get_node("ShipsLeft").set_text("Ships Left: " + str(get_node("/root/global").shipsLeft))
+	get_node("ShipsLeft").update()
+################################################ GLOWNA PETLA GRY ############################################
 func _process(delta):
 
 	shelterProcess()
@@ -220,18 +231,7 @@ func _process(delta):
 
 	mysteryProcess(delta)
 	
-	
-	if shipLaserBeamHitInvader:
-		get_node("invadersSoundsPlayer").invaderHit()
-	shipLaserBeamHitInvader = false
-	
-	if shipLaserBeamHitShelter:
-		get_node("invadersSoundsPlayer").invaderHit()
-	shipLaserBeamHitShelter = false
-	
-	if laserBeamHitTheWall:
-		get_node("invadersSoundsPlayer").invaderHit()
-	laserBeamHitTheWall = false
+	playAllSounds()
 		
 	get_node(laserBeamName).moving = shipLaserMoving
 	
@@ -257,6 +257,9 @@ func _process(delta):
 			get_node(laserBeamName).set_pos(laserBeamPosition) #set laser position to the same position as ship position
 			shipLaserMoving = true
 			get_node("invadersSoundsPlayer").shot()
+			
+			## RELOAD CURRENT SCENE
+			#get_tree().reload_current_scene()
 			
 	if !rocket1Moving:
 		setPositionOfShootingInvader()
@@ -291,15 +294,26 @@ func _process(delta):
 		
 	get_node(laserBeamName).movingLaserBeam(delta)
 	canStep = false
+	print("Zdobyte punkty:    " + str(get_node("/root/global").points))
+	
+	get_node("/root/global").checkIfYouAreHiScore()
+	get_node("CurrentPoints").set_text("Current Points: " +str(get_node("/root/global").points))#  + str(points))
+	get_node("CurrentPoints").update()
+	get_node("HightScore").set_text("Hi-Score Points: " +str(get_node("/root/global").hiscore))#  + str(points))
+	get_node("HightScore").update()
+	get_node("ShipsLeft").set_text("Ships Left: " + str(get_node("/root/global").shipsLeft))
+	get_node("ShipsLeft").update()
+	if get_node("/root/global").checkIfYouDied():
+		get_node("/root/global").points = 0
+		get_node("/root/global").shipsLeft = 3
+		get_tree().reload_current_scene()
 	
 #CHECK COLLISIONS WITH INVADERS
 func colide(invaderPosition, positionLaserBeam):
 	if ((positionLaserBeam.x > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x < invaderPosition.x+current_invader_width/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < invaderPosition.y + INVADERS_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > invaderPosition.y - INVADERS_HIGHT/2) ):
 		shipLaserMoving=false
-		#print("K")
 		return true
 	else:
-		#print("N")
 		return false
 #CHECK COLLISIONS WITH SHELTERS
 func colideWithShelter(shelterPosition, positionLaserBeam):
@@ -364,25 +378,25 @@ func rokcetShipProcess():
 	if rocketColideWithShip(poz,0,shipPosition):
 		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
 		swapDestoryedRocketWithNewRandom(0)
-		print("Ship Destroyed")
+		get_node("/root/global").subtractShip()
 
 	poz = get_node(rocketMovingArray[1]).get_pos()
 	if rocketColideWithShip(poz,1,shipPosition):
 		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
 		swapDestoryedRocketWithNewRandom(1)
-		print("Ship Destroyed")
+		get_node("/root/global").subtractShip()
 
 	poz = get_node(rocketMovingArray[2]).get_pos()
 	if rocketColideWithShip(poz,2,shipPosition):
 		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
 		swapDestoryedRocketWithNewRandom(2)
-		print("Ship Destroyed")
+		get_node("/root/global").subtractShip()
 
 	poz = get_node(rocketMovingArray[3]).get_pos()
 	if rocketColideWithShip(poz,3,shipPosition):
 		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
 		swapDestoryedRocketWithNewRandom(3)
-		print("Ship Destroyed")
+		get_node("/root/global").subtractShip()
 		
 func waitForStep():
 	canStep = true
@@ -464,7 +478,6 @@ func shelterProcess():
 			
 func invadersProcess():
 	for i in range(55):
-		#print(points)
 		var laserPos = get_node(laserBeamName).get_pos()
 		var someInvader = get_node(allInvadersNames[i]).get_pos()
 		var isAlive = get_node(allInvadersNames[i]).isAlive
@@ -483,7 +496,7 @@ func invadersProcess():
 					shipLaserBeamHitInvader = true
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
-					points = points + gPoints
+					addPoints(gPoints)
 					break
 			elif i>10 && i<22:#F
 				if someInvader.x + INVADERS_F_WIDTH/2 > MARGIN_RIGHT:
@@ -500,7 +513,7 @@ func invadersProcess():
 					#get_node("invadersSoundsPlayer").invaderHit()
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
-					points = points + fPoints
+					addPoints(fPoints)
 					break
 			elif i>21 && i<33:#F
 				if someInvader.x + INVADERS_F_WIDTH/2 > MARGIN_RIGHT:
@@ -517,7 +530,7 @@ func invadersProcess():
 					#get_node("invadersSoundsPlayer").invaderHit()
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
-					points = points + fPoints
+					addPoints(fPoints)
 					break
 			elif i>32 && i<44:#E
 				if someInvader.x + INVADERS_E_WIDTH/2 > MARGIN_RIGHT:
@@ -535,7 +548,7 @@ func invadersProcess():
 					#get_node("invadersSoundsPlayer").invaderHit()
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
-					points = points + ePoints
+					addPoints(ePoints)
 					break
 			elif i>43 && i<55:#E
 				if someInvader.x + INVADERS_E_WIDTH/2 > MARGIN_RIGHT:
@@ -552,7 +565,7 @@ func invadersProcess():
 					#get_node("invadersSoundsPlayer").invaderHit()
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
-					points = points + ePoints
+					addPoints(ePoints)
 					break
 					
 			if canDoVerticalStep:
@@ -562,8 +575,6 @@ func invadersProcess():
 				wasVerticalStep = false
 			else:
 				wasVerticalStep = true
-			
-		
 		if canStep && i == 10 && stepNumber==0:
 			get_node("invadersSoundsPlayer").invader1()
 		if canStep && i == 21 && stepNumber==1:
@@ -572,6 +583,7 @@ func invadersProcess():
 			get_node("invadersSoundsPlayer").invader3()
 		if canStep && i == 43 && stepNumber==3:
 			get_node("invadersSoundsPlayer").invader4()
+
 
 func wallProcess():
 	var laserPos = get_node(laserBeamName).get_pos()
@@ -676,8 +688,7 @@ func createListOfRockets():
 		rocketInstance.set_name(rocketName)
 		add_child(rocketInstance)
 		get_node(rocketName).set_pos(rocketsPositionOutOfView)
-		print(i)
-	# rocket 2
+
 	for i in range(4):
 		var rocketName = "2" + str(i)
 		rocketNamesArray.push_back(rocketName)
@@ -685,8 +696,7 @@ func createListOfRockets():
 		rocketInstance.set_name(rocketName)
 		add_child(rocketInstance)
 		get_node(rocketName).set_pos(rocketsPositionOutOfView)
-		print(i)
-	# rocket 3
+
 	for i in range(4):
 		var rocketName = "3" + str(i)
 		rocketNamesArray.push_back(rocketName)
@@ -694,14 +704,7 @@ func createListOfRockets():
 		rocketInstance.set_name(rocketName)
 		add_child(rocketInstance)
 		get_node(rocketName).set_pos(rocketsPositionOutOfView)
-		print(i)
-	
-	var y = 0
-	for r in rocketNamesArray:
-		#print(str(y) + "  -> "+r)
-		y= y + 1
-	#print ("-------------------")
-		
+
 func createListOfRandomMovingRockets():
 	randomize()
 	var randomRocket = randi()%12
@@ -804,6 +807,7 @@ func mysteryProcess(delta):
 		get_node("mystery").moving = false
 		mysteryRun = false
 		get_node("mystery").set_pos(mysteryPositionOutOfView)
+		addPoints(mysteryPoints[randomFromZeroTo(4)])
 	else:
 		if !get_node("mystery").moving:
 			if mysteryRun:
@@ -818,12 +822,36 @@ func mysteryProcess(delta):
 		
 	get_node("mystery").movingMastery(delta)
 	
-
+func playAllSounds():
+	if playSound1:
+		get_node("invadersSoundsPlayer").invader1()
+	if playSound2:
+		get_node("invadersSoundsPlayer").invader2()
+	if playSound3:
+		get_node("invadersSoundsPlayer").invader3()
+	if playSound4:
+		get_node("invadersSoundsPlayer").invader4()
+	if shipLaserBeamHitInvader:
+		get_node("invadersSoundsPlayer").invaderHit()
+	if shipLaserBeamHitShelter:
+		get_node("invadersSoundsPlayer").invaderHit()
+	if laserBeamHitTheWall:
+		get_node("invadersSoundsPlayer").invaderHit()
+	
+	laserBeamHitTheWall = false
+	shipLaserBeamHitInvader = false
+	shipLaserBeamHitShelter = false
 func waitForMystery():
 	mysteryRun = true
 
-
-
+func addPoints(newPoints):
+	get_node("/root/global").points = get_node("/root/global").points + newPoints
+	
+func randomFromZeroTo(upperLimit):
+	#randomize()
+	var randomNumber = randi()%upperLimit
+	return randomNumber
+	
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
 	

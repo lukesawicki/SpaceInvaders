@@ -1,16 +1,17 @@
-[gd_scene load_steps=9 format=1]
+[gd_scene load_steps=10 format=1]
 
 [ext_resource path="res://scripts/Gameplay.gd" type="Script" id=1]
 [ext_resource path="res://backgrounds/Gameplay.png" type="Texture" id=2]
-[ext_resource path="res://buttons/BackNormal.png" type="Texture" id=3]
-[ext_resource path="res://buttons/BackPressed.png" type="Texture" id=4]
-[ext_resource path="res://buttons/EndingNormal.png" type="Texture" id=5]
-[ext_resource path="res://buttons/EndingPressed.png" type="Texture" id=6]
-[ext_resource path="res://sounds/invader_hit.wav" type="Sample" id=7]
+[ext_resource path="res://fonts/Roboto Thin 34px.fnt" type="BitmapFont" id=3]
+[ext_resource path="res://buttons/BackNormal.png" type="Texture" id=4]
+[ext_resource path="res://buttons/BackPressed.png" type="Texture" id=5]
+[ext_resource path="res://buttons/EndingNormal.png" type="Texture" id=6]
+[ext_resource path="res://buttons/EndingPressed.png" type="Texture" id=7]
+[ext_resource path="res://sounds/invader_hit.wav" type="Sample" id=8]
 
 [sub_resource type="SampleLibrary" id=1]
 
-samples/invader_hit = { "db":0.0, "pitch":1.0, "sample":ExtResource( 7 ) }
+samples/invader_hit = { "db":0.0, "pitch":1.0, "sample":ExtResource( 8 ) }
 
 [node name="GameplayNode2D" type="Node2D"]
 
@@ -23,23 +24,26 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = -1.0
-margin/top = 2.0
+margin/top = 1.0
 margin/right = 1023.0
-margin/bottom = 898.0
+margin/bottom = 897.0
 texture = ExtResource( 2 )
 stretch_mode = 0
 
-[node name="GamePlay" type="Label" parent="."]
+[node name="CurrentPoints" type="Label" parent="."]
 
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 40.0
-margin/bottom = 14.0
-text = "Gameplay"
+margin/left = 48.0
+margin/top = 16.0
+margin/right = 292.0
+margin/bottom = 52.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0.96875, 0, 1, 1 )
+text = "Current Points: 0"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
@@ -50,15 +54,15 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 62.0
-margin/top = 653.0
-margin/right = 182.0
-margin/bottom = 717.0
+margin/left = 305.0
+margin/top = 642.0
+margin/right = 425.0
+margin/bottom = 706.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-textures/normal = ExtResource( 3 )
-textures/pressed = ExtResource( 4 )
+textures/normal = ExtResource( 4 )
+textures/pressed = ExtResource( 5 )
 
 [node name="Exit Game" type="TextureButton" parent="."]
 
@@ -73,8 +77,8 @@ margin/bottom = 708.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-textures/normal = ExtResource( 5 )
-textures/pressed = ExtResource( 6 )
+textures/normal = ExtResource( 6 )
+textures/pressed = ExtResource( 7 )
 
 [node name="Exit Game1" type="TextureButton" parent="."]
 
@@ -89,8 +93,8 @@ margin/bottom = 708.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-textures/normal = ExtResource( 5 )
-textures/pressed = ExtResource( 6 )
+textures/normal = ExtResource( 6 )
+textures/pressed = ExtResource( 7 )
 
 [node name="SamplePlayer2D" type="SamplePlayer2D" parent="."]
 
@@ -102,6 +106,58 @@ params/attenuation/distance_exp = 1.0
 config/polyphony = 4
 config/samples = SubResource( 1 )
 config/pitch_random = 0.0
+
+[node name="HightScore" type="Label" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 354.0
+margin/top = 17.0
+margin/right = 613.0
+margin/bottom = 53.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 1, 0, 0.84375, 1 )
+text = "Hi-Score Points: 0"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="ShipsLeft" type="Label" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 22.0
+margin/top = 710.0
+margin/right = 202.0
+margin/bottom = 746.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 0, 0.9375, 1 )
+custom_colors/font_color_shadow = Color( 1, 1, 1, 1 )
+text = "Ships Left: 3"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Label" type="Label" parent="ShipsLeft"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 381.0
+margin/top = -638.0
+margin/right = 619.0
+margin/bottom = -602.0
+custom_fonts/font = ExtResource( 3 )
+text = "Version 0.1 Beta"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
 
 [connection signal="pressed" from="Main Menu" to="." method="_on_Main_Menu_pressed"]
 

@@ -1,11 +1,12 @@
 extends Node
 
 var current_scene = null
-
+var points = 0
+var hiscore = 66
+var shipsLeft = 3
 func _ready():
 	var root = get_tree().get_root()
 	current_scene = root.get_child( root.get_child_count() -1 )
-	
 	
 func goto_scene(path):
 	# This function will usually be called from a signal callback,
@@ -16,8 +17,15 @@ func goto_scene(path):
 	# The way around this is deferring the load to a later time, when
 	# it is ensured that no code from the current scene is running:
 	call_deferred("_deffered_goto_scene", path)
-
-
+func checkIfYouAreHiScore():
+	if(points > hiscore):
+		hiscore = points
+func subtractShip():
+	shipsLeft = shipsLeft - 1
+func addShip():
+	shipsLeft = shipsLeft + 1
+func checkIfYouDied():
+	return shipsLeft == 0
 func _deffered_goto_scene(path):
 	# Immediately free the current scene,
 	# there is no risk here.
