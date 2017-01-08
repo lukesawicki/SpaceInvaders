@@ -47,8 +47,10 @@ var allSheltersNames = []
 
 # SHIP PROPERTIES
 
-var terranShipScene = preload("res://scenes/TerranShipScene.tscn")
+var SHIP_WIDTH = 39
+var SHIP_HIGHT = 24
 
+var terranShipScene = preload("res://scenes/TerranShipScene.tscn")
 var terranShipp
 
 # LASER BEAM AND ROCKETS PROPERTIES
@@ -179,15 +181,16 @@ func _ready():
 	
 
 func _process(delta):
-	#SHELTER COLLISIONS WITH LASER BEAM
+
 	shelterProcess()
 	
 	rocketShelterProcess()
 
 	laserRocketProcess()
 
-	#INVADERS MOVING AND COLLISIONS WITH LASER BEAM
 	invadersProcess()
+	
+	rokcetShipProcess()
 	
 	wallProcess()
 	
@@ -315,7 +318,47 @@ func rocketColideWithShelter(rocketPosition, rocketNumber, shelterPosition):
 		return true;
 	else:
 		return false
+#rocketship
+func rocketColideWithShip(rocketPosition, rocketNumber, shipPosition):
+	if (rocketPosition.x > shipPosition.x - SHIP_WIDTH/2) && (rocketPosition.x < shipPosition.x + SHIP_WIDTH/2) && (rocketPosition.y + ROCKED_HIGHT/2 > shipPosition.y - SHIP_HIGHT/2) && (rocketPosition.y + ROCKED_HIGHT/2 < shipPosition.y + SHIP_HIGHT/2):
+		if rocketNumber == 0:
+			rocket1Moving=false
+		elif rocketNumber == 1:
+			rocket2Moving=false
+		elif rocketNumber == 2:
+			rocket3Moving=false
+		elif rocketNumber == 3:
+			rocket4Moving=false
+		return true;
+	else:
+		return false
+#rocketColideWithShip(rocketPosition, rocketNumber, shipPosition):
+func rokcetShipProcess():
+	var shipPosition = get_node("myShip").get_pos()
+	var poz = get_node(rocketMovingArray[0]).get_pos()
+	if rocketColideWithShip(poz,0,shipPosition):
+		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(0)
+		print("Ship Destroyed")
 
+	poz = get_node(rocketMovingArray[1]).get_pos()
+	if rocketColideWithShip(poz,1,shipPosition):
+		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(1)
+		print("Ship Destroyed")
+
+	poz = get_node(rocketMovingArray[2]).get_pos()
+	if rocketColideWithShip(poz,2,shipPosition):
+		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(2)
+		print("Ship Destroyed")
+
+	poz = get_node(rocketMovingArray[3]).get_pos()
+	if rocketColideWithShip(poz,3,shipPosition):
+		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(3)
+		print("Ship Destroyed")
+		
 func waitForStep():
 	canStep = true
 	stepNumber = stepNumber + 1
