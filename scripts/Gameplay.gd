@@ -31,6 +31,16 @@ var current_invader_width = 24
 var invaders_g = preload("res://scenes/G_Invaders.tscn")
 var invaders_f = preload("res://scenes/F_Invaders.tscn")
 var invaders_e = preload("res://scenes/E_Invaders.tscn")
+# MYSTERY
+var MYSTERY_WIDTH = 48
+var MYSTERY_HIGHT = 24
+var MYSTERY_Y_POSITION = 191
+var mysteryPositionOutOfView = Vector2(256, -512)
+var mysteryInvader = preload("res://scenes/MysteryScene.tscn")
+var mysteryRun = false
+var mysteryTimer = null
+var mysteryDelayTime = 0.5
+
 
 var allInvadersNames = []
 var invaderPositionToCheck
@@ -164,6 +174,11 @@ func _ready():
 	#setInvadersPositions()
 	initializeInvaders()
 	wasVerticalStep = false
+	
+	var mysteryInvaderInstance = mysteryInvader.instance()
+	mysteryInvaderInstance.set_name("mystery")
+	add_child(mysteryInvaderInstance)
+	
 
 	#OTHER
 	timer = Timer.new()
@@ -172,6 +187,13 @@ func _ready():
 	timer.connect("timeout", self, "waitForStep")
 	timer.start()
 	add_child(timer)
+	
+	mysteryTimer = Timer.new()
+	mysteryTimer.set_wait_time(mysteryDelayTime)
+	mysteryTimer.set_active(true)
+	mysteryTimer.connect("timeout", self, "waitForMystery")
+	mysteryTimer.start()
+	add_child(mysteryTimer)
 	
 	var soundsPlayer = player.instance()
 	soundsPlayer.set_name("invadersSoundsPlayer")
@@ -195,6 +217,9 @@ func _process(delta):
 	wallProcess()
 	
 	wallRocketProcess()
+
+	mysteryProcess(delta)
+	
 	
 	if shipLaserBeamHitInvader:
 		get_node("invadersSoundsPlayer").invaderHit()
@@ -365,7 +390,7 @@ func waitForStep():
 	if( stepNumber == 5):
 		stepNumber = 0
 	
-	#print("waitForStep")
+
 	
 func setPositionOfShootingInvader():
 	var alive = false
@@ -755,6 +780,48 @@ func laserRocketProcess():
 	if laserRocketCollision(poz,3,laserPosition):
 		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
 		swapDestoryedRocketWithNewRandom(3)
+
+func mysteryWallColide():
+	var mysteryPosition = get_node("mystery").get_pos()
+	if(mysteryPosition.x < MARGIN_LEFT + MYSTERY_WIDTH/2):
+		return true
+	if(mysteryPosition.x >  MARGIN_RIGHT - MYSTERY_WIDTH/2):
+		return true
+
+func mysteryLaserColide():
+	var positionLaserBeam = get_node(laserBeamName).get_pos()
+	var mysteryPosition = get_node("mystery").get_pos()
+	if ( positionLaserBeam.x > mysteryPosition.x - MYSTERY_WIDTH/2) && (positionLaserBeam.x < mysteryPosition.x+MYSTERY_WIDTH/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < mysteryPosition.y + MYSTERY_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > mysteryPosition.y - MYSTERY_HIGHT/2):
+		return true
+	else:
+		return false
+func mysteryProcess(delta):
+	if mysteryWallColide():
+		get_node("mystery").moving = false
+		mysteryRun = false
+		get_node("mystery").set_pos(mysteryPositionOutOfView)
+	elif mysteryLaserColide():
+		get_node("mystery").moving = false
+		mysteryRun = false
+		get_node("mystery").set_pos(mysteryPositionOutOfView)
+	else:
+		if !get_node("mystery").moving:
+			if mysteryRun:
+				get_node("mystery").drawIfMovingAndDirection()
+				if get_node("mystery").velocity < 0:
+					get_node("mystery").set_pos(Vector2(MARGIN_RIGHT - ((MYSTERY_WIDTH/2)+2), 512))
+				elif get_node("mystery").velocity > 0:
+					get_node("mystery").set_pos(Vector2(MARGIN_LEFT + ((MYSTERY_WIDTH/2)+2), 512))
+					
+				
+				get_node("mystery").moving = true
+		
+	get_node("mystery").movingMastery(delta)
+	
+
+func waitForMystery():
+	mysteryRun = true
+
 
 
 func _on_Main_Menu_pressed():

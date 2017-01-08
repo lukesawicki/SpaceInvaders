@@ -17,6 +17,7 @@ var SCREEN_HIGHT = 768
 
 var shipVelocityVector = Vector2()
 var moving = false
+var movingRight = true
 
 func movingShip(delta):
 	if(Input.is_action_pressed("ship_left")):
