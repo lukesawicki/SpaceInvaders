@@ -823,14 +823,6 @@ func mysteryProcess(delta):
 	get_node("mystery").movingMastery(delta)
 	
 func playAllSounds():
-	if playSound1:
-		get_node("invadersSoundsPlayer").invader1()
-	if playSound2:
-		get_node("invadersSoundsPlayer").invader2()
-	if playSound3:
-		get_node("invadersSoundsPlayer").invader3()
-	if playSound4:
-		get_node("invadersSoundsPlayer").invader4()
 	if shipLaserBeamHitInvader:
 		get_node("invadersSoundsPlayer").invaderHit()
 	if shipLaserBeamHitShelter:
