@@ -1,7 +1,5 @@
 extends Node2D
 
-var isShootPressed = false
-
 # ENVIRONMENT
 
 const MARGIN_LEFT = 0
@@ -17,10 +15,7 @@ const SPACE_BETWEEN_E = 12
 
 var screen_size
 
-# INVADERS AND SHELTER PROPERTIES AND OTHER
-
-
-
+#INVADERS
 const INVADERS_G_WIDTH = 24
 const INVADERS_F_WIDTH = 34
 const INVADERS_E_WIDTH = 36
@@ -31,25 +26,40 @@ var current_invader_width = 24
 var invaders_g = preload("res://scenes/G_Invaders.tscn")
 var invaders_f = preload("res://scenes/F_Invaders.tscn")
 var invaders_e = preload("res://scenes/E_Invaders.tscn")
+
+var allInvadersNames = []
+
+var STEP_LEFT =  -6
+var STEP_RIGHT = 6
+var STEP = STEP_RIGHT
+
+var stepNumber = 0
+var verticalStepNumber = 1
+var canDoVerticalStep = false
+var wasVerticalStep = true
+
+var positionX = MARGIN_LEFT
+var positionY = MARGIN_TOP + INVADERS_HIGHT
+
+var invaderWhichAreShootingNow = randi()%55
+var shootingInvaderPosition = Vector2(0, 0)
+
 # MYSTERY
 var MYSTERY_WIDTH = 48
 var MYSTERY_HIGHT = 24
-var MYSTERY_Y_POSITION = 191
+var MYSTERY_Y_POSITION = 191  # NIE UZYWANA
 var mysteryPositionOutOfView = Vector2(256, -512)
 var mysteryInvader = preload("res://scenes/MysteryScene.tscn")
 var mysteryRun = false
 var mysteryTimer = null
 var mysteryDelayTime = 0.5
 
-
-var allInvadersNames = []
-var invaderPositionToCheck
-
+#SHELTERS
 var shelter = preload("res://scenes/ShelterScene.tscn")
 
 const SHELTER_WIDTH = 66
 const SHELTER_HIGHT = 48
-const SHELTER_ROW_X_POSITION = 50
+
 const SHTELER_ROW_Y_POSITION = 600
 const SPACE_BETWEEN_SHELTERS = 69
 
@@ -62,19 +72,13 @@ var SHIP_HIGHT = 24
 
 var terranShipScene = preload("res://scenes/TerranShipScene.tscn")
 var terranShipp
+var shipLaserMoving = false
 
-# LASER BEAM AND ROCKETS PROPERTIES
-
-#****laser beam
-const NUMBER_OF_LASER_BEAM_INSTANCES = 1
+#LASER BEAM
 
 const LASER_BEAM_WIDTH = 4
 const LASER_BEAM_HIGHT = 15
 
-var laserBeamCount = 0
-var laserBeamArray = []
-var temporaryLaserBeam
-var shipLaserMoving = false
 var laserBeamPosition = Vector2(1024, 1024)
 var laserBeamPositionOutOfView = Vector2(1024, 1024)
 
@@ -85,18 +89,18 @@ var laserBeam = preload("res://scenes/LaserBeamShootScene.tscn")
 var laserBeamName
 var laserBeamHitTheWall = false
 
-#****rockets
+#ROCKETS
 const NUMBER_OF_ROCKET_INSTANCES = 4
 
 const ROCKED_WIDTH = 4
 const ROCKED_HIGHT = 15
 
-var rocketsPositionOutOfView = Vector2(-64, -64)
-
 var rocket1Position = Vector2(-64, -64)
 var rocket2Position = Vector2(-64, -64)
 var rocket3Position = Vector2(-64, -64)
 var rocket4Position = Vector2(-64, -64)
+
+var rocketsPositionOutOfView = Vector2(-64, -64)
 
 var rocket1Moving = false
 var rocket2Moving = false
@@ -110,118 +114,50 @@ var rocketScene1 = preload("res://scenes/InvaderRocket1Scene.tscn")
 var rocketScene2 = preload("res://scenes/InvaderRocket2Scene.tscn")
 var rocketScene3 = preload("res://scenes/InvaderRocket3Scene.tscn")
 
-# OTHER VARIABLES
-
-var player = preload("res://scenes/AllSoundsPlayer.tscn")
-var stopCheckingCollisions
-
-var timer = null
-var stepDelayTime = 0.2
-var canStep = true
-#var STEP = 6
-
-
-var STEP_LEFT =  -6
-var STEP_RIGHT = 6
-var STEP = STEP_RIGHT
-
-var stepNumber = 0
-var verticalStepNumber = 1
-var canDoVerticalStep = false
-var wasVerticalStep = true
-var youDied = false
-
-var positionX = MARGIN_LEFT
-var positionY = MARGIN_TOP + INVADERS_HIGHT
-
-# INVADERS SHOOTING
-var invaderWhichAreShootingNow = randi()%55
-var shootingInvaderPosition = Vector2(0, 0)
-
 #GAMEPLAY
 const ePoints = 10
 const fPoints = 20
 const gPoints = 30
 var mysteryPoints = [50, 100, 150, 300]
-#var points = 0
-#var highScore = 0
+
+#OTHER VARIABLES
+
+var player = preload("res://scenes/AllSoundsPlayer.tscn")
+
+var timer = null
+var stepDelayTime = 0.2
+var canStep = true
 
 var playSound1 = false
 var playSound2 = false
 var playSound3 = false
 var playSound4 = false
 
-var mostRightInvaderPosition = Vector2(0,0)
-var mostDownInvaderPosition = Vector2(0,0)
-
 func _ready():
+	initializeShelters()
 	
-	#variables which are using to set start position all invaders
-	var shelterPosition = Vector2(0, SHTELER_ROW_Y_POSITION)
-	var shelterTemporaryPositionX = 0
-	for i in range(4):
-			var shelterInstance = shelter.instance()
-			shelterInstance.set_name("Shelter" + str(i))
-			add_child(shelterInstance)
-			shelterTemporaryPositionX = shelterTemporaryPositionX + SHELTER_WIDTH + SPACE_BETWEEN_SHELTERS
-			shelterPosition.x = shelterTemporaryPositionX
-			get_node("Shelter" + str(i)).set_pos(shelterPosition)
-			allSheltersNames.push_back("Shelter" + str(i))
-
-	#Create ship instance and 
-	terranShipp = terranShipScene.instance()
-	terranShipp.set_name("myShip")
-	add_child(terranShipp)
+	initializeTerranShip()
 	
-	#Create laser beam instances:
-
-	var laserBeamInstance = laserBeam.instance()
-	laserBeamInstance.set_name("LaserBeam")
-	add_child(laserBeamInstance)
-	get_node("LaserBeam").set_pos(laserBeamPositionOutOfView)
-	laserBeamName = "LaserBeam"
-	
-	#Create rockets instances
+	initializeLaserBeam()
 	
 	createListOfRockets()
-	createListOfRandomMovingRockets()
 	
-	#setInvadersPositions()
+	createListOfRandomMovingRockets()
+
 	initializeInvaders()
+	
+	initializeMysteryShip()
+	
+	initializeTimers()
+
+	initializeSoundPlayer()
+	
+	initializeGraphicalUserInterface()
+	
 	wasVerticalStep = false
 	
-	var mysteryInvaderInstance = mysteryInvader.instance()
-	mysteryInvaderInstance.set_name("mystery")
-	add_child(mysteryInvaderInstance)
-	
 
-	#OTHER
-	timer = Timer.new()
-	timer.set_wait_time(stepDelayTime)
-	timer.set_active(true)
-	timer.connect("timeout", self, "waitForStep")
-	timer.start()
-	add_child(timer)
-	
-	mysteryTimer = Timer.new()
-	mysteryTimer.set_wait_time(mysteryDelayTime)
-	mysteryTimer.set_active(true)
-	mysteryTimer.connect("timeout", self, "waitForMystery")
-	mysteryTimer.start()
-	add_child(mysteryTimer)
-	
-	var soundsPlayer = player.instance()
-	soundsPlayer.set_name("invadersSoundsPlayer")
-	add_child(soundsPlayer)
-	set_process(true)
-	
-	get_node("CurrentPoints").set_text("Current Points: " +str(get_node("/root/global").points))#  + str(points))
-	get_node("CurrentPoints").update()
-	get_node("HightScore").set_text("Hi-Score Points: " + str(get_node("/root/global").hiscore))#  + str(points))
-	get_node("HightScore").update()
-	get_node("ShipsLeft").set_text("Ships Left: " + str(get_node("/root/global").shipsLeft))
-	get_node("ShipsLeft").update()
-################################################ GLOWNA PETLA GRY ############################################
+################################ GLOWNA PETLA GRY ################################
 func _process(delta):
 
 	shelterProcess()
@@ -254,12 +190,6 @@ func _process(delta):
 	
 	if Input.is_action_pressed("ship_shoot"):
 		laserBeamPosition = get_node(laserBeamName).get_pos()
-
-		rocket1Position = get_node(rocketMovingArray[0]).get_pos()
-		rocket2Position = get_node(rocketMovingArray[1]).get_pos()
-		rocket3Position = get_node(rocketMovingArray[2]).get_pos()
-		rocket4Position = get_node(rocketMovingArray[3]).get_pos()
-				
 		if !shipLaserMoving:
 			laserBeamPosition.y = get_node("myShip").get_pos().y
 			laserBeamPosition.x = get_node("myShip").get_pos().x
@@ -303,20 +233,120 @@ func _process(delta):
 		
 	get_node(laserBeamName).movingLaserBeam(delta)
 	canStep = false
-	#print("Zdobyte punkty:    " + str(get_node("/root/global").points))
 	
-	get_node("/root/global").checkIfYouAreHiScore()
-	get_node("CurrentPoints").set_text("Current Points: " +str(get_node("/root/global").points))#  + str(points))
-	get_node("CurrentPoints").update()
-	get_node("HightScore").set_text("Hi-Score Points: " +str(get_node("/root/global").hiscore))#  + str(points))
-	get_node("HightScore").update()
-	get_node("ShipsLeft").set_text("Ships Left: " + str(get_node("/root/global").shipsLeft))
-	get_node("ShipsLeft").update()
-	if get_node("/root/global").checkIfYouDied():
-		get_node("/root/global").points = 0
-		get_node("/root/global").shipsLeft = 3
-		get_tree().reload_current_scene()
+	updateGraphicalUserInterface()
 	
+################################ INVADERS PROCESS ################################
+func invadersProcess():
+	for i in range(55):
+		var laserPos = get_node(laserBeamName).get_pos()
+		var someInvader = get_node(allInvadersNames[i]).get_pos()
+		var isAlive = get_node(allInvadersNames[i]).isAlive
+		if isAlive:
+			if i < 11:#G
+				if invaderColideRightWall(someInvader.x, INVADERS_G_WIDTH):
+					canStep = false
+					canDoVerticalStep = true
+					verticalStepNumber = verticalStepNumber + 1
+					wasVerticalStep = true
+				if canStep && stepNumber==4:
+					get_node(allInvadersNames[i]).step(STEP)
+				current_invader_width = INVADERS_G_WIDTH
+				if colide(someInvader, laserPos):
+					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+					shipLaserBeamHitInvader = true
+					get_node(allInvadersNames[i]).set_hidden(true)
+					get_node(allInvadersNames[i]).isAlive = false
+					addPoints(gPoints)
+					break
+			elif i>10 && i<22:#F
+				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH):
+					canStep = false
+					canDoVerticalStep = true
+					verticalStepNumber = verticalStepNumber + 1
+					wasVerticalStep = true
+				if canStep && stepNumber==3:
+					get_node(allInvadersNames[i]).step(STEP)
+				current_invader_width = INVADERS_F_WIDTH
+				if colide(someInvader, laserPos):
+					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+					shipLaserBeamHitInvader = true
+					#get_node("invadersSoundsPlayer").invaderHit()
+					get_node(allInvadersNames[i]).set_hidden(true)
+					get_node(allInvadersNames[i]).isAlive = false
+					addPoints(fPoints)
+					break
+			elif i>21 && i<33:#F
+				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH):
+					canStep = false
+					canDoVerticalStep = true
+					verticalStepNumber = verticalStepNumber + 1
+					wasVerticalStep = true
+				if canStep && stepNumber==2:
+					get_node(allInvadersNames[i]).step(STEP)
+				current_invader_width = INVADERS_F_WIDTH
+				if colide(someInvader, laserPos):
+					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+					shipLaserBeamHitInvader = true
+					#get_node("invadersSoundsPlayer").invaderHit()
+					get_node(allInvadersNames[i]).set_hidden(true)
+					get_node(allInvadersNames[i]).isAlive = false
+					addPoints(fPoints)
+					break
+			elif i>32 && i<44:#E
+				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH):
+					canStep = false
+					canDoVerticalStep = true
+					verticalStepNumber = verticalStepNumber + 1
+					wasVerticalStep = true
+				if canStep && stepNumber==1:
+					get_node(allInvadersNames[i]).step(STEP)
+				current_invader_width = INVADERS_E_WIDTH
+				#get_node(allInvadersNames[i]).step()
+				if colide(someInvader, laserPos):
+					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+					shipLaserBeamHitInvader = true
+					#get_node("invadersSoundsPlayer").invaderHit()
+					get_node(allInvadersNames[i]).set_hidden(true)
+					get_node(allInvadersNames[i]).isAlive = false
+					addPoints(ePoints)
+					break
+			elif i>43 && i<55:#E
+				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH):
+					canStep = false
+					canDoVerticalStep = true
+					verticalStepNumber = verticalStepNumber + 1
+				if canStep && stepNumber==0:
+					get_node(allInvadersNames[i]).step(STEP)
+				current_invader_width = INVADERS_E_WIDTH
+				#get_node(allInvadersNames[i]).step()
+				if colide(someInvader, laserPos):
+					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+					shipLaserBeamHitInvader = true
+					#get_node("invadersSoundsPlayer").invaderHit()
+					get_node(allInvadersNames[i]).set_hidden(true)
+					get_node(allInvadersNames[i]).isAlive = false
+					addPoints(ePoints)
+					break
+					
+			if canDoVerticalStep:
+				setInvadersPositions()
+				canDoVerticalStep = false
+				canStep = true
+				wasVerticalStep = false
+			else:
+				wasVerticalStep = true
+		if canStep && i == 10 && stepNumber==0:
+			get_node("invadersSoundsPlayer").invader1()
+		if canStep && i == 21 && stepNumber==1:
+			get_node("invadersSoundsPlayer").invader2()
+		if canStep && i == 32 && stepNumber==2:
+			get_node("invadersSoundsPlayer").invader3()
+		if canStep && i == 43 && stepNumber==3:
+			get_node("invadersSoundsPlayer").invader4()
+			
+func invaderColideRightWall(invaderPositionX, invaderWidth):
+	return invaderPositionX + invaderWidth/2 > MARGIN_RIGHT
 #CHECK COLLISIONS WITH INVADERS
 func colide(invaderPosition, positionLaserBeam):
 	if ((positionLaserBeam.x > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x < invaderPosition.x+current_invader_width/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < invaderPosition.y + INVADERS_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > invaderPosition.y - INVADERS_HIGHT/2) ):
@@ -413,11 +443,8 @@ func waitForStep():
 	if( stepNumber == 5):
 		stepNumber = 0
 	
-
-	
 func setPositionOfShootingInvader():
 	var alive = false
-	
 	while !alive:
 		randomize()
 		invaderWhichAreShootingNow = randi()%55
@@ -484,118 +511,6 @@ func shelterProcess():
 			shipLaserBeamHitShelter=true
 			get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 			break
-			
-func invadersProcess():
-	for i in range(55):
-		var laserPos = get_node(laserBeamName).get_pos()
-		var someInvader = get_node(allInvadersNames[i]).get_pos()
-		var isAlive = get_node(allInvadersNames[i]).isAlive
-		if isAlive:
-			if i < 11:#G
-				if someInvader.x + INVADERS_G_WIDTH/2 > MARGIN_RIGHT:
-					canStep = false
-					canDoVerticalStep = true
-					verticalStepNumber = verticalStepNumber + 1
-					wasVerticalStep = true
-				if canStep && stepNumber==4:
-					get_node(allInvadersNames[i]).step(STEP)
-				current_invader_width = INVADERS_G_WIDTH
-				if colide(someInvader, laserPos):
-					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-					shipLaserBeamHitInvader = true
-					get_node(allInvadersNames[i]).set_hidden(true)
-					get_node(allInvadersNames[i]).isAlive = false
-					addPoints(gPoints)
-					break
-			elif i>10 && i<22:#F
-				if someInvader.x + INVADERS_F_WIDTH/2 > MARGIN_RIGHT:
-					canStep = false
-					canDoVerticalStep = true
-					verticalStepNumber = verticalStepNumber + 1
-					wasVerticalStep = true
-				if canStep && stepNumber==3:
-					get_node(allInvadersNames[i]).step(STEP)
-				current_invader_width = INVADERS_F_WIDTH
-				if colide(someInvader, laserPos):
-					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-					shipLaserBeamHitInvader = true
-					#get_node("invadersSoundsPlayer").invaderHit()
-					get_node(allInvadersNames[i]).set_hidden(true)
-					get_node(allInvadersNames[i]).isAlive = false
-					addPoints(fPoints)
-					break
-			elif i>21 && i<33:#F
-				if someInvader.x + INVADERS_F_WIDTH/2 > MARGIN_RIGHT:
-					canStep = false
-					canDoVerticalStep = true
-					verticalStepNumber = verticalStepNumber + 1
-					wasVerticalStep = true
-				if canStep && stepNumber==2:
-					get_node(allInvadersNames[i]).step(STEP)
-				current_invader_width = INVADERS_F_WIDTH
-				if colide(someInvader, laserPos):
-					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-					shipLaserBeamHitInvader = true
-					#get_node("invadersSoundsPlayer").invaderHit()
-					get_node(allInvadersNames[i]).set_hidden(true)
-					get_node(allInvadersNames[i]).isAlive = false
-					addPoints(fPoints)
-					break
-			elif i>32 && i<44:#E
-				if someInvader.x + INVADERS_E_WIDTH/2 > MARGIN_RIGHT:
-					canStep = false
-					canDoVerticalStep = true
-					verticalStepNumber = verticalStepNumber + 1
-					wasVerticalStep = true
-				if canStep && stepNumber==1:
-					get_node(allInvadersNames[i]).step(STEP)
-				current_invader_width = INVADERS_E_WIDTH
-				#get_node(allInvadersNames[i]).step()
-				if colide(someInvader, laserPos):
-					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-					shipLaserBeamHitInvader = true
-					#get_node("invadersSoundsPlayer").invaderHit()
-					get_node(allInvadersNames[i]).set_hidden(true)
-					get_node(allInvadersNames[i]).isAlive = false
-					addPoints(ePoints)
-					break
-			elif i>43 && i<55:#E
-				if someInvader.x + INVADERS_E_WIDTH/2 > MARGIN_RIGHT:
-					canStep = false
-					canDoVerticalStep = true
-					verticalStepNumber = verticalStepNumber + 1
-				if canStep && stepNumber==0:
-					get_node(allInvadersNames[i]).step(STEP)
-				current_invader_width = INVADERS_E_WIDTH
-				#get_node(allInvadersNames[i]).step()
-				if colide(someInvader, laserPos):
-					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-					shipLaserBeamHitInvader = true
-					#get_node("invadersSoundsPlayer").invaderHit()
-					get_node(allInvadersNames[i]).set_hidden(true)
-					get_node(allInvadersNames[i]).isAlive = false
-					addPoints(ePoints)
-					break
-				
-
-			if canDoVerticalStep:
-				STEP = STEP*-1
-				setInvadersPositions()
-				canDoVerticalStep = false
-				canStep = true
-				wasVerticalStep = false
-			else:
-				wasVerticalStep = true
-				
-		if canStep && i == 10 && stepNumber==0:
-			get_node("invadersSoundsPlayer").invader1()
-		if canStep && i == 21 && stepNumber==1:
-			get_node("invadersSoundsPlayer").invader2()
-		if canStep && i == 32 && stepNumber==2:
-			get_node("invadersSoundsPlayer").invader3()
-		if canStep && i == 43 && stepNumber==3:
-			get_node("invadersSoundsPlayer").invader4()
-
 
 func wallProcess():
 	var laserPos = get_node(laserBeamName).get_pos()
@@ -604,7 +519,6 @@ func wallProcess():
 		get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 
 func wallRocketProcess():
-	#for i in range(4):
 	var poz
 	poz = get_node(rocketMovingArray[0]).get_pos()
 	if rocketColideWithWall(poz,0):
@@ -626,7 +540,7 @@ func wallRocketProcess():
 		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
 		swapDestoryedRocketWithNewRandom(3)
 
-#rocketColideWithShelter
+
 func rocketShelterProcess():
 	for i in range(4):
 		var someShelterPosition = get_node(allSheltersNames[i]).get_pos()
@@ -650,7 +564,6 @@ func rocketShelterProcess():
 			get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
 			swapDestoryedRocketWithNewRandom(3)
 
-######################################################################################################
 func setInvadersPositions():
 	var invaderPosition = Vector2(0, 0)
 	positionX = MARGIN_LEFT
@@ -690,162 +603,6 @@ func setInvadersPositions():
 			invaderPosition.y = positionY
 			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
 ######################################################################################################
-		
-		
-		
-		
-func setInvadersPositionsssssssssssssss():
-	var invaderPosition = Vector2(0, 0)
-	positionX = MARGIN_LEFT
-	
-	positionY = MARGIN_TOP + INVADERS_HIGHT * verticalStepNumber
-	var GPOSITION_LEFT = MARGIN_RIGHT - (10*SPACE_BETWEEN_G+11*INVADERS_G_WIDTH)
-	
-	
-	var FPOSITION_LEFT = MARGIN_RIGHT - (10*SPACE_BETWEEN_F+11*INVADERS_F_WIDTH)
-	
-	
-	var EPOSITION_LEFT = MARGIN_RIGHT - (10*SPACE_BETWEEN_E+11*INVADERS_E_WIDTH)
-	
-	
-	var GpositionX = GPOSITION_LEFT
-
-	var FpositionX = FPOSITION_LEFT
-
-	var EpositionX = EPOSITION_LEFT
-
-	
-	for i in range(55):
-		if i < 11:
-			if wasVerticalStep && i == 0:
-				GpositionX = GpositionX + INVADERS_G_WIDTH/2
-			else:
-				GpositionX = GpositionX + INVADERS_G_WIDTH + SPACE_BETWEEN_G
-			invaderPosition.x = GpositionX
-			invaderPosition.y = positionY
-			get_node("InvaderG" + str(i)).set_pos(invaderPosition)
-			
-		elif i>10 && i<33:
-			if i == 11 || i == 22:
-				FpositionX = FPOSITION_LEFT
-				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
-			if wasVerticalStep && ( i == 11 || i == 22):
-				FpositionX = FpositionX + INVADERS_F_WIDTH/2
-			else:
-				FpositionX = FpositionX + INVADERS_F_WIDTH + SPACE_BETWEEN_F #get_node(nodeInGroup).set_pos(position, 24)
-			invaderPosition.x = FpositionX
-			invaderPosition.y = positionY
-			get_node("InvaderF" + str(i)).set_pos(invaderPosition)
-		
-		elif i>32 && i<55:
-			if i == 33 || i == 44:
-				EpositionX = EPOSITION_LEFT
-				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
-			if wasVerticalStep && ( i == 33 || i == 44):
-				EpositionX = EpositionX + INVADERS_E_WIDTH/2
-			else:
-				EpositionX = EpositionX + INVADERS_E_WIDTH + SPACE_BETWEEN_E  #get_node(nodeInGroup).set_pos(position, 24)
-			invaderPosition.x = EpositionX
-			invaderPosition.y = positionY
-			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
-
-
-###### VERTICAL STEP
-func vvvstep():
-	var invaderPosition = Vector2(0, 0)
-	positionX = MARGIN_LEFT
-	positionY = MARGIN_TOP + INVADERS_HIGHT * verticalStepNumber
-	
-	for i in range(55):
-		if i < 11:
-			if wasVerticalStep && i == 0:
-				positionX = positionX + INVADERS_G_WIDTH/2
-			else:
-				positionX = positionX + INVADERS_G_WIDTH + SPACE_BETWEEN_G
-			invaderPosition.x = positionX
-			invaderPosition.y = positionY
-			get_node("InvaderG" + str(i)).set_pos(invaderPosition)
-			
-		elif i>10 && i<33:
-			if i == 11 || i == 22:
-				positionX = MARGIN_LEFT
-				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
-			if wasVerticalStep && ( i == 11 || i == 22):
-				positionX = positionX + INVADERS_F_WIDTH/2
-			else:
-				positionX = positionX + INVADERS_F_WIDTH + SPACE_BETWEEN_F #get_node(nodeInGroup).set_pos(position, 24)
-			invaderPosition.x = positionX
-			invaderPosition.y = positionY
-			get_node("InvaderF" + str(i)).set_pos(invaderPosition)
-		
-		elif i>32 && i<55:
-			if i == 33 || i == 44:
-				positionX = MARGIN_LEFT
-				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
-			if wasVerticalStep && ( i == 33 || i == 44):
-				positionX = positionX + INVADERS_E_WIDTH/2
-			else:
-				positionX = positionX + INVADERS_E_WIDTH + SPACE_BETWEEN_E  #get_node(nodeInGroup).set_pos(position, 24)
-			invaderPosition.x = positionX
-			invaderPosition.y = positionY
-			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
-
-func verticalStep():
-	var invaderPosition = Vector2(0, 0)
-	positionX = MARGIN_LEFT
-	
-	positionY = MARGIN_TOP + INVADERS_HIGHT * verticalStepNumber
-	var GPOSITION_LEFT = MARGIN_RIGHT - (10*SPACE_BETWEEN_G+11*INVADERS_G_WIDTH)
-	
-	
-	var FPOSITION_LEFT = MARGIN_RIGHT - (10*SPACE_BETWEEN_F+11*INVADERS_F_WIDTH)
-	
-	
-	var EPOSITION_LEFT = MARGIN_RIGHT - (10*SPACE_BETWEEN_E+11*INVADERS_E_WIDTH)
-	
-	
-	var GpositionX = GPOSITION_LEFT
-
-	var FpositionX = FPOSITION_LEFT
-
-	var EpositionX = EPOSITION_LEFT
-
-	
-	for i in range(55):
-		if i < 11:
-			if wasVerticalStep && i == 0:
-				GpositionX = GpositionX + INVADERS_G_WIDTH/2
-			else:
-				GpositionX = GpositionX + INVADERS_G_WIDTH + SPACE_BETWEEN_G
-			invaderPosition.x = GpositionX
-			invaderPosition.y = positionY
-			get_node("InvaderG" + str(i)).set_pos(invaderPosition)
-			
-		elif i>10 && i<33:
-			if i == 11 || i == 22:
-				FpositionX = FPOSITION_LEFT
-				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
-			if wasVerticalStep && ( i == 11 || i == 22):
-				FpositionX = FpositionX + INVADERS_F_WIDTH/2
-			else:
-				FpositionX = FpositionX + INVADERS_F_WIDTH + SPACE_BETWEEN_F #get_node(nodeInGroup).set_pos(position, 24)
-			invaderPosition.x = FpositionX
-			invaderPosition.y = positionY
-			get_node("InvaderF" + str(i)).set_pos(invaderPosition)
-		
-		elif i>32 && i<55:
-			if i == 33 || i == 44:
-				EpositionX = EPOSITION_LEFT
-				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
-			if wasVerticalStep && ( i == 33 || i == 44):
-				EpositionX = EpositionX + INVADERS_E_WIDTH/2
-			else:
-				EpositionX = EpositionX + INVADERS_E_WIDTH + SPACE_BETWEEN_E  #get_node(nodeInGroup).set_pos(position, 24)
-			invaderPosition.x = EpositionX
-			invaderPosition.y = positionY
-			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
-
-
 
 func createListOfRockets():
 	for i in range(4):
@@ -1007,15 +764,81 @@ func addPoints(newPoints):
 	get_node("/root/global").points = get_node("/root/global").points + newPoints
 	
 func randomFromZeroTo(upperLimit):
-	#randomize()
 	var randomNumber = randi()%upperLimit
 	return randomNumber
+func initializeTimers():
+	timer = Timer.new()
+	timer.set_wait_time(stepDelayTime)
+	timer.set_active(true)
+	timer.connect("timeout", self, "waitForStep")
+	timer.start()
+	add_child(timer)
+	
+	mysteryTimer = Timer.new()
+	mysteryTimer.set_wait_time(mysteryDelayTime)
+	mysteryTimer.set_active(true)
+	mysteryTimer.connect("timeout", self, "waitForMystery")
+	mysteryTimer.start()
+	add_child(mysteryTimer)
 
+func initializeShelters():
+	var shelterPosition = Vector2(0, SHTELER_ROW_Y_POSITION)
+	var shelterTemporaryPositionX = 0
+	for i in range(4):
+			var shelterInstance = shelter.instance()
+			shelterInstance.set_name("Shelter" + str(i))
+			add_child(shelterInstance)
+			shelterTemporaryPositionX = shelterTemporaryPositionX + SHELTER_WIDTH + SPACE_BETWEEN_SHELTERS
+			shelterPosition.x = shelterTemporaryPositionX
+			get_node("Shelter" + str(i)).set_pos(shelterPosition)
+			allSheltersNames.push_back("Shelter" + str(i))
 
+func initializeTerranShip():
+	terranShipp = terranShipScene.instance()
+	terranShipp.set_name("myShip")
+	add_child(terranShipp)
 
+func initializeLaserBeam():
+	var laserBeamInstance = laserBeam.instance()
+	laserBeamInstance.set_name("LaserBeam")
+	add_child(laserBeamInstance)
+	get_node("LaserBeam").set_pos(laserBeamPositionOutOfView)
+	laserBeamName = "LaserBeam"
+	
+func initializeMysteryShip():
+	var mysteryInvaderInstance = mysteryInvader.instance()
+	mysteryInvaderInstance.set_name("mystery")
+	add_child(mysteryInvaderInstance)
+	
+func initializeSoundPlayer():
+	var soundsPlayer = player.instance()
+	soundsPlayer.set_name("invadersSoundsPlayer")
+	add_child(soundsPlayer)
+	set_process(true)
+	
+func initializeGraphicalUserInterface():
+	get_node("CurrentPoints").set_text("Current Points: " +str(get_node("/root/global").points))#  + str(points))
+	get_node("CurrentPoints").update()
+	get_node("HightScore").set_text("Hi-Score Points: " + str(get_node("/root/global").hiscore))#  + str(points))
+	get_node("HightScore").update()
+	get_node("ShipsLeft").set_text("Ships Left: " + str(get_node("/root/global").shipsLeft))
+	get_node("ShipsLeft").update()
+	
+func updateGraphicalUserInterface():
+	get_node("/root/global").checkIfYouAreHiScore()
+	get_node("CurrentPoints").set_text("Current Points: " +str(get_node("/root/global").points))
+	get_node("CurrentPoints").update()
+	get_node("HightScore").set_text("Hi-Score Points: " +str(get_node("/root/global").hiscore))
+	get_node("HightScore").update()
+	get_node("ShipsLeft").set_text("Ships Left: " + str(get_node("/root/global").shipsLeft))
+	get_node("ShipsLeft").update()
+	if get_node("/root/global").checkIfYouDied():
+		get_node("/root/global").points = 0
+		get_node("/root/global").shipsLeft = 3
+		get_tree().reload_current_scene()
+		
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
-	
 	
 func _on_Exit_Game_pressed():
 	get_node("/root/global").goto_scene("res://scenes/EndingScreen.tscn")
