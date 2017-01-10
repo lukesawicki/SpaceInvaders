@@ -44,6 +44,8 @@ var positionY = MARGIN_TOP + INVADERS_HIGHT
 var invaderWhichAreShootingNow = randi()%55
 var shootingInvaderPosition = Vector2(0, 0)
 
+var invadersAdditionalInfos = {}
+
 # MYSTERY
 var MYSTERY_WIDTH = 48
 var MYSTERY_HIGHT = 24
@@ -133,6 +135,9 @@ var playSound2 = false
 var playSound3 = false
 var playSound4 = false
 
+##########################
+var colidedWall = false
+
 func _ready():
 	initializeShelters()
 	
@@ -196,7 +201,8 @@ func _process(delta):
 			get_node(laserBeamName).set_pos(laserBeamPosition) #set laser position to the same position as ship position
 			shipLaserMoving = true
 			get_node("invadersSoundsPlayer").shot()
-			
+			stepDelayTime = stepDelayTime - 0.03
+			timer.set_wait_time(stepDelayTime)
 			## RELOAD CURRENT SCENE
 			#get_tree().reload_current_scene()
 			
@@ -244,11 +250,13 @@ func invadersProcess():
 		var isAlive = get_node(allInvadersNames[i]).isAlive
 		if isAlive:
 			if i < 11:#G
-				if invaderColideRightWall(someInvader.x, INVADERS_G_WIDTH):
+				if invaderColideRightWall(someInvader.x, INVADERS_G_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_G_WIDTH):
+					colidedWall = true
 					canStep = false
 					canDoVerticalStep = true
 					verticalStepNumber = verticalStepNumber + 1
 					wasVerticalStep = true
+					break
 				if canStep && stepNumber==4:
 					get_node(allInvadersNames[i]).step(STEP)
 				current_invader_width = INVADERS_G_WIDTH
@@ -260,11 +268,13 @@ func invadersProcess():
 					addPoints(gPoints)
 					break
 			elif i>10 && i<22:#F
-				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH):
+				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_F_WIDTH):
+					colidedWall = true
 					canStep = false
 					canDoVerticalStep = true
 					verticalStepNumber = verticalStepNumber + 1
 					wasVerticalStep = true
+					break
 				if canStep && stepNumber==3:
 					get_node(allInvadersNames[i]).step(STEP)
 				current_invader_width = INVADERS_F_WIDTH
@@ -277,11 +287,13 @@ func invadersProcess():
 					addPoints(fPoints)
 					break
 			elif i>21 && i<33:#F
-				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH):
+				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_F_WIDTH):
+					colidedWall = true
 					canStep = false
 					canDoVerticalStep = true
 					verticalStepNumber = verticalStepNumber + 1
 					wasVerticalStep = true
+					break
 				if canStep && stepNumber==2:
 					get_node(allInvadersNames[i]).step(STEP)
 				current_invader_width = INVADERS_F_WIDTH
@@ -294,11 +306,13 @@ func invadersProcess():
 					addPoints(fPoints)
 					break
 			elif i>32 && i<44:#E
-				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH):
+				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_E_WIDTH):
+					colidedWall = true
 					canStep = false
 					canDoVerticalStep = true
 					verticalStepNumber = verticalStepNumber + 1
 					wasVerticalStep = true
+					break
 				if canStep && stepNumber==1:
 					get_node(allInvadersNames[i]).step(STEP)
 				current_invader_width = INVADERS_E_WIDTH
@@ -312,10 +326,12 @@ func invadersProcess():
 					addPoints(ePoints)
 					break
 			elif i>43 && i<55:#E
-				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH):
+				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_E_WIDTH):
+					colidedWall = true
 					canStep = false
 					canDoVerticalStep = true
 					verticalStepNumber = verticalStepNumber + 1
+					break
 				if canStep && stepNumber==0:
 					get_node(allInvadersNames[i]).step(STEP)
 				current_invader_width = INVADERS_E_WIDTH
@@ -329,13 +345,6 @@ func invadersProcess():
 					addPoints(ePoints)
 					break
 					
-			if canDoVerticalStep:
-				setInvadersPositions()
-				canDoVerticalStep = false
-				canStep = true
-				wasVerticalStep = false
-			else:
-				wasVerticalStep = true
 		if canStep && i == 10 && stepNumber==0:
 			get_node("invadersSoundsPlayer").invader1()
 		if canStep && i == 21 && stepNumber==1:
@@ -344,9 +353,37 @@ func invadersProcess():
 			get_node("invadersSoundsPlayer").invader3()
 		if canStep && i == 43 && stepNumber==3:
 			get_node("invadersSoundsPlayer").invader4()
+					
+	if !colidedWall:
+		savePositions()
+	
+	colidedWall = false
+		
+	if canDoVerticalStep:
+		setPreviousPositions()
+		STEP = STEP * -1
+		#setInvadersPositions()
+		canDoVerticalStep = false
+		canStep = true
+		wasVerticalStep = false
+	else:
+		wasVerticalStep = true
+		
+func savePositions():
+	for invaderName in allInvadersNames:
+		invadersAdditionalInfos[invaderName] = get_node(invaderName).get_pos()
+func setPreviousPositions():
+	for invaderName in allInvadersNames:
+		invadersAdditionalInfos[invaderName].y = invadersAdditionalInfos[invaderName].y + INVADERS_HIGHT+24
+		if STEP > 0:
+			get_node(invaderName).set_pos(Vector2(invadersAdditionalInfos[invaderName].x-12,invadersAdditionalInfos[invaderName].y))
+		else:
+			get_node(invaderName).set_pos(Vector2(invadersAdditionalInfos[invaderName].x+12,invadersAdditionalInfos[invaderName].y))
 			
 func invaderColideRightWall(invaderPositionX, invaderWidth):
 	return invaderPositionX + invaderWidth/2 > MARGIN_RIGHT
+func invaderColideLeftWall(invaderPositionX, invaderWidth):
+	return invaderPositionX - invaderWidth/2 < MARGIN_LEFT
 #CHECK COLLISIONS WITH INVADERS
 func colide(invaderPosition, positionLaserBeam):
 	if ((positionLaserBeam.x > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x < invaderPosition.x+current_invader_width/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < invaderPosition.y + INVADERS_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > invaderPosition.y - INVADERS_HIGHT/2) ):
