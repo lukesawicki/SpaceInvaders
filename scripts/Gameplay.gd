@@ -19,7 +19,7 @@ var screen_size
 
 # INVADERS AND SHELTER PROPERTIES AND OTHER
 
-const STEP = 6
+
 
 const INVADERS_G_WIDTH = 24
 const INVADERS_F_WIDTH = 34
@@ -118,7 +118,13 @@ var stopCheckingCollisions
 var timer = null
 var stepDelayTime = 0.2
 var canStep = true
-const STEP = 6
+#var STEP = 6
+
+
+var STEP_LEFT =  -6
+var STEP_RIGHT = 6
+var STEP = STEP_RIGHT
+
 var stepNumber = 0
 var verticalStepNumber = 1
 var canDoVerticalStep = false
@@ -144,6 +150,9 @@ var playSound1 = false
 var playSound2 = false
 var playSound3 = false
 var playSound4 = false
+
+var mostRightInvaderPosition = Vector2(0,0)
+var mostDownInvaderPosition = Vector2(0,0)
 
 func _ready():
 	
@@ -294,7 +303,7 @@ func _process(delta):
 		
 	get_node(laserBeamName).movingLaserBeam(delta)
 	canStep = false
-	print("Zdobyte punkty:    " + str(get_node("/root/global").points))
+	#print("Zdobyte punkty:    " + str(get_node("/root/global").points))
 	
 	get_node("/root/global").checkIfYouAreHiScore()
 	get_node("CurrentPoints").set_text("Current Points: " +str(get_node("/root/global").points))#  + str(points))
@@ -567,14 +576,17 @@ func invadersProcess():
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(ePoints)
 					break
-					
+				
+
 			if canDoVerticalStep:
+				STEP = STEP*-1
 				setInvadersPositions()
 				canDoVerticalStep = false
 				canStep = true
 				wasVerticalStep = false
 			else:
 				wasVerticalStep = true
+				
 		if canStep && i == 10 && stepNumber==0:
 			get_node("invadersSoundsPlayer").invader1()
 		if canStep && i == 21 && stepNumber==1:
@@ -638,8 +650,7 @@ func rocketShelterProcess():
 			get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
 			swapDestoryedRocketWithNewRandom(3)
 
-		
-		
+######################################################################################################
 func setInvadersPositions():
 	var invaderPosition = Vector2(0, 0)
 	positionX = MARGIN_LEFT
@@ -678,6 +689,162 @@ func setInvadersPositions():
 			invaderPosition.x = positionX
 			invaderPosition.y = positionY
 			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
+######################################################################################################
+		
+		
+		
+		
+func setInvadersPositionsssssssssssssss():
+	var invaderPosition = Vector2(0, 0)
+	positionX = MARGIN_LEFT
+	
+	positionY = MARGIN_TOP + INVADERS_HIGHT * verticalStepNumber
+	var GPOSITION_LEFT = MARGIN_RIGHT - (10*SPACE_BETWEEN_G+11*INVADERS_G_WIDTH)
+	
+	
+	var FPOSITION_LEFT = MARGIN_RIGHT - (10*SPACE_BETWEEN_F+11*INVADERS_F_WIDTH)
+	
+	
+	var EPOSITION_LEFT = MARGIN_RIGHT - (10*SPACE_BETWEEN_E+11*INVADERS_E_WIDTH)
+	
+	
+	var GpositionX = GPOSITION_LEFT
+
+	var FpositionX = FPOSITION_LEFT
+
+	var EpositionX = EPOSITION_LEFT
+
+	
+	for i in range(55):
+		if i < 11:
+			if wasVerticalStep && i == 0:
+				GpositionX = GpositionX + INVADERS_G_WIDTH/2
+			else:
+				GpositionX = GpositionX + INVADERS_G_WIDTH + SPACE_BETWEEN_G
+			invaderPosition.x = GpositionX
+			invaderPosition.y = positionY
+			get_node("InvaderG" + str(i)).set_pos(invaderPosition)
+			
+		elif i>10 && i<33:
+			if i == 11 || i == 22:
+				FpositionX = FPOSITION_LEFT
+				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
+			if wasVerticalStep && ( i == 11 || i == 22):
+				FpositionX = FpositionX + INVADERS_F_WIDTH/2
+			else:
+				FpositionX = FpositionX + INVADERS_F_WIDTH + SPACE_BETWEEN_F #get_node(nodeInGroup).set_pos(position, 24)
+			invaderPosition.x = FpositionX
+			invaderPosition.y = positionY
+			get_node("InvaderF" + str(i)).set_pos(invaderPosition)
+		
+		elif i>32 && i<55:
+			if i == 33 || i == 44:
+				EpositionX = EPOSITION_LEFT
+				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
+			if wasVerticalStep && ( i == 33 || i == 44):
+				EpositionX = EpositionX + INVADERS_E_WIDTH/2
+			else:
+				EpositionX = EpositionX + INVADERS_E_WIDTH + SPACE_BETWEEN_E  #get_node(nodeInGroup).set_pos(position, 24)
+			invaderPosition.x = EpositionX
+			invaderPosition.y = positionY
+			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
+
+
+###### VERTICAL STEP
+func vvvstep():
+	var invaderPosition = Vector2(0, 0)
+	positionX = MARGIN_LEFT
+	positionY = MARGIN_TOP + INVADERS_HIGHT * verticalStepNumber
+	
+	for i in range(55):
+		if i < 11:
+			if wasVerticalStep && i == 0:
+				positionX = positionX + INVADERS_G_WIDTH/2
+			else:
+				positionX = positionX + INVADERS_G_WIDTH + SPACE_BETWEEN_G
+			invaderPosition.x = positionX
+			invaderPosition.y = positionY
+			get_node("InvaderG" + str(i)).set_pos(invaderPosition)
+			
+		elif i>10 && i<33:
+			if i == 11 || i == 22:
+				positionX = MARGIN_LEFT
+				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
+			if wasVerticalStep && ( i == 11 || i == 22):
+				positionX = positionX + INVADERS_F_WIDTH/2
+			else:
+				positionX = positionX + INVADERS_F_WIDTH + SPACE_BETWEEN_F #get_node(nodeInGroup).set_pos(position, 24)
+			invaderPosition.x = positionX
+			invaderPosition.y = positionY
+			get_node("InvaderF" + str(i)).set_pos(invaderPosition)
+		
+		elif i>32 && i<55:
+			if i == 33 || i == 44:
+				positionX = MARGIN_LEFT
+				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
+			if wasVerticalStep && ( i == 33 || i == 44):
+				positionX = positionX + INVADERS_E_WIDTH/2
+			else:
+				positionX = positionX + INVADERS_E_WIDTH + SPACE_BETWEEN_E  #get_node(nodeInGroup).set_pos(position, 24)
+			invaderPosition.x = positionX
+			invaderPosition.y = positionY
+			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
+
+func verticalStep():
+	var invaderPosition = Vector2(0, 0)
+	positionX = MARGIN_LEFT
+	
+	positionY = MARGIN_TOP + INVADERS_HIGHT * verticalStepNumber
+	var GPOSITION_LEFT = MARGIN_RIGHT - (10*SPACE_BETWEEN_G+11*INVADERS_G_WIDTH)
+	
+	
+	var FPOSITION_LEFT = MARGIN_RIGHT - (10*SPACE_BETWEEN_F+11*INVADERS_F_WIDTH)
+	
+	
+	var EPOSITION_LEFT = MARGIN_RIGHT - (10*SPACE_BETWEEN_E+11*INVADERS_E_WIDTH)
+	
+	
+	var GpositionX = GPOSITION_LEFT
+
+	var FpositionX = FPOSITION_LEFT
+
+	var EpositionX = EPOSITION_LEFT
+
+	
+	for i in range(55):
+		if i < 11:
+			if wasVerticalStep && i == 0:
+				GpositionX = GpositionX + INVADERS_G_WIDTH/2
+			else:
+				GpositionX = GpositionX + INVADERS_G_WIDTH + SPACE_BETWEEN_G
+			invaderPosition.x = GpositionX
+			invaderPosition.y = positionY
+			get_node("InvaderG" + str(i)).set_pos(invaderPosition)
+			
+		elif i>10 && i<33:
+			if i == 11 || i == 22:
+				FpositionX = FPOSITION_LEFT
+				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
+			if wasVerticalStep && ( i == 11 || i == 22):
+				FpositionX = FpositionX + INVADERS_F_WIDTH/2
+			else:
+				FpositionX = FpositionX + INVADERS_F_WIDTH + SPACE_BETWEEN_F #get_node(nodeInGroup).set_pos(position, 24)
+			invaderPosition.x = FpositionX
+			invaderPosition.y = positionY
+			get_node("InvaderF" + str(i)).set_pos(invaderPosition)
+		
+		elif i>32 && i<55:
+			if i == 33 || i == 44:
+				EpositionX = EPOSITION_LEFT
+				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
+			if wasVerticalStep && ( i == 33 || i == 44):
+				EpositionX = EpositionX + INVADERS_E_WIDTH/2
+			else:
+				EpositionX = EpositionX + INVADERS_E_WIDTH + SPACE_BETWEEN_E  #get_node(nodeInGroup).set_pos(position, 24)
+			invaderPosition.x = EpositionX
+			invaderPosition.y = positionY
+			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
+
 
 
 func createListOfRockets():
@@ -843,7 +1010,9 @@ func randomFromZeroTo(upperLimit):
 	#randomize()
 	var randomNumber = randi()%upperLimit
 	return randomNumber
-	
+
+
+
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
 	
