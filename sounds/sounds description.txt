@@ -1,0 +1,7 @@
+bunker_hit		-strzal strafil w bunkier
+invader_shot		-odglos strzalu invadera
+invader_sound_1-4 	-dzwieki odtwarzane cyklicznie, w tle, podczas gry
+player_explosion	-wybuch statku gracza (smierc)
+shot 			-strzal gracza
+ufo_hit			-special invader trafiony
+ufo_move		-odglos ruchu special invadera (musi byc looped!)
