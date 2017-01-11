@@ -44,7 +44,7 @@ scroll/ignore_camera_zoom = true
 
 [node name="stars" type="Sprite" parent="ParallaxBackground"]
 
-transform/pos = Vector2( 428.384, 436.846 )
+transform/pos = Vector2( 337.944, 436.846 )
 texture = ExtResource( 3 )
 
 [node name="TitleScreen" type="Label" parent="."]
