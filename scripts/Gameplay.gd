@@ -122,6 +122,9 @@ const fPoints = 20
 const gPoints = 30
 var mysteryPoints = [50, 100, 150, 300]
 
+var numberOfShots = 0
+var numberOfInvaders = 55
+
 #OTHER VARIABLES
 
 var player = preload("res://scenes/AllSoundsPlayer.tscn")
@@ -166,7 +169,8 @@ func _ready():
 	initializeGraphicalUserInterface()
 	
 	wasVerticalStep = false
-	
+	numberOfShots = 0
+	numberOfInvaders = 55
 
 ################################ GLOWNA PETLA GRY ################################
 func _process(delta):
@@ -185,6 +189,8 @@ func _process(delta):
 	
 	wallRocketProcess()
 
+	mysteryMovingCondition()
+
 	mysteryProcess(delta)
 	
 	playAllSounds()
@@ -196,7 +202,6 @@ func _process(delta):
 	get_node(rocketMovingArray[2]).moving = rocket3Moving
 	get_node(rocketMovingArray[3]).moving = rocket4Moving
 		
-		
 	get_node("myShip").movingShip(delta)
 	
 	if Input.is_action_pressed("ship_shoot"):
@@ -207,10 +212,8 @@ func _process(delta):
 			get_node(laserBeamName).set_pos(laserBeamPosition) #set laser position to the same position as ship position
 			shipLaserMoving = true
 			get_node("invadersSoundsPlayer").shot()
-			stepDelayTime = stepDelayTime - 0.03
-			timer.set_wait_time(stepDelayTime)
-			## RELOAD CURRENT SCENE
-			#get_tree().reload_current_scene()
+			countShots()
+
 			
 	if !rocket1Moving:
 		setPositionOfShootingInvader()
@@ -247,7 +250,7 @@ func _process(delta):
 	canStep = false
 	
 	updateGraphicalUserInterface()
-	
+	print(numberOfShots)
 ################################ INVADERS PROCESS ################################
 func invadersProcess():
 	for i in range(55):
@@ -481,21 +484,21 @@ func waitForStep():
 #___________________________________________________________________________________________________________
 func waitForPlayNote():
 	noteCanPlayNote = true
-	if noteNumber == 3:
-		noteNumber = 0
-	noteNumber = noteNumber + 1
 		
 func playOneNote():
 	if noteCanPlayNote:
-		if noteNumber==0:
-			get_node("invadersSoundsPlayer").invader1()
 		if noteNumber==1:
-			get_node("invadersSoundsPlayer").invader2()
+			get_node("invadersSoundsPlayer").invader1()
 		if noteNumber==2:
-			get_node("invadersSoundsPlayer").invader3()
+			get_node("invadersSoundsPlayer").invader2()
 		if noteNumber==3:
+			get_node("invadersSoundsPlayer").invader3()
+		if noteNumber==4:
 			get_node("invadersSoundsPlayer").invader4()
 		noteCanPlayNote = false ### UWAGA UWAGA JEST TO W IFIE
+	if noteNumber == 4:
+		noteNumber = 0
+	noteNumber = noteNumber + 1
 	
 func setPositionOfShootingInvader():
 	var alive = false
@@ -776,6 +779,11 @@ func mysteryLaserColide():
 		return true
 	else:
 		return false
+		
+func mysteryMovingCondition():
+	if numberOfShots == 15:
+		mysteryRun = true
+		numberOfShots = 0
 func mysteryProcess(delta):
 	if mysteryWallColide():
 		get_node("mystery").moving = false
@@ -811,8 +819,9 @@ func playAllSounds():
 	laserBeamHitTheWall = false
 	shipLaserBeamHitInvader = false
 	shipLaserBeamHitShelter = false
+#####################################################    WAIT FOR MYSTERY
 func waitForMystery():
-	mysteryRun = true
+	pass#mysteryRun = true
 
 func addPoints(newPoints):
 	get_node("/root/global").points = get_node("/root/global").points + newPoints
@@ -897,7 +906,13 @@ func updateGraphicalUserInterface():
 		get_node("/root/global").points = 0
 		get_node("/root/global").shipsLeft = 3
 		get_tree().reload_current_scene()
-		
+
+func countShots():
+	numberOfShots = numberOfShots + 1
+
+func countInvadersLeft():
+	numberOfInvaders = numberOfInvaders - 1
+
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
 	
