@@ -138,6 +138,12 @@ var playSound4 = false
 ##########################
 var colidedWall = false
 
+var noteSoundTimer = null
+var noteSoundDelayTime = 0.8
+var noteCanPlayNote = true
+var noteNumber = 0
+
+
 func _ready():
 	initializeShelters()
 	
@@ -345,15 +351,8 @@ func invadersProcess():
 					addPoints(ePoints)
 					break
 					
-		if canStep && i == 10 && stepNumber==0:
-			get_node("invadersSoundsPlayer").invader1()
-		if canStep && i == 21 && stepNumber==1:
-			get_node("invadersSoundsPlayer").invader2()
-		if canStep && i == 32 && stepNumber==2:
-			get_node("invadersSoundsPlayer").invader3()
-		if canStep && i == 43 && stepNumber==3:
-			get_node("invadersSoundsPlayer").invader4()
-					
+	playOneNote()
+	
 	if !colidedWall:
 		savePositions()
 	
@@ -479,6 +478,24 @@ func waitForStep():
 	stepNumber = stepNumber + 1
 	if( stepNumber == 5):
 		stepNumber = 0
+#___________________________________________________________________________________________________________
+func waitForPlayNote():
+	noteCanPlayNote = true
+	if noteNumber == 3:
+		noteNumber = 0
+	noteNumber = noteNumber + 1
+		
+func playOneNote():
+	if noteCanPlayNote:
+		if noteNumber==0:
+			get_node("invadersSoundsPlayer").invader1()
+		if noteNumber==1:
+			get_node("invadersSoundsPlayer").invader2()
+		if noteNumber==2:
+			get_node("invadersSoundsPlayer").invader3()
+		if noteNumber==3:
+			get_node("invadersSoundsPlayer").invader4()
+		noteCanPlayNote = false ### UWAGA UWAGA JEST TO W IFIE
 	
 func setPositionOfShootingInvader():
 	var alive = false
@@ -784,12 +801,12 @@ func mysteryProcess(delta):
 	get_node("mystery").movingMastery(delta)
 	
 func playAllSounds():
-	if shipLaserBeamHitInvader:
+	if shipLaserBeamHitInvader||shipLaserBeamHitShelter||laserBeamHitTheWall:
 		get_node("invadersSoundsPlayer").invaderHit()
-	if shipLaserBeamHitShelter:
-		get_node("invadersSoundsPlayer").invaderHit()
-	if laserBeamHitTheWall:
-		get_node("invadersSoundsPlayer").invaderHit()
+	#if shipLaserBeamHitShelter:
+	#	get_node("invadersSoundsPlayer").invaderHit()
+	#if laserBeamHitTheWall:
+	#	get_node("invadersSoundsPlayer").invaderHit()
 	
 	laserBeamHitTheWall = false
 	shipLaserBeamHitInvader = false
@@ -817,6 +834,13 @@ func initializeTimers():
 	mysteryTimer.connect("timeout", self, "waitForMystery")
 	mysteryTimer.start()
 	add_child(mysteryTimer)
+	
+	noteSoundTimer = Timer.new()
+	noteSoundTimer.set_wait_time(noteSoundDelayTime)
+	noteSoundTimer.set_active(true)
+	noteSoundTimer.connect("timeout", self, "waitForPlayNote")
+	noteSoundTimer.start()
+	add_child(noteSoundTimer)
 
 func initializeShelters():
 	var shelterPosition = Vector2(0, SHTELER_ROW_Y_POSITION)
