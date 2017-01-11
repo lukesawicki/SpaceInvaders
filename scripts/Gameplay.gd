@@ -53,8 +53,6 @@ var MYSTERY_Y_POSITION = 191  # NIE UZYWANA
 var mysteryPositionOutOfView = Vector2(256, -512)
 var mysteryInvader = preload("res://scenes/MysteryScene.tscn")
 var mysteryRun = false
-var mysteryTimer = null
-var mysteryDelayTime = 0.5
 
 #SHELTERS
 var shelter = preload("res://scenes/ShelterScene.tscn")
@@ -495,18 +493,19 @@ func playOneNote():
 			get_node("invadersSoundsPlayer").invader3()
 		if noteNumber==4:
 			get_node("invadersSoundsPlayer").invader4()
+			noteNumber = 0
 		noteCanPlayNote = false ### UWAGA UWAGA JEST TO W IFIE
-	if noteNumber == 4:
-		noteNumber = 0
-	noteNumber = noteNumber + 1
+		noteNumber = noteNumber + 1
+
+	
 	
 func setPositionOfShootingInvader():
-	var alive = false
-	while !alive:
+	var ifCanShoot = false
+	while !ifCanShoot:
 		randomize()
 		invaderWhichAreShootingNow = randi()%55
-		alive = get_node(allInvadersNames[invaderWhichAreShootingNow]).isAlive
-	if alive:
+		ifCanShoot = get_node(allInvadersNames[invaderWhichAreShootingNow]).isAlive && invaderShootingCondition(get_node(allInvadersNames[invaderWhichAreShootingNow]).get_pos())
+	if ifCanShoot:
 		shootingInvaderPosition = get_node(allInvadersNames[invaderWhichAreShootingNow]).get_pos()
 	
 func initializeInvaders():
@@ -837,13 +836,6 @@ func initializeTimers():
 	timer.start()
 	add_child(timer)
 	
-	mysteryTimer = Timer.new()
-	mysteryTimer.set_wait_time(mysteryDelayTime)
-	mysteryTimer.set_active(true)
-	mysteryTimer.connect("timeout", self, "waitForMystery")
-	mysteryTimer.start()
-	add_child(mysteryTimer)
-	
 	noteSoundTimer = Timer.new()
 	noteSoundTimer.set_wait_time(noteSoundDelayTime)
 	noteSoundTimer.set_active(true)
@@ -912,6 +904,17 @@ func countShots():
 
 func countInvadersLeft():
 	numberOfInvaders = numberOfInvaders - 1
+
+func invaderShootingCondition(shootingInvaderPosition):
+	var invPosition
+	var canShoot = true
+	for inv in allInvadersNames:
+		invPosition = get_node(inv).get_pos()
+		if get_node(inv).isAlive:
+			if invPosition.y > shootingInvaderPosition.y && shootingInvaderPosition.x > invPosition.x - get_node(inv).WIDTH/2 && shootingInvaderPosition.x < invPosition.x + get_node(inv).WIDTH/2:
+				canShoot = false
+				break
+	return canShoot
 
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
