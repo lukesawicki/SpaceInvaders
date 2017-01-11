@@ -878,20 +878,20 @@ func initializeSoundPlayer():
 	set_process(true)
 	
 func initializeGraphicalUserInterface():
-	get_node("CurrentPoints").set_text("Current Points: " +str(get_node("/root/global").points))#  + str(points))
+	get_node("CurrentPoints").set_text(str(get_node("/root/global").points))#  + str(points))
 	get_node("CurrentPoints").update()
-	get_node("HightScore").set_text("Hi-Score Points: " + str(get_node("/root/global").hiscore))#  + str(points))
+	get_node("HightScore").set_text(str(get_node("/root/global").hiscore))#  + str(points))
 	get_node("HightScore").update()
-	get_node("ShipsLeft").set_text("Ships Left: " + str(get_node("/root/global").shipsLeft))
+	get_node("ShipsLeft").set_text(str(get_node("/root/global").shipsLeft))
 	get_node("ShipsLeft").update()
 	
 func updateGraphicalUserInterface():
 	get_node("/root/global").checkIfYouAreHiScore()
-	get_node("CurrentPoints").set_text("Current Points: " +str(get_node("/root/global").points))
+	get_node("CurrentPoints").set_text(str(get_node("/root/global").points))
 	get_node("CurrentPoints").update()
-	get_node("HightScore").set_text("Hi-Score Points: " +str(get_node("/root/global").hiscore))
+	get_node("HightScore").set_text(str(get_node("/root/global").hiscore))
 	get_node("HightScore").update()
-	get_node("ShipsLeft").set_text("Ships Left: " + str(get_node("/root/global").shipsLeft))
+	get_node("ShipsLeft").set_text(str(get_node("/root/global").shipsLeft))
 	get_node("ShipsLeft").update()
 	if get_node("/root/global").checkIfYouDied():
 		get_node("/root/global").points = 0
