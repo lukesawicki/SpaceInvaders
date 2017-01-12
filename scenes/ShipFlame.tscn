@@ -18,6 +18,7 @@ tracks/0/keys = { "times":FloatArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ), "transitions
 
 texture = ExtResource( 1 )
 hframes = 4
+frame = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
