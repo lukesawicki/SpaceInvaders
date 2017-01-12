@@ -4,7 +4,7 @@ extends Node2D
 
 const MARGIN_LEFT = 0
 const MARGIN_RIGHT = 672
-const MARGIN_TOP = 216
+const MARGIN_TOP = 168
 const MARGIN_BOTTOM = 768
 const SCREEN_WIDTH = 672
 const SCREEN_HIGHT = 768
@@ -12,6 +12,8 @@ const INVADERS_ROWS_SPACE = 24
 const SPACE_BETWEEN_G = 24
 const SPACE_BETWEEN_F = 14
 const SPACE_BETWEEN_E = 12
+
+var INVASION_POSITION = 576
 
 var screen_size
 
@@ -122,6 +124,7 @@ var mysteryPoints = [50, 100, 150, 300]
 
 var numberOfShots = 0
 var numberOfInvaders = 55
+var numberOfCurrentVerticalStep=0
 
 #OTHER VARIABLES
 
@@ -148,6 +151,9 @@ var noteSoundDelayReduction = 0.3
 var previousNumberOfInvaders = 55
 var nuberOfInvadersToChangeSoundDelay = 6
 var previousPointsAfterIncreasingNumberOfShips = 0
+
+var invasion = false
+
 
 func _ready():
 	initializeShelters()
@@ -260,7 +266,7 @@ func _process(delta):
 	updateGraphicalUserInterface()
 	addShipForPoints()
 	#print(numberOfShots)
-	print(numberOfInvaders)
+	#print(numberOfInvaders)
 ############################# END GAME MAIN LOOP ###############################
 
 
@@ -307,7 +313,7 @@ func colideWithShelter(shelterPosition, positionLaserBeam):
 
 ########################### LASER BEAM WALL COLLISION ##########################
 func colideWithWall(positionLaserBeam):
-	if (positionLaserBeam.y < MARGIN_TOP):
+	if (positionLaserBeam.y - INVADERS_HIGHT/2 < MARGIN_TOP):
 		shipLaserMoving=false
 		return true;
 	else:
@@ -331,7 +337,6 @@ func rocketColideWithWall(rocketPosition, rocketNumber):
 	else:
 		return false
 ################################################################################
-
 
 
 ########################### ROCKET SHELTER COLLISION ###########################
@@ -413,8 +418,6 @@ func mysteryLaserColide():
 
 
 
-
-
 #############################**** GAMEPLAY METHODS ****#########################
 
 ####################### SAVE INVADERS CURRENT POSITIONS ########################
@@ -422,7 +425,6 @@ func savePositions():
 	for invaderName in allInvadersNames:
 		invadersAdditionalInfos[invaderName] = get_node(invaderName).get_pos()
 ################################################################################
-
 
 
 ############### SET PREVIOUS INVADERS POSIOTIONS AS CURRENT ####################
@@ -434,7 +436,6 @@ func setPreviousPositions():
 		else:
 			get_node(invaderName).set_pos(Vector2(invadersAdditionalInfos[invaderName].x+12,invadersAdditionalInfos[invaderName].y))
 ################################################################################
-
 
 
 ########################### WAITING FOR STEP INVADERS ##########################
@@ -493,7 +494,7 @@ func setPositionOfShootingInvader():
 func setInvadersPositions():
 	var invaderPosition = Vector2(0, 0)
 	positionX = MARGIN_LEFT
-	positionY = MARGIN_TOP + INVADERS_HIGHT * verticalStepNumber
+	positionY = MARGIN_TOP + ( INVADERS_HIGHT/2 ) * verticalStepNumber
 	
 	for i in range(55):
 		if i < 11:
@@ -531,8 +532,6 @@ func setInvadersPositions():
 ################################################################################
 
 
-
-
 ################### CREATE 12 RANDOM ROCKETS 4-ANY KIND ########################
 func createListOfRockets():
 	for i in range(4):
@@ -559,7 +558,7 @@ func createListOfRockets():
 		add_child(rocketInstance)
 		get_node(rocketName).set_pos(rocketsPositionOutOfView)
 ################################################################################
-		
+
 
 ############################# MYSTERY SHIP MOVING CONDITION ####################
 func mysteryMovingCondition():
@@ -573,16 +572,11 @@ func mysteryMovingCondition():
 func playAllSounds():
 	if shipLaserBeamHitInvader||shipLaserBeamHitShelter||laserBeamHitTheWall:
 		get_node("invadersSoundsPlayer").invaderHit()
-	#if shipLaserBeamHitShelter:
-	#	get_node("invadersSoundsPlayer").invaderHit()
-	#if laserBeamHitTheWall:
-	#	get_node("invadersSoundsPlayer").invaderHit()
 	
 	laserBeamHitTheWall = false
 	shipLaserBeamHitInvader = false
 	shipLaserBeamHitShelter = false
 ################################################################################
-
 
 
 ################################### ADDING POINTS ##############################
@@ -591,19 +585,16 @@ func addPoints(newPoints):
 ################################################################################
 
 
-
 ################################### SHOTS COUNTER ##############################
 func countShots():
 	numberOfShots = numberOfShots + 1
 ################################################################################
 
 
-
 ################################# LEFT INVADERS COUNTER ########################
 func countInvadersLeft():
 	numberOfInvaders = numberOfInvaders - 1
 ################################################################################
-
 
 
 ############################# INVADER SHOOTING CONDITION #######################
@@ -620,7 +611,6 @@ func invaderShootingCondition(shootingInvaderPosition):
 ################################################################################
 
 
-
 #################### PLAYING SOUNDS OF MUSIC(FOUR SOUNDS) ######################
 func playingMusicProcess():
 	if previousNumberOfInvaders - numberOfInvaders == 6:
@@ -628,7 +618,6 @@ func playingMusicProcess():
 		noteSoundTimer.set_wait_time(noteSoundDelayTime)
 		previousNumberOfInvaders = numberOfInvaders
 ################################################################################
-
 
 
 ####################### ADDING NEW SHIP FOR 1500 POINTS ########################
@@ -693,18 +682,16 @@ func swapDestoryedRocketWithNewRandom(destroyed):
 			wrzucilemNowa = false
 ################################################################################
 
-
 ###########################**** END GAMEPLAY METHODS ****#######################
 
 
 ############################**** INITIALIZING METHODS ****######################
 
-
 ############################# INITIALIZING INVADERS ############################
 func initializeInvaders():
 	var invaderPosition = Vector2(0, 0)
 	positionX = MARGIN_LEFT
-	positionY = MARGIN_TOP + INVADERS_HIGHT * verticalStepNumber
+	positionY = MARGIN_TOP + (INVADERS_HIGHT/2) * verticalStepNumber
 	
 	for i in range(55):
 		if i < 11:
@@ -752,9 +739,8 @@ func initializeInvaders():
 			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
 			allInvadersNames.push_back("InvaderE" + str(i))
 ################################################################################
-	
-	
-	
+
+
 ############################# SHELTERS INITALIZATION ###########################
 func initializeShelters():
 	var shelterPosition = Vector2(0, SHTELER_ROW_Y_POSITION)
@@ -770,14 +756,12 @@ func initializeShelters():
 ################################################################################
 
 
-
 ############################# TERRAN SHIP INITALIZATION ########################
 func initializeTerranShip():
 	terranShipp = terranShipScene.instance()
 	terranShipp.set_name("myShip")
 	add_child(terranShipp)
 ################################################################################
-
 
 
 ############################# LASER BEAM INITALIZATION #########################
@@ -790,14 +774,12 @@ func initializeLaserBeam():
 ################################################################################
 
 
-
 ############################# MYSTERY SHIP INITALIZATION #######################
 func initializeMysteryShip():
 	var mysteryInvaderInstance = mysteryInvader.instance()
 	mysteryInvaderInstance.set_name("mystery")
 	add_child(mysteryInvaderInstance)
 ################################################################################
-
 
 
 ############################# SOUND PLAYER INITALIZATION #######################
@@ -807,7 +789,6 @@ func initializeSoundPlayer():
 	add_child(soundsPlayer)
 	set_process(true)
 ################################################################################
-
 
 
 ########################### ALL TIMERS INITALIZATION ###########################
@@ -828,7 +809,6 @@ func initializeTimers():
 ################################################################################
 
 
-
 ############################# GUI HUD INITALIZATION ############################
 func initializeGraphicalUserInterface():
 	get_node("CurrentPoints").set_text(str(get_node("/root/global").points))#  + str(points))
@@ -842,7 +822,6 @@ func initializeGraphicalUserInterface():
 ########################**** END INITIALIZING METHODS ****######################
 
 
-	
 ###########################**** PROCESING METHODS ****##########################
 
 ################################ INVADERS PROCESS ##############################
@@ -851,6 +830,9 @@ func invadersProcess():
 		var laserPos = get_node(laserBeamName).get_pos()
 		var someInvader = get_node(allInvadersNames[i]).get_pos()
 		var isAlive = get_node(allInvadersNames[i]).isAlive
+		if someInvader.y+INVADERS_HIGHT >= INVASION_POSITION:
+			invasion = true
+			break
 		if isAlive:
 			if i < 11:#G
 				if invaderColideRightWall(someInvader.x, INVADERS_G_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_G_WIDTH):
@@ -885,7 +867,6 @@ func invadersProcess():
 				if laserBeamInvaderColide(someInvader, laserPos):
 					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 					shipLaserBeamHitInvader = true
-					#get_node("invadersSoundsPlayer").invaderHit()
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(fPoints)
@@ -905,7 +886,6 @@ func invadersProcess():
 				if laserBeamInvaderColide(someInvader, laserPos):
 					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 					shipLaserBeamHitInvader = true
-					#get_node("invadersSoundsPlayer").invaderHit()
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(fPoints)
@@ -922,11 +902,9 @@ func invadersProcess():
 				if canStep && stepNumber==1:
 					get_node(allInvadersNames[i]).step(STEP)
 				current_invader_width = INVADERS_E_WIDTH
-				#get_node(allInvadersNames[i]).step()
 				if laserBeamInvaderColide(someInvader, laserPos):
 					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 					shipLaserBeamHitInvader = true
-					#get_node("invadersSoundsPlayer").invaderHit()
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(ePoints)
@@ -942,11 +920,9 @@ func invadersProcess():
 				if canStep && stepNumber==0:
 					get_node(allInvadersNames[i]).step(STEP)
 				current_invader_width = INVADERS_E_WIDTH
-				#get_node(allInvadersNames[i]).step()
 				if laserBeamInvaderColide(someInvader, laserPos):
 					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 					shipLaserBeamHitInvader = true
-					#get_node("invadersSoundsPlayer").invaderHit()
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(ePoints)
@@ -966,16 +942,14 @@ func invadersProcess():
 		
 	if canDoVerticalStep:
 		setPreviousPositions()
+		numberOfCurrentVerticalStep = numberOfCurrentVerticalStep + 1
 		STEP = STEP * -1
-		#setInvadersPositions()
 		canDoVerticalStep = false
 		canStep = true
 		wasVerticalStep = false
 	else:
 		wasVerticalStep = true
 ################################################################################
-
-
 
 
 ################################# MYSTERY SHIP PROCESS #########################
@@ -998,12 +972,10 @@ func mysteryProcess(delta):
 				elif get_node("mystery").velocity > 0:
 					get_node("mystery").set_pos(Vector2(MARGIN_LEFT + ((MYSTERY_WIDTH/2)+2), 512))
 					
-				
 				get_node("mystery").moving = true
 		
 	get_node("mystery").movingMastery(delta)
 ################################################################################
-
 
 
 ########################## LASER BEAM SHELTER PROCESS ##########################
@@ -1018,7 +990,6 @@ func shelterProcess():
 ################################################################################
 
 
-
 ############################ LASER BEAM WALL PROCESS ###########################
 func wallProcess():
 	var laserPos = get_node(laserBeamName).get_pos()
@@ -1026,7 +997,6 @@ func wallProcess():
 		laserBeamHitTheWall=true
 		get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 ################################################################################
-
 
 
 ########################### LASER BEAM ROCKET PROCESS #########################
@@ -1054,7 +1024,6 @@ func laserRocketProcess():
 ################################################################################
 
 
-
 ############################## ROCKET WALL PROCESS #############################
 func wallRocketProcess():
 	var poz
@@ -1078,7 +1047,6 @@ func wallRocketProcess():
 		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
 		swapDestoryedRocketWithNewRandom(3)
 ################################################################################
-
 
 
 ############################ ROCKET SHELTER PROCESS ############################
@@ -1138,8 +1106,6 @@ func rokcetShipProcess():
 
 #########################**** END PROCESING METHODS ****########################
 
-
-
 ################################  OTHER  #######################################
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
@@ -1150,6 +1116,7 @@ func _on_Exit_Game_pressed():
 func randomFromZeroTo(upperLimit):
 	var randomNumber = randi()%upperLimit
 	return randomNumber
+
 
 ############################## GUI OR HUD UPDATE ###############################
 func updateGraphicalUserInterface():
@@ -1163,7 +1130,11 @@ func updateGraphicalUserInterface():
 	if get_node("/root/global").checkIfYouDied():
 		get_node("/root/global").points = 0
 		get_node("/root/global").shipsLeft = 3
-		get_tree().reload_current_scene()
+		get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
+	if invasion:
+		get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
+			
+		#get_tree().reload_current_scene()
 ################################################################################
 
 
