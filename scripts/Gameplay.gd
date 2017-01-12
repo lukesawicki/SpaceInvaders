@@ -1127,12 +1127,10 @@ func updateGraphicalUserInterface():
 	get_node("HightScore").update()
 	get_node("ShipsLeft").set_text(str(get_node("/root/global").shipsLeft))
 	get_node("ShipsLeft").update()
-	if get_node("/root/global").checkIfYouDied():
+	if get_node("/root/global").checkIfYouDied() || invasion:
 		get_node("/root/global").points = 0
 		get_node("/root/global").shipsLeft = 3
-		get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
-	if invasion:
-		get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
+		get_node("/root/global").goto_scene("res://scenes/GameOver.tscn")
 			
 		#get_tree().reload_current_scene()
 ################################################################################
