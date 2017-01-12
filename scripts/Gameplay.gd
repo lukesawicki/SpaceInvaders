@@ -129,6 +129,7 @@ var player = preload("res://scenes/AllSoundsPlayer.tscn")
 
 var timer = null
 var stepDelayTime = 0.2
+var stepDelayReduction = 0.05
 var canStep = true
 
 var playSound1 = false
@@ -147,6 +148,7 @@ var noteNumber = 0
 var noteSoundDelayReduction = 0.3
 var previousNumberOfInvaders = 55
 var nuberOfInvadersToChangeSoundDelay = 6
+var previousPointsAfterIncreasingNumberOfShips = 0
 
 func _ready():
 	initializeShelters()
@@ -218,6 +220,8 @@ func _process(delta):
 			shipLaserMoving = true
 			get_node("invadersSoundsPlayer").shot()
 			countShots()
+			#### TESTY TESTY
+			#get_node("/root/global").points = get_node("/root/global").points + 300
 
 			
 	if !rocket1Moving:
@@ -255,6 +259,7 @@ func _process(delta):
 	canStep = false
 	
 	updateGraphicalUserInterface()
+	addShipForPoints()
 	#print(numberOfShots)
 	print(numberOfInvaders)
 ################################ INVADERS PROCESS ################################
@@ -364,7 +369,11 @@ func invadersProcess():
 					addPoints(ePoints)
 					countInvadersLeft()
 					break
-					
+	
+			
+	if shipLaserBeamHitInvader:
+		increaseStepSpeedWhenInvaderDie()
+	
 	playOneNote()
 	
 	if !colidedWall:
@@ -789,6 +798,7 @@ func mysteryLaserColide():
 	var positionLaserBeam = get_node(laserBeamName).get_pos()
 	var mysteryPosition = get_node("mystery").get_pos()
 	if ( positionLaserBeam.x > mysteryPosition.x - MYSTERY_WIDTH/2) && (positionLaserBeam.x < mysteryPosition.x+MYSTERY_WIDTH/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < mysteryPosition.y + MYSTERY_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > mysteryPosition.y - MYSTERY_HIGHT/2):
+		get_node("invadersSoundsPlayer").specialInvaderHit()
 		return true
 	else:
 		return false
@@ -935,6 +945,15 @@ func playingMusicProcess():
 		noteSoundDelayTime = noteSoundDelayTime - noteSoundDelayReduction
 		noteSoundTimer.set_wait_time(noteSoundDelayTime)
 		previousNumberOfInvaders = numberOfInvaders
+		
+func addShipForPoints():
+	if get_node("/root/global").points - previousPointsAfterIncreasingNumberOfShips >= 1500:
+		get_node("/root/global").addShip()
+		previousPointsAfterIncreasingNumberOfShips = get_node("/root/global").points
+		
+func increaseStepSpeedWhenInvaderDie():
+	stepDelayTime = stepDelayTime - stepDelayReduction
+	timer.set_wait_time(stepDelayTime)
 
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
