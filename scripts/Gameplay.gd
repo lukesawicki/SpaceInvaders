@@ -144,6 +144,9 @@ var noteSoundDelayTime = 0.8
 var noteCanPlayNote = true
 var noteNumber = 0
 
+var noteSoundDelayReduction = 0.3
+var previousNumberOfInvaders = 55
+var nuberOfInvadersToChangeSoundDelay = 6
 
 func _ready():
 	initializeShelters()
@@ -191,7 +194,11 @@ func _process(delta):
 
 	mysteryProcess(delta)
 	
+	playingMusicProcess()
+	
 	playAllSounds()
+		
+	playingMusicProcess()
 		
 	get_node(laserBeamName).moving = shipLaserMoving
 	
@@ -248,7 +255,8 @@ func _process(delta):
 	canStep = false
 	
 	updateGraphicalUserInterface()
-	print(numberOfShots)
+	#print(numberOfShots)
+	print(numberOfInvaders)
 ################################ INVADERS PROCESS ################################
 func invadersProcess():
 	for i in range(55):
@@ -273,6 +281,7 @@ func invadersProcess():
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(gPoints)
+					countInvadersLeft()
 					break
 			elif i>10 && i<22:#F
 				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_F_WIDTH):
@@ -292,6 +301,7 @@ func invadersProcess():
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(fPoints)
+					countInvadersLeft()
 					break
 			elif i>21 && i<33:#F
 				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_F_WIDTH):
@@ -311,6 +321,7 @@ func invadersProcess():
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(fPoints)
+					countInvadersLeft()
 					break
 			elif i>32 && i<44:#E
 				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_E_WIDTH):
@@ -331,6 +342,7 @@ func invadersProcess():
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(ePoints)
+					countInvadersLeft()
 					break
 			elif i>43 && i<55:#E
 				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_E_WIDTH):
@@ -350,6 +362,7 @@ func invadersProcess():
 					get_node(allInvadersNames[i]).set_hidden(true)
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(ePoints)
+					countInvadersLeft()
 					break
 					
 	playOneNote()
@@ -386,14 +399,14 @@ func invaderColideLeftWall(invaderPositionX, invaderWidth):
 	return invaderPositionX - invaderWidth/2 < MARGIN_LEFT
 #CHECK COLLISIONS WITH INVADERS
 func colide(invaderPosition, positionLaserBeam):
-	if ((positionLaserBeam.x > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x < invaderPosition.x+current_invader_width/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < invaderPosition.y + INVADERS_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > invaderPosition.y - INVADERS_HIGHT/2) ):
+	if ( ( (positionLaserBeam.x + LASER_BEAM_WIDTH/2 > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x + LASER_BEAM_WIDTH/2 < invaderPosition.x + current_invader_width/2) ) || ( (positionLaserBeam.x - LASER_BEAM_WIDTH/2 > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x - LASER_BEAM_WIDTH/2 < invaderPosition.x + current_invader_width/2) ) ) && ( (positionLaserBeam.y-LASER_BEAM_HIGHT/2 < invaderPosition.y + INVADERS_HIGHT/2) && (positionLaserBeam.y-LASER_BEAM_HIGHT/2 > invaderPosition.y - INVADERS_HIGHT/2) ):
 		shipLaserMoving=false
 		return true
 	else:
 		return false
 #CHECK COLLISIONS WITH SHELTERS
 func colideWithShelter(shelterPosition, positionLaserBeam):
-	if ( positionLaserBeam.x > shelterPosition.x - SHELTER_WIDTH/2) && (positionLaserBeam.x < shelterPosition.x+SHELTER_WIDTH/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < shelterPosition.y + SHELTER_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > shelterPosition.y - SHELTER_HIGHT/2):
+	if ( ( (positionLaserBeam.x + LASER_BEAM_WIDTH/2 > shelterPosition.x - SHELTER_WIDTH/2) && (positionLaserBeam.x + LASER_BEAM_WIDTH/2 < shelterPosition.x + SHELTER_WIDTH/2) ) || ( (positionLaserBeam.x - LASER_BEAM_WIDTH/2 > shelterPosition.x - SHELTER_WIDTH/2) && (positionLaserBeam.x - LASER_BEAM_WIDTH/2 < shelterPosition.x + SHELTER_WIDTH/2) ) ) && ( (positionLaserBeam.y-LASER_BEAM_HIGHT/2 < shelterPosition.y + SHELTER_HIGHT/2) && (positionLaserBeam.y-LASER_BEAM_HIGHT/2 > shelterPosition.y - SHELTER_HIGHT/2) ):
 		shipLaserMoving=false
 		return true
 	else:
@@ -421,7 +434,8 @@ func rocketColideWithWall(rocketPosition, rocketNumber):
 		return false
 		
 func rocketColideWithShelter(rocketPosition, rocketNumber, shelterPosition):
-	if ( rocketPosition.x > shelterPosition.x - SHELTER_WIDTH/2) && (rocketPosition.x < shelterPosition.x+SHELTER_WIDTH/2) && (rocketPosition.y + ROCKED_HIGHT/2 > shelterPosition.y - SHELTER_HIGHT/2) && (rocketPosition.y + ROCKED_HIGHT/2 < shelterPosition.y + SHELTER_HIGHT/2):
+	#if ( rocketPosition.x > shelterPosition.x - SHELTER_WIDTH/2) && (rocketPosition.x < shelterPosition.x+SHELTER_WIDTH/2) && (rocketPosition.y + ROCKED_HIGHT/2 > shelterPosition.y - SHELTER_HIGHT/2) && (rocketPosition.y + ROCKED_HIGHT/2 < shelterPosition.y + SHELTER_HIGHT/2):
+	if ( ( (rocketPosition.x + ROCKED_WIDTH/2 > shelterPosition.x - SHELTER_WIDTH/2) && (rocketPosition.x + ROCKED_WIDTH/2 < shelterPosition.x + SHELTER_WIDTH/2) ) || ( (rocketPosition.x - ROCKED_WIDTH/2 > shelterPosition.x - SHELTER_WIDTH/2) && (rocketPosition.x - ROCKED_WIDTH/2 < shelterPosition.x + SHELTER_WIDTH/2) ) )   &&   ( (rocketPosition.y+ROCKED_HIGHT/2 < shelterPosition.y + SHELTER_HIGHT/2) && (rocketPosition.y+ROCKED_HIGHT/2 > shelterPosition.y - SHELTER_HIGHT/2) ):
 		if rocketNumber == 0:
 			rocket1Moving=false
 		elif rocketNumber == 1:
@@ -915,6 +929,12 @@ func invaderShootingCondition(shootingInvaderPosition):
 				canShoot = false
 				break
 	return canShoot
+
+func playingMusicProcess():
+	if previousNumberOfInvaders - numberOfInvaders == 6:
+		noteSoundDelayTime = noteSoundDelayTime - noteSoundDelayReduction
+		noteSoundTimer.set_wait_time(noteSoundDelayTime)
+		previousNumberOfInvaders = numberOfInvaders
 
 func _on_Main_Menu_pressed():
 	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
