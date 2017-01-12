@@ -145,7 +145,7 @@ flat = true
 
 [node name="logo" type="Sprite" parent="."]
 
-transform/pos = Vector2( 334.545, 311.224 )
+transform/pos = Vector2( 334.545, 300 )
 texture = ExtResource( 6 )
 
 [connection signal="pressed" from="StartNormal" to="." method="_on_StartNormal_pressed"]
