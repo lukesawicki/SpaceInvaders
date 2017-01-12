@@ -137,7 +137,6 @@ var playSound2 = false
 var playSound3 = false
 var playSound4 = false
 
-##########################
 var colidedWall = false
 
 var noteSoundTimer = null
@@ -175,7 +174,7 @@ func _ready():
 	numberOfShots = 0
 	numberOfInvaders = 55
 
-################################ GLOWNA PETLA GRY ################################
+################################ GAME MAIN LOOP ################################
 func _process(delta):
 
 	shelterProcess()
@@ -262,172 +261,62 @@ func _process(delta):
 	addShipForPoints()
 	#print(numberOfShots)
 	print(numberOfInvaders)
-################################ INVADERS PROCESS ################################
-func invadersProcess():
-	for i in range(55):
-		var laserPos = get_node(laserBeamName).get_pos()
-		var someInvader = get_node(allInvadersNames[i]).get_pos()
-		var isAlive = get_node(allInvadersNames[i]).isAlive
-		if isAlive:
-			if i < 11:#G
-				if invaderColideRightWall(someInvader.x, INVADERS_G_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_G_WIDTH):
-					colidedWall = true
-					canStep = false
-					canDoVerticalStep = true
-					verticalStepNumber = verticalStepNumber + 1
-					wasVerticalStep = true
-					break
-				if canStep && stepNumber==4:
-					get_node(allInvadersNames[i]).step(STEP)
-				current_invader_width = INVADERS_G_WIDTH
-				if colide(someInvader, laserPos):
-					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-					shipLaserBeamHitInvader = true
-					get_node(allInvadersNames[i]).set_hidden(true)
-					get_node(allInvadersNames[i]).isAlive = false
-					addPoints(gPoints)
-					countInvadersLeft()
-					break
-			elif i>10 && i<22:#F
-				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_F_WIDTH):
-					colidedWall = true
-					canStep = false
-					canDoVerticalStep = true
-					verticalStepNumber = verticalStepNumber + 1
-					wasVerticalStep = true
-					break
-				if canStep && stepNumber==3:
-					get_node(allInvadersNames[i]).step(STEP)
-				current_invader_width = INVADERS_F_WIDTH
-				if colide(someInvader, laserPos):
-					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-					shipLaserBeamHitInvader = true
-					#get_node("invadersSoundsPlayer").invaderHit()
-					get_node(allInvadersNames[i]).set_hidden(true)
-					get_node(allInvadersNames[i]).isAlive = false
-					addPoints(fPoints)
-					countInvadersLeft()
-					break
-			elif i>21 && i<33:#F
-				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_F_WIDTH):
-					colidedWall = true
-					canStep = false
-					canDoVerticalStep = true
-					verticalStepNumber = verticalStepNumber + 1
-					wasVerticalStep = true
-					break
-				if canStep && stepNumber==2:
-					get_node(allInvadersNames[i]).step(STEP)
-				current_invader_width = INVADERS_F_WIDTH
-				if colide(someInvader, laserPos):
-					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-					shipLaserBeamHitInvader = true
-					#get_node("invadersSoundsPlayer").invaderHit()
-					get_node(allInvadersNames[i]).set_hidden(true)
-					get_node(allInvadersNames[i]).isAlive = false
-					addPoints(fPoints)
-					countInvadersLeft()
-					break
-			elif i>32 && i<44:#E
-				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_E_WIDTH):
-					colidedWall = true
-					canStep = false
-					canDoVerticalStep = true
-					verticalStepNumber = verticalStepNumber + 1
-					wasVerticalStep = true
-					break
-				if canStep && stepNumber==1:
-					get_node(allInvadersNames[i]).step(STEP)
-				current_invader_width = INVADERS_E_WIDTH
-				#get_node(allInvadersNames[i]).step()
-				if colide(someInvader, laserPos):
-					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-					shipLaserBeamHitInvader = true
-					#get_node("invadersSoundsPlayer").invaderHit()
-					get_node(allInvadersNames[i]).set_hidden(true)
-					get_node(allInvadersNames[i]).isAlive = false
-					addPoints(ePoints)
-					countInvadersLeft()
-					break
-			elif i>43 && i<55:#E
-				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_E_WIDTH):
-					colidedWall = true
-					canStep = false
-					canDoVerticalStep = true
-					verticalStepNumber = verticalStepNumber + 1
-					break
-				if canStep && stepNumber==0:
-					get_node(allInvadersNames[i]).step(STEP)
-				current_invader_width = INVADERS_E_WIDTH
-				#get_node(allInvadersNames[i]).step()
-				if colide(someInvader, laserPos):
-					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-					shipLaserBeamHitInvader = true
-					#get_node("invadersSoundsPlayer").invaderHit()
-					get_node(allInvadersNames[i]).set_hidden(true)
-					get_node(allInvadersNames[i]).isAlive = false
-					addPoints(ePoints)
-					countInvadersLeft()
-					break
-	
-			
-	if shipLaserBeamHitInvader:
-		increaseStepSpeedWhenInvaderDie()
-	
-	playOneNote()
-	
-	if !colidedWall:
-		savePositions()
-	
-	colidedWall = false
+############################# END GAME MAIN LOOP ###############################
+
+
+
+
 		
-	if canDoVerticalStep:
-		setPreviousPositions()
-		STEP = STEP * -1
-		#setInvadersPositions()
-		canDoVerticalStep = false
-		canStep = true
-		wasVerticalStep = false
-	else:
-		wasVerticalStep = true
-		
-func savePositions():
-	for invaderName in allInvadersNames:
-		invadersAdditionalInfos[invaderName] = get_node(invaderName).get_pos()
-func setPreviousPositions():
-	for invaderName in allInvadersNames:
-		invadersAdditionalInfos[invaderName].y = invadersAdditionalInfos[invaderName].y + INVADERS_HIGHT+24
-		if STEP > 0:
-			get_node(invaderName).set_pos(Vector2(invadersAdditionalInfos[invaderName].x-12,invadersAdditionalInfos[invaderName].y))
-		else:
-			get_node(invaderName).set_pos(Vector2(invadersAdditionalInfos[invaderName].x+12,invadersAdditionalInfos[invaderName].y))
-			
+###########################**** COLLISIONS METHODS ****#########################
+
+######################### INVADER RIGHT WALL COLLISION #########################
 func invaderColideRightWall(invaderPositionX, invaderWidth):
 	return invaderPositionX + invaderWidth/2 > MARGIN_RIGHT
+################################################################################
+
+
+
+########################## INVADER LEFT WALL COLLISION #########################
 func invaderColideLeftWall(invaderPositionX, invaderWidth):
 	return invaderPositionX - invaderWidth/2 < MARGIN_LEFT
-#CHECK COLLISIONS WITH INVADERS
-func colide(invaderPosition, positionLaserBeam):
+################################################################################
+
+
+
+######################### LASER BEAM INVADER COLLISION #########################
+func laserBeamInvaderColide(invaderPosition, positionLaserBeam):
 	if ( ( (positionLaserBeam.x + LASER_BEAM_WIDTH/2 > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x + LASER_BEAM_WIDTH/2 < invaderPosition.x + current_invader_width/2) ) || ( (positionLaserBeam.x - LASER_BEAM_WIDTH/2 > invaderPosition.x - current_invader_width/2) && (positionLaserBeam.x - LASER_BEAM_WIDTH/2 < invaderPosition.x + current_invader_width/2) ) ) && ( (positionLaserBeam.y-LASER_BEAM_HIGHT/2 < invaderPosition.y + INVADERS_HIGHT/2) && (positionLaserBeam.y-LASER_BEAM_HIGHT/2 > invaderPosition.y - INVADERS_HIGHT/2) ):
 		shipLaserMoving=false
 		return true
 	else:
 		return false
-#CHECK COLLISIONS WITH SHELTERS
+################################################################################
+
+
+
+########################## LASER BEAM SHELTER COLLISON #########################
 func colideWithShelter(shelterPosition, positionLaserBeam):
 	if ( ( (positionLaserBeam.x + LASER_BEAM_WIDTH/2 > shelterPosition.x - SHELTER_WIDTH/2) && (positionLaserBeam.x + LASER_BEAM_WIDTH/2 < shelterPosition.x + SHELTER_WIDTH/2) ) || ( (positionLaserBeam.x - LASER_BEAM_WIDTH/2 > shelterPosition.x - SHELTER_WIDTH/2) && (positionLaserBeam.x - LASER_BEAM_WIDTH/2 < shelterPosition.x + SHELTER_WIDTH/2) ) ) && ( (positionLaserBeam.y-LASER_BEAM_HIGHT/2 < shelterPosition.y + SHELTER_HIGHT/2) && (positionLaserBeam.y-LASER_BEAM_HIGHT/2 > shelterPosition.y - SHELTER_HIGHT/2) ):
 		shipLaserMoving=false
 		return true
 	else:
 		return false
-#CHECK COLLISIONS WITH TOP WALL
+################################################################################
+
+
+
+########################### LASER BEAM WALL COLLISION ##########################
 func colideWithWall(positionLaserBeam):
 	if (positionLaserBeam.y < MARGIN_TOP):
 		shipLaserMoving=false
 		return true;
 	else:
 		return false
+################################################################################
 
+
+
+############################# ROCKET WALL COLLISION ############################
 func rocketColideWithWall(rocketPosition, rocketNumber):
 	if (rocketPosition.y > MARGIN_BOTTOM):
 		if rocketNumber == 0:
@@ -441,7 +330,11 @@ func rocketColideWithWall(rocketPosition, rocketNumber):
 		return true;
 	else:
 		return false
-		
+################################################################################
+
+
+
+########################### ROCKET SHELTER COLLISION ###########################
 func rocketColideWithShelter(rocketPosition, rocketNumber, shelterPosition):
 	#if ( rocketPosition.x > shelterPosition.x - SHELTER_WIDTH/2) && (rocketPosition.x < shelterPosition.x+SHELTER_WIDTH/2) && (rocketPosition.y + ROCKED_HIGHT/2 > shelterPosition.y - SHELTER_HIGHT/2) && (rocketPosition.y + ROCKED_HIGHT/2 < shelterPosition.y + SHELTER_HIGHT/2):
 	if ( ( (rocketPosition.x + ROCKED_WIDTH/2 > shelterPosition.x - SHELTER_WIDTH/2) && (rocketPosition.x + ROCKED_WIDTH/2 < shelterPosition.x + SHELTER_WIDTH/2) ) || ( (rocketPosition.x - ROCKED_WIDTH/2 > shelterPosition.x - SHELTER_WIDTH/2) && (rocketPosition.x - ROCKED_WIDTH/2 < shelterPosition.x + SHELTER_WIDTH/2) ) )   &&   ( (rocketPosition.y+ROCKED_HIGHT/2 < shelterPosition.y + SHELTER_HIGHT/2) && (rocketPosition.y+ROCKED_HIGHT/2 > shelterPosition.y - SHELTER_HIGHT/2) ):
@@ -456,7 +349,11 @@ func rocketColideWithShelter(rocketPosition, rocketNumber, shelterPosition):
 		return true;
 	else:
 		return false
-#rocketship
+################################################################################
+
+
+
+########################### ROCKET SHIP COLLISION ##############################
 func rocketColideWithShip(rocketPosition, rocketNumber, shipPosition):
 	if (rocketPosition.x > shipPosition.x - SHIP_WIDTH/2) && (rocketPosition.x < shipPosition.x + SHIP_WIDTH/2) && (rocketPosition.y + ROCKED_HIGHT/2 > shipPosition.y - SHIP_HIGHT/2) && (rocketPosition.y + ROCKED_HIGHT/2 < shipPosition.y + SHIP_HIGHT/2):
 		if rocketNumber == 0:
@@ -470,42 +367,94 @@ func rocketColideWithShip(rocketPosition, rocketNumber, shipPosition):
 		return true;
 	else:
 		return false
-#rocketColideWithShip(rocketPosition, rocketNumber, shipPosition):
-func rokcetShipProcess():
-	var shipPosition = get_node("myShip").get_pos()
-	var poz = get_node(rocketMovingArray[0]).get_pos()
-	if rocketColideWithShip(poz,0,shipPosition):
-		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(0)
-		get_node("/root/global").subtractShip()
+################################################################################
 
-	poz = get_node(rocketMovingArray[1]).get_pos()
-	if rocketColideWithShip(poz,1,shipPosition):
-		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(1)
-		get_node("/root/global").subtractShip()
+########################### LASER BEAM ROCKET COLLISION ########################
+func laserRocketCollision(rocketPosition, rocketNumber, laserBeamPosition):
+	if (laserBeamPosition.x - LASER_BEAM_WIDTH/2 < rocketPosition.x + ROCKED_WIDTH/2) && (laserBeamPosition.x - LASER_BEAM_WIDTH/2 > rocketPosition.x - ROCKED_WIDTH/2) && (laserBeamPosition.y - LASER_BEAM_HIGHT/2 < rocketPosition.y + ROCKED_HIGHT/2) && (laserBeamPosition.y - LASER_BEAM_HIGHT/2 > rocketPosition.y - ROCKED_HIGHT/2) || (laserBeamPosition.x + LASER_BEAM_WIDTH/2 > rocketPosition.x - ROCKED_WIDTH/2) && (laserBeamPosition.x + LASER_BEAM_WIDTH/2 < rocketPosition.x + ROCKED_WIDTH/2) && (laserBeamPosition.y - LASER_BEAM_HIGHT/2 < rocketPosition.y + ROCKED_HIGHT/2) && (laserBeamPosition.y - LASER_BEAM_HIGHT/2 > rocketPosition.y - ROCKED_HIGHT/2):
+		if rocketNumber == 0:
+			rocket1Moving=false
+		elif rocketNumber == 1:
+			rocket2Moving=false
+		elif rocketNumber == 2:
+			rocket3Moving=false
+		elif rocketNumber == 3:
+			rocket4Moving=false
+		return true;
+	else:
+		return false
+################################################################################
 
-	poz = get_node(rocketMovingArray[2]).get_pos()
-	if rocketColideWithShip(poz,2,shipPosition):
-		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(2)
-		get_node("/root/global").subtractShip()
 
-	poz = get_node(rocketMovingArray[3]).get_pos()
-	if rocketColideWithShip(poz,3,shipPosition):
-		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(3)
-		get_node("/root/global").subtractShip()
-		
+
+########################### MYSTERY SHIP WALL COLLISION ########################
+func mysteryWallColide():
+	var mysteryPosition = get_node("mystery").get_pos()
+	if(mysteryPosition.x < MARGIN_LEFT + MYSTERY_WIDTH/2):
+		return true
+	if(mysteryPosition.x >  MARGIN_RIGHT - MYSTERY_WIDTH/2):
+		return true
+################################################################################
+
+
+
+######################## LASER BEAM MYSTERY SHIP COLLISION #####################
+func mysteryLaserColide():
+	var positionLaserBeam = get_node(laserBeamName).get_pos()
+	var mysteryPosition = get_node("mystery").get_pos()
+	if ( positionLaserBeam.x > mysteryPosition.x - MYSTERY_WIDTH/2) && (positionLaserBeam.x < mysteryPosition.x+MYSTERY_WIDTH/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < mysteryPosition.y + MYSTERY_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > mysteryPosition.y - MYSTERY_HIGHT/2):
+		get_node("invadersSoundsPlayer").specialInvaderHit()
+		return true
+	else:
+		return false
+################################################################################
+
+#########################**** END COLLISIONS METHODS ****#######################
+
+
+
+
+
+#############################**** GAMEPLAY METHODS ****#########################
+
+####################### SAVE INVADERS CURRENT POSITIONS ########################
+func savePositions():
+	for invaderName in allInvadersNames:
+		invadersAdditionalInfos[invaderName] = get_node(invaderName).get_pos()
+################################################################################
+
+
+
+############### SET PREVIOUS INVADERS POSIOTIONS AS CURRENT ####################
+func setPreviousPositions():
+	for invaderName in allInvadersNames:
+		invadersAdditionalInfos[invaderName].y = invadersAdditionalInfos[invaderName].y + INVADERS_HIGHT+24
+		if STEP > 0:
+			get_node(invaderName).set_pos(Vector2(invadersAdditionalInfos[invaderName].x-12,invadersAdditionalInfos[invaderName].y))
+		else:
+			get_node(invaderName).set_pos(Vector2(invadersAdditionalInfos[invaderName].x+12,invadersAdditionalInfos[invaderName].y))
+################################################################################
+
+
+
+########################### WAITING FOR STEP INVADERS ##########################
 func waitForStep():
 	canStep = true
 	stepNumber = stepNumber + 1
 	if( stepNumber == 5):
 		stepNumber = 0
-#___________________________________________________________________________________________________________
+################################################################################
+
+
+
+########################### WAITING FOR PLAYING NOTE ###########################
 func waitForPlayNote():
 	noteCanPlayNote = true
-		
+################################################################################
+
+
+
+#################### PLAYING SOUNDS FOR MUSIC IN GAMEPLAY ######################
 func playOneNote():
 	if noteCanPlayNote:
 		if noteNumber==1:
@@ -517,11 +466,13 @@ func playOneNote():
 		if noteNumber==4:
 			get_node("invadersSoundsPlayer").invader4()
 			noteNumber = 0
-		noteCanPlayNote = false ### UWAGA UWAGA JEST TO W IFIE
+		noteCanPlayNote = false # WARNING THIS IS IN THE IF CONDITION
 		noteNumber = noteNumber + 1
+################################################################################
 
-	
-	
+
+
+############## SETTING SHOOTING INVADER POSITION TO VARIABLE ###################
 func setPositionOfShootingInvader():
 	var ifCanShoot = false
 	while !ifCanShoot:
@@ -530,7 +481,226 @@ func setPositionOfShootingInvader():
 		ifCanShoot = get_node(allInvadersNames[invaderWhichAreShootingNow]).isAlive && invaderShootingCondition(get_node(allInvadersNames[invaderWhichAreShootingNow]).get_pos())
 	if ifCanShoot:
 		shootingInvaderPosition = get_node(allInvadersNames[invaderWhichAreShootingNow]).get_pos()
+################################################################################
+
+
+
+
+
+
+
+################## SET INVADERS POSITION TO START POINT ########################
+func setInvadersPositions():
+	var invaderPosition = Vector2(0, 0)
+	positionX = MARGIN_LEFT
+	positionY = MARGIN_TOP + INVADERS_HIGHT * verticalStepNumber
 	
+	for i in range(55):
+		if i < 11:
+			if wasVerticalStep && i == 0:
+				positionX = positionX + INVADERS_G_WIDTH/2
+			else:
+				positionX = positionX + INVADERS_G_WIDTH + SPACE_BETWEEN_G
+			invaderPosition.x = positionX
+			invaderPosition.y = positionY
+			get_node("InvaderG" + str(i)).set_pos(invaderPosition)
+			
+		elif i>10 && i<33:
+			if i == 11 || i == 22:
+				positionX = MARGIN_LEFT
+				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
+			if wasVerticalStep && ( i == 11 || i == 22):
+				positionX = positionX + INVADERS_F_WIDTH/2
+			else:
+				positionX = positionX + INVADERS_F_WIDTH + SPACE_BETWEEN_F #get_node(nodeInGroup).set_pos(position, 24)
+			invaderPosition.x = positionX
+			invaderPosition.y = positionY
+			get_node("InvaderF" + str(i)).set_pos(invaderPosition)
+		
+		elif i>32 && i<55:
+			if i == 33 || i == 44:
+				positionX = MARGIN_LEFT
+				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
+			if wasVerticalStep && ( i == 33 || i == 44):
+				positionX = positionX + INVADERS_E_WIDTH/2
+			else:
+				positionX = positionX + INVADERS_E_WIDTH + SPACE_BETWEEN_E  #get_node(nodeInGroup).set_pos(position, 24)
+			invaderPosition.x = positionX
+			invaderPosition.y = positionY
+			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
+################################################################################
+
+
+
+
+################### CREATE 12 RANDOM ROCKETS 4-ANY KIND ########################
+func createListOfRockets():
+	for i in range(4):
+		var rocketName = "1" + str(i)
+		rocketNamesArray.push_back(rocketName)
+		var rocketInstance = rocketScene1.instance()
+		rocketInstance.set_name(rocketName)
+		add_child(rocketInstance)
+		get_node(rocketName).set_pos(rocketsPositionOutOfView)
+
+	for i in range(4):
+		var rocketName = "2" + str(i)
+		rocketNamesArray.push_back(rocketName)
+		var rocketInstance = rocketScene2.instance()
+		rocketInstance.set_name(rocketName)
+		add_child(rocketInstance)
+		get_node(rocketName).set_pos(rocketsPositionOutOfView)
+
+	for i in range(4):
+		var rocketName = "3" + str(i)
+		rocketNamesArray.push_back(rocketName)
+		var rocketInstance = rocketScene3.instance()
+		rocketInstance.set_name(rocketName)
+		add_child(rocketInstance)
+		get_node(rocketName).set_pos(rocketsPositionOutOfView)
+################################################################################
+		
+
+############################# MYSTERY SHIP MOVING CONDITION ####################
+func mysteryMovingCondition():
+	if numberOfShots == 15:
+		mysteryRun = true
+		numberOfShots = 0
+################################################################################
+
+
+############################## PLAYIN ALL SOUNDS ###############################
+func playAllSounds():
+	if shipLaserBeamHitInvader||shipLaserBeamHitShelter||laserBeamHitTheWall:
+		get_node("invadersSoundsPlayer").invaderHit()
+	#if shipLaserBeamHitShelter:
+	#	get_node("invadersSoundsPlayer").invaderHit()
+	#if laserBeamHitTheWall:
+	#	get_node("invadersSoundsPlayer").invaderHit()
+	
+	laserBeamHitTheWall = false
+	shipLaserBeamHitInvader = false
+	shipLaserBeamHitShelter = false
+################################################################################
+
+
+
+################################### ADDING POINTS ##############################
+func addPoints(newPoints):
+	get_node("/root/global").points = get_node("/root/global").points + newPoints
+################################################################################
+
+
+
+################################### SHOTS COUNTER ##############################
+func countShots():
+	numberOfShots = numberOfShots + 1
+################################################################################
+
+
+
+################################# LEFT INVADERS COUNTER ########################
+func countInvadersLeft():
+	numberOfInvaders = numberOfInvaders - 1
+################################################################################
+
+
+
+############################# INVADER SHOOTING CONDITION #######################
+func invaderShootingCondition(shootingInvaderPosition):
+	var invPosition
+	var canShoot = true
+	for inv in allInvadersNames:
+		invPosition = get_node(inv).get_pos()
+		if get_node(inv).isAlive:
+			if invPosition.y > shootingInvaderPosition.y && shootingInvaderPosition.x > invPosition.x - get_node(inv).WIDTH/2 && shootingInvaderPosition.x < invPosition.x + get_node(inv).WIDTH/2:
+				canShoot = false
+				break
+	return canShoot
+################################################################################
+
+
+
+#################### PLAYING SOUNDS OF MUSIC(FOUR SOUNDS) ######################
+func playingMusicProcess():
+	if previousNumberOfInvaders - numberOfInvaders == 6:
+		noteSoundDelayTime = noteSoundDelayTime - noteSoundDelayReduction
+		noteSoundTimer.set_wait_time(noteSoundDelayTime)
+		previousNumberOfInvaders = numberOfInvaders
+################################################################################
+
+
+
+####################### ADDING NEW SHIP FOR 1500 POINTS ########################
+func addShipForPoints():
+	if get_node("/root/global").points - previousPointsAfterIncreasingNumberOfShips >= 1500:
+		get_node("/root/global").addShip()
+		previousPointsAfterIncreasingNumberOfShips = get_node("/root/global").points
+################################################################################
+
+################################# INCREASING INVADERS SPEED ####################
+func increaseStepSpeedWhenInvaderDie():
+	stepDelayTime = stepDelayTime - stepDelayReduction
+	timer.set_wait_time(stepDelayTime)
+################################################################################
+
+################### CREATE SET OF RANDOM ROCKETS TO SHOTING ####################
+func createListOfRandomMovingRockets():
+	randomize()
+	var randomRocket = randi()%12
+	rocketMovingArray.push_back(rocketNamesArray[randomRocket])
+	var brakuje = true
+	var licznikDodanych = 1
+	var nieMaTakiejRakiety = false
+	while brakuje:
+		randomize()
+		randomRocket = randi()%12
+		for i in range(0, rocketMovingArray.size()):
+			if rocketMovingArray[i].to_int() !=rocketNamesArray[randomRocket].to_int():
+				nieMaTakiejRakiety = true
+			else:
+				nieMaTakiejRakiety = false
+				break
+		if nieMaTakiejRakiety:
+			rocketMovingArray.push_back(rocketNamesArray[randomRocket])
+			licznikDodanych = licznikDodanych + 1
+		if licznikDodanych != 4:
+			brakuje = true
+		elif licznikDodanych == 4:
+			brakuje = false
+################################################################################
+
+
+
+######################### ROCKET SWAPING WHEN DESTROYED ########################
+func swapDestoryedRocketWithNewRandom(destroyed):
+	var wrzucilemNowa = false
+	var randomRocket
+	var nieMaTakiejRakiety = false
+	while !wrzucilemNowa:
+		randomize()
+		randomRocket = randi()%12
+		for i in range(0, rocketMovingArray.size()):
+			if rocketMovingArray[i].to_int() !=rocketNamesArray[randomRocket].to_int():
+				nieMaTakiejRakiety = true
+			else:
+				nieMaTakiejRakiety = false
+				break
+		if nieMaTakiejRakiety:
+			rocketMovingArray[destroyed] = rocketNamesArray[randomRocket]
+			wrzucilemNowa = true
+		else:
+			wrzucilemNowa = false
+################################################################################
+
+
+###########################**** END GAMEPLAY METHODS ****#######################
+
+
+############################**** INITIALIZING METHODS ****######################
+
+
+############################# INITIALIZING INVADERS ############################
 func initializeInvaders():
 	var invaderPosition = Vector2(0, 0)
 	positionX = MARGIN_LEFT
@@ -581,232 +751,234 @@ func initializeInvaders():
 			invaderPosition.y = positionY
 			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
 			allInvadersNames.push_back("InvaderE" + str(i))
-
-func shelterProcess():
+################################################################################
+	
+	
+	
+############################# SHELTERS INITALIZATION ###########################
+func initializeShelters():
+	var shelterPosition = Vector2(0, SHTELER_ROW_Y_POSITION)
+	var shelterTemporaryPositionX = 0
 	for i in range(4):
-		var laserPos = get_node(laserBeamName).get_pos()
-		var someShelter = get_node(allSheltersNames[i]).get_pos()
-		if colideWithShelter(someShelter, laserPos):
-			shipLaserBeamHitShelter=true
-			get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
-			break
+			var shelterInstance = shelter.instance()
+			shelterInstance.set_name("Shelter" + str(i))
+			add_child(shelterInstance)
+			shelterTemporaryPositionX = shelterTemporaryPositionX + SHELTER_WIDTH + SPACE_BETWEEN_SHELTERS
+			shelterPosition.x = shelterTemporaryPositionX
+			get_node("Shelter" + str(i)).set_pos(shelterPosition)
+			allSheltersNames.push_back("Shelter" + str(i))
+################################################################################
 
-func wallProcess():
-	var laserPos = get_node(laserBeamName).get_pos()
-	if colideWithWall(laserPos):
-		laserBeamHitTheWall=true
-		get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 
-func wallRocketProcess():
-	var poz
-	poz = get_node(rocketMovingArray[0]).get_pos()
-	if rocketColideWithWall(poz,0):
-		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(0)
+
+############################# TERRAN SHIP INITALIZATION ########################
+func initializeTerranShip():
+	terranShipp = terranShipScene.instance()
+	terranShipp.set_name("myShip")
+	add_child(terranShipp)
+################################################################################
+
+
+
+############################# LASER BEAM INITALIZATION #########################
+func initializeLaserBeam():
+	var laserBeamInstance = laserBeam.instance()
+	laserBeamInstance.set_name("LaserBeam")
+	add_child(laserBeamInstance)
+	get_node("LaserBeam").set_pos(laserBeamPositionOutOfView)
+	laserBeamName = "LaserBeam"
+################################################################################
+
+
+
+############################# MYSTERY SHIP INITALIZATION #######################
+func initializeMysteryShip():
+	var mysteryInvaderInstance = mysteryInvader.instance()
+	mysteryInvaderInstance.set_name("mystery")
+	add_child(mysteryInvaderInstance)
+################################################################################
+
+
+
+############################# SOUND PLAYER INITALIZATION #######################
+func initializeSoundPlayer():
+	var soundsPlayer = player.instance()
+	soundsPlayer.set_name("invadersSoundsPlayer")
+	add_child(soundsPlayer)
+	set_process(true)
+################################################################################
+
+
+
+########################### ALL TIMERS INITALIZATION ###########################
+func initializeTimers():
+	timer = Timer.new()
+	timer.set_wait_time(stepDelayTime)
+	timer.set_active(true)
+	timer.connect("timeout", self, "waitForStep")
+	timer.start()
+	add_child(timer)
 	
-	poz = get_node(rocketMovingArray[1]).get_pos()
-	if rocketColideWithWall(poz,1):
-		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(1)
+	noteSoundTimer = Timer.new()
+	noteSoundTimer.set_wait_time(noteSoundDelayTime)
+	noteSoundTimer.set_active(true)
+	noteSoundTimer.connect("timeout", self, "waitForPlayNote")
+	noteSoundTimer.start()
+	add_child(noteSoundTimer)
+################################################################################
+
+
+
+############################# GUI HUD INITALIZATION ############################
+func initializeGraphicalUserInterface():
+	get_node("CurrentPoints").set_text(str(get_node("/root/global").points))#  + str(points))
+	get_node("CurrentPoints").update()
+	get_node("HightScore").set_text(str(get_node("/root/global").hiscore))#  + str(points))
+	get_node("HightScore").update()
+	get_node("ShipsLeft").set_text(str(get_node("/root/global").shipsLeft))
+	get_node("ShipsLeft").update()
+################################################################################
+
+########################**** END INITIALIZING METHODS ****######################
+
+
 	
-	poz = get_node(rocketMovingArray[2]).get_pos()
-	if rocketColideWithWall(poz,2):
-		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(2)
-	
-	poz = get_node(rocketMovingArray[3]).get_pos()
-	if rocketColideWithWall(poz,3):
-		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(3)
+###########################**** PROCESING METHODS ****##########################
 
-
-func rocketShelterProcess():
-	for i in range(4):
-		var someShelterPosition = get_node(allSheltersNames[i]).get_pos()
-		var poz = get_node(rocketMovingArray[0]).get_pos()
-		if rocketColideWithShelter(poz,0,someShelterPosition):
-			get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
-			swapDestoryedRocketWithNewRandom(0)
-
-		poz = get_node(rocketMovingArray[1]).get_pos()
-		if rocketColideWithShelter(poz,1,someShelterPosition):
-			get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
-			swapDestoryedRocketWithNewRandom(1)
-
-		poz = get_node(rocketMovingArray[2]).get_pos()
-		if rocketColideWithShelter(poz,2,someShelterPosition):
-			get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
-			swapDestoryedRocketWithNewRandom(2)
-
-		poz = get_node(rocketMovingArray[3]).get_pos()
-		if rocketColideWithShelter(poz,3,someShelterPosition):
-			get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
-			swapDestoryedRocketWithNewRandom(3)
-
-func setInvadersPositions():
-	var invaderPosition = Vector2(0, 0)
-	positionX = MARGIN_LEFT
-	positionY = MARGIN_TOP + INVADERS_HIGHT * verticalStepNumber
-	
+################################ INVADERS PROCESS ##############################
+func invadersProcess():
 	for i in range(55):
-		if i < 11:
-			if wasVerticalStep && i == 0:
-				positionX = positionX + INVADERS_G_WIDTH/2
-			else:
-				positionX = positionX + INVADERS_G_WIDTH + SPACE_BETWEEN_G
-			invaderPosition.x = positionX
-			invaderPosition.y = positionY
-			get_node("InvaderG" + str(i)).set_pos(invaderPosition)
-			
-		elif i>10 && i<33:
-			if i == 11 || i == 22:
-				positionX = MARGIN_LEFT
-				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
-			if wasVerticalStep && ( i == 11 || i == 22):
-				positionX = positionX + INVADERS_F_WIDTH/2
-			else:
-				positionX = positionX + INVADERS_F_WIDTH + SPACE_BETWEEN_F #get_node(nodeInGroup).set_pos(position, 24)
-			invaderPosition.x = positionX
-			invaderPosition.y = positionY
-			get_node("InvaderF" + str(i)).set_pos(invaderPosition)
-		
-		elif i>32 && i<55:
-			if i == 33 || i == 44:
-				positionX = MARGIN_LEFT
-				positionY = positionY+INVADERS_ROWS_SPACE+INVADERS_HIGHT
-			if wasVerticalStep && ( i == 33 || i == 44):
-				positionX = positionX + INVADERS_E_WIDTH/2
-			else:
-				positionX = positionX + INVADERS_E_WIDTH + SPACE_BETWEEN_E  #get_node(nodeInGroup).set_pos(position, 24)
-			invaderPosition.x = positionX
-			invaderPosition.y = positionY
-			get_node("InvaderE" + str(i)).set_pos(invaderPosition)
-######################################################################################################
-
-func createListOfRockets():
-	for i in range(4):
-		var rocketName = "1" + str(i)
-		rocketNamesArray.push_back(rocketName)
-		var rocketInstance = rocketScene1.instance()
-		rocketInstance.set_name(rocketName)
-		add_child(rocketInstance)
-		get_node(rocketName).set_pos(rocketsPositionOutOfView)
-
-	for i in range(4):
-		var rocketName = "2" + str(i)
-		rocketNamesArray.push_back(rocketName)
-		var rocketInstance = rocketScene2.instance()
-		rocketInstance.set_name(rocketName)
-		add_child(rocketInstance)
-		get_node(rocketName).set_pos(rocketsPositionOutOfView)
-
-	for i in range(4):
-		var rocketName = "3" + str(i)
-		rocketNamesArray.push_back(rocketName)
-		var rocketInstance = rocketScene3.instance()
-		rocketInstance.set_name(rocketName)
-		add_child(rocketInstance)
-		get_node(rocketName).set_pos(rocketsPositionOutOfView)
-
-func createListOfRandomMovingRockets():
-	randomize()
-	var randomRocket = randi()%12
-	rocketMovingArray.push_back(rocketNamesArray[randomRocket])
-	var brakuje = true
-	var licznikDodanych = 1
-	var nieMaTakiejRakiety = false
-	while brakuje:
-		randomize()
-		randomRocket = randi()%12
-		for i in range(0, rocketMovingArray.size()):
-			if rocketMovingArray[i].to_int() !=rocketNamesArray[randomRocket].to_int():
-				nieMaTakiejRakiety = true
-			else:
-				nieMaTakiejRakiety = false
-				break
-		if nieMaTakiejRakiety:
-			rocketMovingArray.push_back(rocketNamesArray[randomRocket])
-			licznikDodanych = licznikDodanych + 1
-		if licznikDodanych != 4:
-			brakuje = true
-		elif licznikDodanych == 4:
-			brakuje = false
-			
-func swapDestoryedRocketWithNewRandom(destroyed):
-	var wrzucilemNowa = false
-	var randomRocket
-	var nieMaTakiejRakiety = false
-	while !wrzucilemNowa:
-		randomize()
-		randomRocket = randi()%12
-		for i in range(0, rocketMovingArray.size()):
-			if rocketMovingArray[i].to_int() !=rocketNamesArray[randomRocket].to_int():
-				nieMaTakiejRakiety = true
-			else:
-				nieMaTakiejRakiety = false
-				break
-		if nieMaTakiejRakiety:
-			rocketMovingArray[destroyed] = rocketNamesArray[randomRocket]
-			wrzucilemNowa = true
-		else:
-			wrzucilemNowa = false
-
-func laserRocketCollision(rocketPosition, rocketNumber, laserBeamPosition):
-	if (laserBeamPosition.x - LASER_BEAM_WIDTH/2 < rocketPosition.x + ROCKED_WIDTH/2) && (laserBeamPosition.x - LASER_BEAM_WIDTH/2 > rocketPosition.x - ROCKED_WIDTH/2) && (laserBeamPosition.y - LASER_BEAM_HIGHT/2 < rocketPosition.y + ROCKED_HIGHT/2) && (laserBeamPosition.y - LASER_BEAM_HIGHT/2 > rocketPosition.y - ROCKED_HIGHT/2) || (laserBeamPosition.x + LASER_BEAM_WIDTH/2 > rocketPosition.x - ROCKED_WIDTH/2) && (laserBeamPosition.x + LASER_BEAM_WIDTH/2 < rocketPosition.x + ROCKED_WIDTH/2) && (laserBeamPosition.y - LASER_BEAM_HIGHT/2 < rocketPosition.y + ROCKED_HIGHT/2) && (laserBeamPosition.y - LASER_BEAM_HIGHT/2 > rocketPosition.y - ROCKED_HIGHT/2):
-		if rocketNumber == 0:
-			rocket1Moving=false
-		elif rocketNumber == 1:
-			rocket2Moving=false
-		elif rocketNumber == 2:
-			rocket3Moving=false
-		elif rocketNumber == 3:
-			rocket4Moving=false
-		return true;
-	else:
-		return false
+		var laserPos = get_node(laserBeamName).get_pos()
+		var someInvader = get_node(allInvadersNames[i]).get_pos()
+		var isAlive = get_node(allInvadersNames[i]).isAlive
+		if isAlive:
+			if i < 11:#G
+				if invaderColideRightWall(someInvader.x, INVADERS_G_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_G_WIDTH):
+					colidedWall = true
+					canStep = false
+					canDoVerticalStep = true
+					verticalStepNumber = verticalStepNumber + 1
+					wasVerticalStep = true
+					break
+				if canStep && stepNumber==4:
+					get_node(allInvadersNames[i]).step(STEP)
+				current_invader_width = INVADERS_G_WIDTH
+				if laserBeamInvaderColide(someInvader, laserPos):
+					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+					shipLaserBeamHitInvader = true
+					get_node(allInvadersNames[i]).set_hidden(true)
+					get_node(allInvadersNames[i]).isAlive = false
+					addPoints(gPoints)
+					countInvadersLeft()
+					break
+			elif i>10 && i<22:#F
+				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_F_WIDTH):
+					colidedWall = true
+					canStep = false
+					canDoVerticalStep = true
+					verticalStepNumber = verticalStepNumber + 1
+					wasVerticalStep = true
+					break
+				if canStep && stepNumber==3:
+					get_node(allInvadersNames[i]).step(STEP)
+				current_invader_width = INVADERS_F_WIDTH
+				if laserBeamInvaderColide(someInvader, laserPos):
+					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+					shipLaserBeamHitInvader = true
+					#get_node("invadersSoundsPlayer").invaderHit()
+					get_node(allInvadersNames[i]).set_hidden(true)
+					get_node(allInvadersNames[i]).isAlive = false
+					addPoints(fPoints)
+					countInvadersLeft()
+					break
+			elif i>21 && i<33:#F
+				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_F_WIDTH):
+					colidedWall = true
+					canStep = false
+					canDoVerticalStep = true
+					verticalStepNumber = verticalStepNumber + 1
+					wasVerticalStep = true
+					break
+				if canStep && stepNumber==2:
+					get_node(allInvadersNames[i]).step(STEP)
+				current_invader_width = INVADERS_F_WIDTH
+				if laserBeamInvaderColide(someInvader, laserPos):
+					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+					shipLaserBeamHitInvader = true
+					#get_node("invadersSoundsPlayer").invaderHit()
+					get_node(allInvadersNames[i]).set_hidden(true)
+					get_node(allInvadersNames[i]).isAlive = false
+					addPoints(fPoints)
+					countInvadersLeft()
+					break
+			elif i>32 && i<44:#E
+				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_E_WIDTH):
+					colidedWall = true
+					canStep = false
+					canDoVerticalStep = true
+					verticalStepNumber = verticalStepNumber + 1
+					wasVerticalStep = true
+					break
+				if canStep && stepNumber==1:
+					get_node(allInvadersNames[i]).step(STEP)
+				current_invader_width = INVADERS_E_WIDTH
+				#get_node(allInvadersNames[i]).step()
+				if laserBeamInvaderColide(someInvader, laserPos):
+					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+					shipLaserBeamHitInvader = true
+					#get_node("invadersSoundsPlayer").invaderHit()
+					get_node(allInvadersNames[i]).set_hidden(true)
+					get_node(allInvadersNames[i]).isAlive = false
+					addPoints(ePoints)
+					countInvadersLeft()
+					break
+			elif i>43 && i<55:#E
+				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_E_WIDTH):
+					colidedWall = true
+					canStep = false
+					canDoVerticalStep = true
+					verticalStepNumber = verticalStepNumber + 1
+					break
+				if canStep && stepNumber==0:
+					get_node(allInvadersNames[i]).step(STEP)
+				current_invader_width = INVADERS_E_WIDTH
+				#get_node(allInvadersNames[i]).step()
+				if laserBeamInvaderColide(someInvader, laserPos):
+					get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+					shipLaserBeamHitInvader = true
+					#get_node("invadersSoundsPlayer").invaderHit()
+					get_node(allInvadersNames[i]).set_hidden(true)
+					get_node(allInvadersNames[i]).isAlive = false
+					addPoints(ePoints)
+					countInvadersLeft()
+					break
 	
-func laserRocketProcess():
-	var laserPosition = get_node(laserBeamName).get_pos()
-	var poz = get_node(rocketMovingArray[0]).get_pos()
-	if laserRocketCollision(poz,0,laserPosition):
-		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(0)
-
-	poz = get_node(rocketMovingArray[1]).get_pos()
-	if laserRocketCollision(poz,1,laserPosition):
-		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(1)
-
-	poz = get_node(rocketMovingArray[2]).get_pos()
-	if laserRocketCollision(poz,2,laserPosition):
-		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(2)
-
-	poz = get_node(rocketMovingArray[3]).get_pos()
-	if laserRocketCollision(poz,3,laserPosition):
-		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(3)
-
-func mysteryWallColide():
-	var mysteryPosition = get_node("mystery").get_pos()
-	if(mysteryPosition.x < MARGIN_LEFT + MYSTERY_WIDTH/2):
-		return true
-	if(mysteryPosition.x >  MARGIN_RIGHT - MYSTERY_WIDTH/2):
-		return true
-
-func mysteryLaserColide():
-	var positionLaserBeam = get_node(laserBeamName).get_pos()
-	var mysteryPosition = get_node("mystery").get_pos()
-	if ( positionLaserBeam.x > mysteryPosition.x - MYSTERY_WIDTH/2) && (positionLaserBeam.x < mysteryPosition.x+MYSTERY_WIDTH/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 < mysteryPosition.y + MYSTERY_HIGHT/2) && (positionLaserBeam.y - LASER_BEAM_HIGHT/2 > mysteryPosition.y - MYSTERY_HIGHT/2):
-		get_node("invadersSoundsPlayer").specialInvaderHit()
-		return true
-	else:
-		return false
+			
+	if shipLaserBeamHitInvader:
+		increaseStepSpeedWhenInvaderDie()
+	
+	playOneNote()
+	
+	if !colidedWall:
+		savePositions()
+	
+	colidedWall = false
 		
-func mysteryMovingCondition():
-	if numberOfShots == 15:
-		mysteryRun = true
-		numberOfShots = 0
+	if canDoVerticalStep:
+		setPreviousPositions()
+		STEP = STEP * -1
+		#setInvadersPositions()
+		canDoVerticalStep = false
+		canStep = true
+		wasVerticalStep = false
+	else:
+		wasVerticalStep = true
+################################################################################
+
+
+
+
+################################# MYSTERY SHIP PROCESS #########################
 func mysteryProcess(delta):
 	if mysteryWallColide():
 		get_node("mystery").moving = false
@@ -830,86 +1002,156 @@ func mysteryProcess(delta):
 				get_node("mystery").moving = true
 		
 	get_node("mystery").movingMastery(delta)
-	
-func playAllSounds():
-	if shipLaserBeamHitInvader||shipLaserBeamHitShelter||laserBeamHitTheWall:
-		get_node("invadersSoundsPlayer").invaderHit()
-	#if shipLaserBeamHitShelter:
-	#	get_node("invadersSoundsPlayer").invaderHit()
-	#if laserBeamHitTheWall:
-	#	get_node("invadersSoundsPlayer").invaderHit()
-	
-	laserBeamHitTheWall = false
-	shipLaserBeamHitInvader = false
-	shipLaserBeamHitShelter = false
-#####################################################    WAIT FOR MYSTERY
-func waitForMystery():
-	pass#mysteryRun = true
+################################################################################
 
-func addPoints(newPoints):
-	get_node("/root/global").points = get_node("/root/global").points + newPoints
+
+
+########################## LASER BEAM SHELTER PROCESS ##########################
+func shelterProcess():
+	for i in range(4):
+		var laserPos = get_node(laserBeamName).get_pos()
+		var someShelter = get_node(allSheltersNames[i]).get_pos()
+		if colideWithShelter(someShelter, laserPos):
+			shipLaserBeamHitShelter=true
+			get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+			break
+################################################################################
+
+
+
+############################ LASER BEAM WALL PROCESS ###########################
+func wallProcess():
+	var laserPos = get_node(laserBeamName).get_pos()
+	if colideWithWall(laserPos):
+		laserBeamHitTheWall=true
+		get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
+################################################################################
+
+
+
+########################### LASER BEAM ROCKET PROCESS #########################
+func laserRocketProcess():
+	var laserPosition = get_node(laserBeamName).get_pos()
+	var poz = get_node(rocketMovingArray[0]).get_pos()
+	if laserRocketCollision(poz,0,laserPosition):
+		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(0)
+
+	poz = get_node(rocketMovingArray[1]).get_pos()
+	if laserRocketCollision(poz,1,laserPosition):
+		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(1)
+
+	poz = get_node(rocketMovingArray[2]).get_pos()
+	if laserRocketCollision(poz,2,laserPosition):
+		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(2)
+
+	poz = get_node(rocketMovingArray[3]).get_pos()
+	if laserRocketCollision(poz,3,laserPosition):
+		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(3)
+################################################################################
+
+
+
+############################## ROCKET WALL PROCESS #############################
+func wallRocketProcess():
+	var poz
+	poz = get_node(rocketMovingArray[0]).get_pos()
+	if rocketColideWithWall(poz,0):
+		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(0)
 	
+	poz = get_node(rocketMovingArray[1]).get_pos()
+	if rocketColideWithWall(poz,1):
+		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(1)
+	
+	poz = get_node(rocketMovingArray[2]).get_pos()
+	if rocketColideWithWall(poz,2):
+		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(2)
+	
+	poz = get_node(rocketMovingArray[3]).get_pos()
+	if rocketColideWithWall(poz,3):
+		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(3)
+################################################################################
+
+
+
+############################ ROCKET SHELTER PROCESS ############################
+func rocketShelterProcess():
+	for i in range(4):
+		var someShelterPosition = get_node(allSheltersNames[i]).get_pos()
+		var poz = get_node(rocketMovingArray[0]).get_pos()
+		if rocketColideWithShelter(poz,0,someShelterPosition):
+			get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
+			swapDestoryedRocketWithNewRandom(0)
+
+		poz = get_node(rocketMovingArray[1]).get_pos()
+		if rocketColideWithShelter(poz,1,someShelterPosition):
+			get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
+			swapDestoryedRocketWithNewRandom(1)
+
+		poz = get_node(rocketMovingArray[2]).get_pos()
+		if rocketColideWithShelter(poz,2,someShelterPosition):
+			get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
+			swapDestoryedRocketWithNewRandom(2)
+
+		poz = get_node(rocketMovingArray[3]).get_pos()
+		if rocketColideWithShelter(poz,3,someShelterPosition):
+			get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
+			swapDestoryedRocketWithNewRandom(3)
+################################################################################
+
+
+###################### ROCKET PROCESS (ON SHIP COLLISION) ######################
+func rokcetShipProcess():
+	var shipPosition = get_node("myShip").get_pos()
+	var poz = get_node(rocketMovingArray[0]).get_pos()
+	if rocketColideWithShip(poz,0,shipPosition):
+		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(0)
+		get_node("/root/global").subtractShip()
+
+	poz = get_node(rocketMovingArray[1]).get_pos()
+	if rocketColideWithShip(poz,1,shipPosition):
+		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(1)
+		get_node("/root/global").subtractShip()
+
+	poz = get_node(rocketMovingArray[2]).get_pos()
+	if rocketColideWithShip(poz,2,shipPosition):
+		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(2)
+		get_node("/root/global").subtractShip()
+
+	poz = get_node(rocketMovingArray[3]).get_pos()
+	if rocketColideWithShip(poz,3,shipPosition):
+		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
+		swapDestoryedRocketWithNewRandom(3)
+		get_node("/root/global").subtractShip()
+################################################################################
+
+
+#########################**** END PROCESING METHODS ****########################
+
+
+
+################################  OTHER  #######################################
+func _on_Main_Menu_pressed():
+	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
+	
+func _on_Exit_Game_pressed():
+	get_node("/root/global").goto_scene("res://scenes/EndingScreen.tscn")
+
 func randomFromZeroTo(upperLimit):
 	var randomNumber = randi()%upperLimit
 	return randomNumber
-func initializeTimers():
-	timer = Timer.new()
-	timer.set_wait_time(stepDelayTime)
-	timer.set_active(true)
-	timer.connect("timeout", self, "waitForStep")
-	timer.start()
-	add_child(timer)
-	
-	noteSoundTimer = Timer.new()
-	noteSoundTimer.set_wait_time(noteSoundDelayTime)
-	noteSoundTimer.set_active(true)
-	noteSoundTimer.connect("timeout", self, "waitForPlayNote")
-	noteSoundTimer.start()
-	add_child(noteSoundTimer)
 
-func initializeShelters():
-	var shelterPosition = Vector2(0, SHTELER_ROW_Y_POSITION)
-	var shelterTemporaryPositionX = 0
-	for i in range(4):
-			var shelterInstance = shelter.instance()
-			shelterInstance.set_name("Shelter" + str(i))
-			add_child(shelterInstance)
-			shelterTemporaryPositionX = shelterTemporaryPositionX + SHELTER_WIDTH + SPACE_BETWEEN_SHELTERS
-			shelterPosition.x = shelterTemporaryPositionX
-			get_node("Shelter" + str(i)).set_pos(shelterPosition)
-			allSheltersNames.push_back("Shelter" + str(i))
-
-func initializeTerranShip():
-	terranShipp = terranShipScene.instance()
-	terranShipp.set_name("myShip")
-	add_child(terranShipp)
-
-func initializeLaserBeam():
-	var laserBeamInstance = laserBeam.instance()
-	laserBeamInstance.set_name("LaserBeam")
-	add_child(laserBeamInstance)
-	get_node("LaserBeam").set_pos(laserBeamPositionOutOfView)
-	laserBeamName = "LaserBeam"
-	
-func initializeMysteryShip():
-	var mysteryInvaderInstance = mysteryInvader.instance()
-	mysteryInvaderInstance.set_name("mystery")
-	add_child(mysteryInvaderInstance)
-	
-func initializeSoundPlayer():
-	var soundsPlayer = player.instance()
-	soundsPlayer.set_name("invadersSoundsPlayer")
-	add_child(soundsPlayer)
-	set_process(true)
-	
-func initializeGraphicalUserInterface():
-	get_node("CurrentPoints").set_text(str(get_node("/root/global").points))#  + str(points))
-	get_node("CurrentPoints").update()
-	get_node("HightScore").set_text(str(get_node("/root/global").hiscore))#  + str(points))
-	get_node("HightScore").update()
-	get_node("ShipsLeft").set_text(str(get_node("/root/global").shipsLeft))
-	get_node("ShipsLeft").update()
-	
+############################## GUI OR HUD UPDATE ###############################
 func updateGraphicalUserInterface():
 	get_node("/root/global").checkIfYouAreHiScore()
 	get_node("CurrentPoints").set_text(str(get_node("/root/global").points))
@@ -922,41 +1164,47 @@ func updateGraphicalUserInterface():
 		get_node("/root/global").points = 0
 		get_node("/root/global").shipsLeft = 3
 		get_tree().reload_current_scene()
+################################################################################
 
-func countShots():
-	numberOfShots = numberOfShots + 1
 
-func countInvadersLeft():
-	numberOfInvaders = numberOfInvaders - 1
 
-func invaderShootingCondition(shootingInvaderPosition):
-	var invPosition
-	var canShoot = true
-	for inv in allInvadersNames:
-		invPosition = get_node(inv).get_pos()
-		if get_node(inv).isAlive:
-			if invPosition.y > shootingInvaderPosition.y && shootingInvaderPosition.x > invPosition.x - get_node(inv).WIDTH/2 && shootingInvaderPosition.x < invPosition.x + get_node(inv).WIDTH/2:
-				canShoot = false
-				break
-	return canShoot
 
-func playingMusicProcess():
-	if previousNumberOfInvaders - numberOfInvaders == 6:
-		noteSoundDelayTime = noteSoundDelayTime - noteSoundDelayReduction
-		noteSoundTimer.set_wait_time(noteSoundDelayTime)
-		previousNumberOfInvaders = numberOfInvaders
-		
-func addShipForPoints():
-	if get_node("/root/global").points - previousPointsAfterIncreasingNumberOfShips >= 1500:
-		get_node("/root/global").addShip()
-		previousPointsAfterIncreasingNumberOfShips = get_node("/root/global").points
-		
-func increaseStepSpeedWhenInvaderDie():
-	stepDelayTime = stepDelayTime - stepDelayReduction
-	timer.set_wait_time(stepDelayTime)
 
-func _on_Main_Menu_pressed():
-	get_node("/root/global").goto_scene("res://scenes/MainMenu.tscn")
-	
-func _on_Exit_Game_pressed():
-	get_node("/root/global").goto_scene("res://scenes/EndingScreen.tscn")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
