@@ -81,6 +81,7 @@ autoplay = "New Anim"
 
 [node name="logo" type="Sprite" parent="."]
 
+editor/display_folded = true
 transform/pos = Vector2( 334.545, 300 )
 texture = ExtResource( 5 )
 

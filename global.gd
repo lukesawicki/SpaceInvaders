@@ -10,6 +10,9 @@ func _ready():
 	var root = get_tree().get_root()
 	current_scene = root.get_child( root.get_child_count() -1 )
 	
+	var menuMusic = get_node("/root/MenuMusic")
+	menuMusic.play()
+	
 func goto_scene(path):
 	# This function will usually be called from a signal callback,
 	# or some other function from the running scene.
@@ -44,3 +47,7 @@ func _deffered_goto_scene(path):
 	
 	# optional, to make it compatible with the SceneTree.change_scene() API
 	get_tree().set_current_scene( current_scene )
+	
+
+
+func playMenuMusic():
