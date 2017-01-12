@@ -17,7 +17,7 @@ func _on_CreditsNormal_pressed():
 	get_node("/root/global").goto_scene("res://scenes/Credits.tscn")
 
 func _on_EndingNormal_pressed():
-	get_node("/root/global").goto_scene("res://scenes/EndingScreen.tscn")
+	get_tree().quit()
 
 func _on_StartNormal1_pressed():
 	get_node("/root/global").goto_scene("res://scenes/GameOver.tscn")

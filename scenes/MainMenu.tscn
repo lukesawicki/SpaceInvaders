@@ -8,7 +8,7 @@
 [ext_resource path="res://fonts/Roboto Thin 34px.fnt" type="BitmapFont" id=6]
 [ext_resource path="res://backgrounds/logo.png" type="Texture" id=7]
 
-[sub_resource type="StyleBoxEmpty" id=3]
+[sub_resource type="StyleBoxEmpty" id=1]
 
 content_margin/left = -1.0
 content_margin/right = -1.0
@@ -63,21 +63,6 @@ playback/speed = 1.0
 blend_times = [  ]
 autoplay = "stars"
 
-[node name="MainMenu" type="Label" parent="."]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 71.0
-margin/bottom = 14.0
-text = "Main Menu"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
 [node name="StartNormal" type="Button" parent="."]
 
 focus_neighbour/left = NodePath(".")
@@ -92,9 +77,9 @@ margin/left = 203.0
 margin/top = 426.0
 margin/right = 461.0
 margin/bottom = 468.0
-custom_styles/hover = SubResource( 3 )
-custom_styles/pressed = SubResource( 3 )
-custom_styles/focus = SubResource( 3 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/focus = SubResource( 1 )
 custom_fonts/font = ExtResource( 6 )
 custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0, 1, 1 )
@@ -119,9 +104,9 @@ margin/left = 385.0
 margin/top = 647.0
 margin/right = 643.0
 margin/bottom = 689.0
-custom_styles/hover = SubResource( 3 )
-custom_styles/pressed = SubResource( 3 )
-custom_styles/focus = SubResource( 3 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/focus = SubResource( 1 )
 custom_fonts/font = ExtResource( 6 )
 custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0, 1, 1 )
@@ -145,9 +130,9 @@ margin/left = 195.0
 margin/top = 490.0
 margin/right = 472.0
 margin/bottom = 532.0
-custom_styles/hover = SubResource( 3 )
-custom_styles/pressed = SubResource( 3 )
-custom_styles/focus = SubResource( 3 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/focus = SubResource( 1 )
 custom_fonts/font = ExtResource( 6 )
 custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0, 1, 1 )
@@ -171,9 +156,9 @@ margin/left = 191.0
 margin/top = 556.0
 margin/right = 481.0
 margin/bottom = 598.0
-custom_styles/hover = SubResource( 3 )
-custom_styles/pressed = SubResource( 3 )
-custom_styles/focus = SubResource( 3 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 1 )
+custom_styles/focus = SubResource( 1 )
 custom_fonts/font = ExtResource( 6 )
 custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0, 1, 1 )
