@@ -13,7 +13,7 @@ const SPACE_BETWEEN_G = 24
 const SPACE_BETWEEN_F = 14
 const SPACE_BETWEEN_E = 12
 
-var INVASION_POSITION = 600
+var INVASION_POSITION = 648
 
 var screen_size
 
@@ -53,7 +53,7 @@ var invadersAdditionalInfos = {}
 # MYSTERY
 var MYSTERY_WIDTH = 48
 var MYSTERY_HIGHT = 24
-var MYSTERY_Y_POSITION = 191  # NIE UZYWANA
+var MYSTERY_Y_POSITION = 110
 var mysteryPositionOutOfView = Vector2(256, -512)
 var mysteryInvader = preload("res://scenes/MysteryScene.tscn")
 var mysteryRun = false
@@ -110,6 +110,11 @@ var rocket1Moving = false
 var rocket2Moving = false
 var rocket3Moving = false
 var rocket4Moving = false
+
+var rocket1ShootingBy = "NoOne"
+var rocket2ShootingBy = "NoOne"
+var rocket3ShootingBy = "NoOne"
+var rocket4ShootingBy = "NoOne"
 
 var rocketNamesArray = []
 var rocketMovingArray = []
@@ -248,25 +253,26 @@ func _process(delta):
 			#AudioServer.set_fx_global_volume_scale(0)
 			
 	if !rocket1Moving:
-		setPositionOfShootingInvader()
+		setPositionOfShootingInvader(0)
 		rocket1Position = shootingInvaderPosition
 		get_node(rocketMovingArray[0]).set_pos(rocket1Position)
 		rocket1Moving = true
+		# tutaj wpisywac invaderowi ze strzela lsawicki
 	
 	if !rocket2Moving:
-		setPositionOfShootingInvader()
+		setPositionOfShootingInvader(1)
 		rocket2Position = shootingInvaderPosition
 		get_node(rocketMovingArray[1]).set_pos(rocket2Position)
 		rocket2Moving = true
 	
 	if !rocket3Moving:
-		setPositionOfShootingInvader()
+		setPositionOfShootingInvader(2)
 		rocket3Position = shootingInvaderPosition
 		get_node(rocketMovingArray[2]).set_pos(rocket3Position)
 		rocket3Moving = true
 	
 	if !rocket4Moving:
-		setPositionOfShootingInvader()
+		setPositionOfShootingInvader(3)
 		rocket4Position = shootingInvaderPosition
 		get_node(rocketMovingArray[3]).set_pos(rocket4Position)
 		rocket4Moving = true
@@ -402,6 +408,7 @@ func laserRocketCollision(rocketPosition, rocketNumber, laserBeamPosition):
 			rocket3Moving=false
 		elif rocketNumber == 3:
 			rocket4Moving=false
+		shipLaserMoving=false
 		return true;
 	else:
 		return false
@@ -491,14 +498,21 @@ func playOneNote():
 
 
 ############## SETTING SHOOTING INVADER POSITION TO VARIABLE ###################
-func setPositionOfShootingInvader():
+func setPositionOfShootingInvader(currentRocketNumber):
 	var ifCanShoot = false
-	while !ifCanShoot:
+	var isShooting = false
+	var invaderName = "NoOne"
+	while !ifCanShoot && !isShooting:
 		randomize()
 		invaderWhichAreShootingNow = randi()%55
 		ifCanShoot = get_node(allInvadersNames[invaderWhichAreShootingNow]).isAlive && invaderShootingCondition(get_node(allInvadersNames[invaderWhichAreShootingNow]).get_pos())
+		##
+		isShooting = get_node(allInvadersNames[invaderWhichAreShootingNow]).isShooting
+		##
 	if ifCanShoot:
 		shootingInvaderPosition = get_node(allInvadersNames[invaderWhichAreShootingNow]).get_pos()
+		get_node(rocketMovingArray[currentRocketNumber]).shootingBy = get_node(allInvadersNames[invaderWhichAreShootingNow]).get_name()
+		get_node(allInvadersNames[invaderWhichAreShootingNow]).isShooting = true
 ################################################################################
 
 
@@ -854,7 +868,7 @@ func invadersProcess():
 		var isAlive = get_node(allInvadersNames[i]).isAlive
 
 		if isAlive:
-			if someInvader.y+INVADERS_HIGHT >= INVASION_POSITION:
+			if someInvader.y+INVADERS_HIGHT/2 >= INVASION_POSITION:
 				invasion = true
 				break
 			if i < 11:#G
@@ -989,12 +1003,12 @@ func mysteryProcess(delta):
 			if mysteryRun:
 				get_node("mystery").drawIfMovingAndDirection()
 				if get_node("mystery").velocity < 0:
-					get_node("mystery").set_pos(Vector2(MARGIN_RIGHT - ((MYSTERY_WIDTH/2)+2), 512))
+					get_node("mystery").set_pos(Vector2(MARGIN_RIGHT - ((MYSTERY_WIDTH/2)+2), MYSTERY_Y_POSITION))
 				elif get_node("mystery").velocity > 0:
-					get_node("mystery").set_pos(Vector2(MARGIN_LEFT + ((MYSTERY_WIDTH/2)+2), 512))
+					get_node("mystery").set_pos(Vector2(MARGIN_LEFT + ((MYSTERY_WIDTH/2)+2), MYSTERY_Y_POSITION))
 					
 				get_node("mystery").moving = true
-		
+				
 	get_node("mystery").movingMastery(delta)
 ################################################################################
 
@@ -1021,27 +1035,54 @@ func wallProcess():
 
 
 ########################### LASER BEAM ROCKET PROCESS #########################
+###############################################################################################################################
 func laserRocketProcess():
 	var laserPosition = get_node(laserBeamName).get_pos()
 	var poz = get_node(rocketMovingArray[0]).get_pos()
-	if laserRocketCollision(poz,0,laserPosition):
-		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(0)
+	
+	var ifDestroy = randomFromZeroTo(get_node(rocketMovingArray[0]).destroingProbability)
+	if ifDestroy == 1:
+		if laserRocketCollision(poz,0,laserPosition):
+			if get_node(get_node(rocketMovingArray[0]).shootingBy) != null:
+				get_node(get_node(rocketMovingArray[0]).shootingBy).isShooting = false
+			get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
+			get_node(rocketMovingArray[0]).shootingBy = "NoOne"
+			swapDestoryedRocketWithNewRandom(0)
+			shipLaserBeamHitShelter=true
+			get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 
 	poz = get_node(rocketMovingArray[1]).get_pos()
-	if laserRocketCollision(poz,1,laserPosition):
-		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(1)
+	var ifDestory = randomFromZeroTo(get_node(rocketMovingArray[1]).destroingProbability)
+	if ifDestroy == 1:
+		if laserRocketCollision(poz,1,laserPosition):
+			if get_node(get_node(rocketMovingArray[1]).shootingBy) != null:
+				get_node(get_node(rocketMovingArray[1]).shootingBy).isShooting = false
+			get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
+			get_node(rocketMovingArray[1]).shootingBy = "NoOne"
+			swapDestoryedRocketWithNewRandom(1)
+			get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 
 	poz = get_node(rocketMovingArray[2]).get_pos()
-	if laserRocketCollision(poz,2,laserPosition):
-		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(2)
+	var ifDestory = randomFromZeroTo(get_node(rocketMovingArray[2]).destroingProbability)
+	if ifDestroy == 1:
+		if laserRocketCollision(poz,2,laserPosition):
+			if get_node(get_node(rocketMovingArray[2]).shootingBy) != null:
+				get_node(get_node(rocketMovingArray[2]).shootingBy).isShooting = false
+			get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
+			get_node(rocketMovingArray[2]).shootingBy = "NoOne"
+			swapDestoryedRocketWithNewRandom(2)
+			get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 
 	poz = get_node(rocketMovingArray[3]).get_pos()
-	if laserRocketCollision(poz,3,laserPosition):
-		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
-		swapDestoryedRocketWithNewRandom(3)
+	var ifDestory = randomFromZeroTo(get_node(rocketMovingArray[0]).destroingProbability)
+	if ifDestroy == 1:
+		if laserRocketCollision(poz,3,laserPosition):
+			if get_node(get_node(rocketMovingArray[3]).shootingBy) != null:
+				get_node(get_node(rocketMovingArray[3]).shootingBy).isShooting = false
+			get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
+			get_node(rocketMovingArray[3]).shootingBy = "NoOne"
+			swapDestoryedRocketWithNewRandom(3)
+			get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 ################################################################################
 
 
@@ -1051,21 +1092,33 @@ func wallRocketProcess():
 	poz = get_node(rocketMovingArray[0]).get_pos()
 	if rocketColideWithWall(poz,0):
 		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
+		if get_node(get_node(rocketMovingArray[0]).shootingBy) != null:
+			get_node(get_node(rocketMovingArray[0]).shootingBy).isShooting = false
+		get_node(rocketMovingArray[0]).shootingBy = "NoOne"
 		swapDestoryedRocketWithNewRandom(0)
 	
 	poz = get_node(rocketMovingArray[1]).get_pos()
 	if rocketColideWithWall(poz,1):
 		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
+		if get_node(get_node(rocketMovingArray[1]).shootingBy) != null:
+			get_node(get_node(rocketMovingArray[1]).shootingBy).isShooting = false
+		get_node(rocketMovingArray[1]).shootingBy = "NoOne"
 		swapDestoryedRocketWithNewRandom(1)
 	
 	poz = get_node(rocketMovingArray[2]).get_pos()
 	if rocketColideWithWall(poz,2):
 		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
+		if get_node(get_node(rocketMovingArray[2]).shootingBy) != null:
+			get_node(get_node(rocketMovingArray[2]).shootingBy).isShooting = false
+		get_node(rocketMovingArray[2]).shootingBy = "NoOne"
 		swapDestoryedRocketWithNewRandom(2)
 	
 	poz = get_node(rocketMovingArray[3]).get_pos()
 	if rocketColideWithWall(poz,3):
 		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
+		if get_node(get_node(rocketMovingArray[3]).shootingBy) != null:
+			get_node(get_node(rocketMovingArray[3]).shootingBy).isShooting = false
+		get_node(rocketMovingArray[3]).shootingBy = "NoOne"
 		swapDestoryedRocketWithNewRandom(3)
 ################################################################################
 
@@ -1077,21 +1130,33 @@ func rocketShelterProcess():
 		var poz = get_node(rocketMovingArray[0]).get_pos()
 		if rocketColideWithShelter(poz,0,someShelterPosition):
 			get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
+			if get_node(get_node(rocketMovingArray[0]).shootingBy) != null:
+				get_node(get_node(rocketMovingArray[0]).shootingBy).isShooting = false
+			get_node(rocketMovingArray[0]).shootingBy = "NoOne"
 			swapDestoryedRocketWithNewRandom(0)
 
 		poz = get_node(rocketMovingArray[1]).get_pos()
 		if rocketColideWithShelter(poz,1,someShelterPosition):
 			get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
+			if get_node(get_node(rocketMovingArray[1]).shootingBy) != null:
+				get_node(get_node(rocketMovingArray[1]).shootingBy).isShooting = false
+			get_node(rocketMovingArray[1]).shootingBy = "NoOne"
 			swapDestoryedRocketWithNewRandom(1)
 
 		poz = get_node(rocketMovingArray[2]).get_pos()
 		if rocketColideWithShelter(poz,2,someShelterPosition):
 			get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
+			if get_node(get_node(rocketMovingArray[2]).shootingBy) != null:
+				get_node(get_node(rocketMovingArray[2]).shootingBy).isShooting = false
+			get_node(rocketMovingArray[2]).shootingBy = "NoOne"
 			swapDestoryedRocketWithNewRandom(2)
 
 		poz = get_node(rocketMovingArray[3]).get_pos()
 		if rocketColideWithShelter(poz,3,someShelterPosition):
 			get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
+			if get_node(get_node(rocketMovingArray[3]).shootingBy) != null:
+				get_node(get_node(rocketMovingArray[3]).shootingBy).isShooting = false
+			get_node(rocketMovingArray[3]).shootingBy = "NoOne"
 			swapDestoryedRocketWithNewRandom(3)
 ################################################################################
 
@@ -1102,6 +1167,8 @@ func rokcetShipProcess():
 	var poz = get_node(rocketMovingArray[0]).get_pos()
 	if rocketColideWithShip(poz,0,shipPosition):
 		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
+		get_node(get_node(rocketMovingArray[0]).shootingBy).isShooting = false
+		get_node(rocketMovingArray[0]).shootingBy = "NoOne"
 		swapDestoryedRocketWithNewRandom(0)
 		get_node("/root/global").subtractShip()
 		rocketShipHit = true
@@ -1110,6 +1177,8 @@ func rokcetShipProcess():
 	poz = get_node(rocketMovingArray[1]).get_pos()
 	if rocketColideWithShip(poz,1,shipPosition):
 		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
+		get_node(get_node(rocketMovingArray[1]).shootingBy).isShooting = false
+		get_node(rocketMovingArray[1]).shootingBy = "NoOne"
 		swapDestoryedRocketWithNewRandom(1)
 		get_node("/root/global").subtractShip()
 		rocketShipHit = true
@@ -1118,6 +1187,8 @@ func rokcetShipProcess():
 	poz = get_node(rocketMovingArray[2]).get_pos()
 	if rocketColideWithShip(poz,2,shipPosition):
 		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
+		get_node(get_node(rocketMovingArray[2]).shootingBy).isShooting = false
+		get_node(rocketMovingArray[2]).shootingBy = "NoOne"
 		swapDestoryedRocketWithNewRandom(2)
 		get_node("/root/global").subtractShip()
 		rocketShipHit = true
@@ -1126,6 +1197,8 @@ func rokcetShipProcess():
 	poz = get_node(rocketMovingArray[3]).get_pos()
 	if rocketColideWithShip(poz,3,shipPosition):
 		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
+		get_node(get_node(rocketMovingArray[3]).shootingBy).isShooting = false
+		get_node(rocketMovingArray[3]).shootingBy = "NoOne"
 		swapDestoryedRocketWithNewRandom(3)
 		get_node("/root/global").subtractShip()
 		rocketShipHit = true
@@ -1146,15 +1219,6 @@ func shipExplosion():
 		resetShipPosition()
 	ifExplode = false
 	
-
-	#if ifExplode:
-	#	var shipPos = get_node("myShip").get_pos()
-	#	get_node("myShip").set_pos(Vector2(128, -1024))
-	#	get_node(explodeName).set_pos(Vector2(shipPos.x, shipPos.y))
-	#	get_node(explodeName).blowItUp()
-	#	ifExplode = false
-	#if !get_node(explodeName).is_playing():
-	#	resetShipPosition()
 ################################################################################
 
 

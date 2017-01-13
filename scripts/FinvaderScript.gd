@@ -5,6 +5,7 @@ var canStep = false
 var stepDelayTime = 1
 const LASER_BEAM_VELOCITY = -150
 var isAlive=true
+var isShooting=false
 const WIDTH=34
 onready var anim = get_node("InvFanim")
 	

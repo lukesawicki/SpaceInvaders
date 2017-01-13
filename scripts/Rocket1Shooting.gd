@@ -3,6 +3,8 @@ extends Node2D
 
 const ROCKET_VELOCITY = 80
 var moving = false
+var shootingBy = "NoOne"
+var destroingProbability = 3
 
 func movingRocket(delta):
 	if moving:
