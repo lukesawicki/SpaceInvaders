@@ -13,7 +13,7 @@ const SPACE_BETWEEN_G = 24
 const SPACE_BETWEEN_F = 14
 const SPACE_BETWEEN_E = 12
 
-var INVASION_POSITION = 576
+var INVASION_POSITION = 600
 
 var screen_size
 
@@ -853,10 +853,11 @@ func invadersProcess():
 		var laserPos = get_node(laserBeamName).get_pos()
 		var someInvader = get_node(allInvadersNames[i]).get_pos()
 		var isAlive = get_node(allInvadersNames[i]).isAlive
-		if someInvader.y+INVADERS_HIGHT >= INVASION_POSITION:
-			invasion = true
-			break
+
 		if isAlive:
+			if someInvader.y+INVADERS_HIGHT >= INVASION_POSITION:
+				invasion = true
+				break
 			if i < 11:#G
 				if invaderColideRightWall(someInvader.x, INVADERS_G_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_G_WIDTH):
 					colidedWall = true
@@ -1188,6 +1189,8 @@ func updateGraphicalUserInterface():
 		get_node("/root/global").points = 0
 		get_node("/root/global").shipsLeft = 3
 		get_node("/root/global").goto_scene("res://scenes/GameOver.tscn")
+	if numberOfInvaders <= 0:
+		get_node("/root/global").goto_scene("res://scenes/EndGame.tscn")
 			
 		#get_tree().reload_current_scene()
 ################################################################################
