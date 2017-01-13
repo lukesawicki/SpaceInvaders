@@ -156,6 +156,7 @@ var invasion = false
 
 
 func _ready():
+	get_node("/root/global").menuMusic.stop()
 	initializeShelters()
 	
 	initializeTerranShip()
@@ -179,7 +180,7 @@ func _ready():
 	wasVerticalStep = false
 	numberOfShots = 0
 	numberOfInvaders = 55
-
+	#get_node("/root/global").menuMusic.play()
 ################################ GAME MAIN LOOP ################################
 func _process(delta):
 
