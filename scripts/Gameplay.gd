@@ -953,7 +953,7 @@ func invadersProcess():
 					break
 	
 	if shipLaserBeamHitInvader:
-		pass#increaseStepSpeedWhenInvaderDie() #lsawicki
+		increaseStepSpeedWhenInvaderDie()
 	
 	if !colidedWall:
 		savePositions()
