@@ -28,3 +28,6 @@ func specialInvaderHit():
 	
 func spcecialInvaderMove():
 	play("ufo_move")
+	
+func bunker_hit():
+	play("bunker_hit")

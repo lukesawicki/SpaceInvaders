@@ -3,7 +3,7 @@ extends Node
 var current_scene = null
 var points = 0
 var hiscore = 66
-var shipsLeft = 3
+var shipsLeft = 999
 var menuMusic
 
 func _ready():

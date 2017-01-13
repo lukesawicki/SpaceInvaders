@@ -116,6 +116,8 @@ var rocketScene1 = preload("res://scenes/InvaderRocket1Scene.tscn")
 var rocketScene2 = preload("res://scenes/InvaderRocket2Scene.tscn")
 var rocketScene3 = preload("res://scenes/InvaderRocket3Scene.tscn")
 
+var rocketShipHit = false
+
 #GAMEPLAY
 const ePoints = 10
 const fPoints = 20
@@ -571,9 +573,14 @@ func mysteryMovingCondition():
 
 ############################## PLAYIN ALL SOUNDS ###############################
 func playAllSounds():
-	if shipLaserBeamHitInvader||shipLaserBeamHitShelter||laserBeamHitTheWall:
+	if shipLaserBeamHitInvader||laserBeamHitTheWall:
 		get_node("invadersSoundsPlayer").invaderHit()
+	if shipLaserBeamHitShelter:
+		get_node("invadersSoundsPlayer").bunker_hit()
+	if rocketShipHit:
+		get_node("invadersSoundsPlayer").shipExplosion()
 	
+	rocketShipHit = false
 	laserBeamHitTheWall = false
 	shipLaserBeamHitInvader = false
 	shipLaserBeamHitShelter = false
@@ -1084,24 +1091,28 @@ func rokcetShipProcess():
 		get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
 		swapDestoryedRocketWithNewRandom(0)
 		get_node("/root/global").subtractShip()
+		rocketShipHit = true
 
 	poz = get_node(rocketMovingArray[1]).get_pos()
 	if rocketColideWithShip(poz,1,shipPosition):
 		get_node(rocketMovingArray[1]).set_pos(rocketsPositionOutOfView)
 		swapDestoryedRocketWithNewRandom(1)
 		get_node("/root/global").subtractShip()
+		rocketShipHit = true
 
 	poz = get_node(rocketMovingArray[2]).get_pos()
 	if rocketColideWithShip(poz,2,shipPosition):
 		get_node(rocketMovingArray[2]).set_pos(rocketsPositionOutOfView)
 		swapDestoryedRocketWithNewRandom(2)
 		get_node("/root/global").subtractShip()
+		rocketShipHit = true
 
 	poz = get_node(rocketMovingArray[3]).get_pos()
 	if rocketColideWithShip(poz,3,shipPosition):
 		get_node(rocketMovingArray[3]).set_pos(rocketsPositionOutOfView)
 		swapDestoryedRocketWithNewRandom(3)
 		get_node("/root/global").subtractShip()
+		rocketShipHit = true
 ################################################################################
 
 
@@ -1135,46 +1146,3 @@ func updateGraphicalUserInterface():
 			
 		#get_tree().reload_current_scene()
 ################################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
