@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=1]
+[gd_scene load_steps=10 format=1]
 
 [ext_resource path="res://backgrounds/bg.png" type="Texture" id=1]
 [ext_resource path="res://fonts/Roboto Thin 34px.fnt" type="BitmapFont" id=2]
 [ext_resource path="res://scripts/GameOver.gd" type="Script" id=3]
 [ext_resource path="res://materials/GameOver.png" type="Texture" id=4]
 [ext_resource path="res://scenes/GameOver.tres" type="Animation" id=5]
+[ext_resource path="res://sounds/Space Invaders - game over.ogg" type="AudioStream" id=6]
 
 [sub_resource type="GDScript" id=3]
 
@@ -103,6 +104,17 @@ playback/active = true
 playback/speed = 1.0
 blend_times = [  ]
 autoplay = "New Anim"
+
+[node name="StreamPlayer" type="StreamPlayer" parent="."]
+
+stream/stream = ExtResource( 6 )
+stream/play = false
+stream/loop = true
+stream/volume_db = 0.0
+stream/autoplay = true
+stream/paused = false
+stream/loop_restart_time = 0.0
+stream/buffering_ms = 500
 
 [connection signal="pressed" from="TryAgain" to="TryAgain" method="_on_TryAgain_pressed"]
 
