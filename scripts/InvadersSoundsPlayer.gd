@@ -31,3 +31,6 @@ func spcecialInvaderMove():
 	
 func bunker_hit():
 	play("bunker_hit")
+
+func mysteryShipSound():
+	play("ufo_move")

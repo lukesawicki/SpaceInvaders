@@ -57,6 +57,7 @@ var MYSTERY_Y_POSITION = 110
 var mysteryPositionOutOfView = Vector2(256, -512)
 var mysteryInvader = preload("res://scenes/MysteryScene.tscn")
 var mysteryRun = false
+var mysteryPlay = false
 
 #SHELTERS
 var shelter = preload("res://scenes/ShelterScene.tscn")
@@ -178,6 +179,7 @@ func _ready():
 	explodeInstance.set_name(explodeName)
 	add_child(explodeInstance)
 	
+		
 	initializeShelters()
 	
 	initializeTerranShip()
@@ -289,7 +291,8 @@ func _process(delta):
 	addShipForPoints()
 	shipExplosion()
 	updateGraphicalUserInterface()
-
+	
+	
 ############################# END GAME MAIN LOOP ###############################
 
 
@@ -595,11 +598,12 @@ func createListOfRockets():
 func mysteryMovingCondition():
 	if numberOfShots == 15:
 		mysteryRun = true
+		mysteryPlay = true
 		numberOfShots = 0
 ################################################################################
 
 
-############################## PLAYIN ALL SOUNDS ###############################
+############################## PLAYIN ALL SOUNDS ################################################################
 func playAllSounds():
 	if shipLaserBeamHitInvader||laserBeamHitTheWall:
 		get_node("invadersSoundsPlayer").invaderHit()
@@ -607,6 +611,12 @@ func playAllSounds():
 		get_node("invadersSoundsPlayer").bunker_hit()
 	if rocketShipHit:
 		get_node("invadersSoundsPlayer").shipExplosion()
+	if mysteryPlay:
+		get_node("/root/ufscpl").play()
+	if !mysteryRun:
+		get_node("/root/ufscpl").stop()
+	
+	mysteryPlay=false
 	
 	rocketShipHit = false
 	laserBeamHitTheWall = false

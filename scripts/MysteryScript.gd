@@ -10,7 +10,8 @@ var moving = false
 func movingMastery(delta):
 	if moving:
 		set_pos(Vector2(get_pos().x + delta * velocity, get_pos().y));
-	
+	else:
+		pass
 func changeState(isMoving):
 	moving = isMoving
 	
