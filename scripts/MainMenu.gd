@@ -21,3 +21,7 @@ func _on_EndingNormal_pressed():
 
 func _on_StartNormal1_pressed():
 	get_node("/root/global").goto_scene("res://scenes/GameOver.tscn")
+
+
+func _on_CreditsNormal1_pressed():
+	get_node("/root/global").goto_scene("res://scenes/EndGame.tscn")

@@ -15,7 +15,7 @@ content_margin/bottom = -1.0
 
 [sub_resource type="GDScript" id=4]
 
-script/source = "func _on_TryAgain_pressed():\n\tget_node(\"/root/global\").goto_scene(\"res://scenes/Gameplay.tscn\")\n\nfunc _on_BackToMenu_pressed():\n\tget_node(\"/root/global\").goto_scene(\"res://scenes/MainMenu.tscn\")"
+script/source = "func _on_TryAgain_pressed():\n\tget_node(\"/root/global\").goto_scene(\"res://scenes/Gameplay.tscn\")"
 
 [node name="Node2D" type="Node2D"]
 
@@ -32,7 +32,6 @@ texture = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="."]
 
-visibility/opacity = 0.0
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -50,7 +49,6 @@ max_lines_visible = -1
 
 [node name="TryAgain" type="Button" parent="."]
 
-visibility/opacity = 0.166667
 focus_neighbour/left = NodePath(".")
 focus_neighbour/top = NodePath(".")
 focus_neighbour/right = NodePath(".")
@@ -78,7 +76,6 @@ script/script = SubResource( 4 )
 
 [node name="BackToMenu" type="Button" parent="."]
 
-visibility/opacity = 0.333333
 focus_neighbour/left = NodePath(".")
 focus_neighbour/top = NodePath(".")
 focus_neighbour/right = NodePath(".")
@@ -114,5 +111,9 @@ playback/active = true
 playback/speed = 1.0
 blend_times = [  ]
 autoplay = "GameOver"
+
+[connection signal="pressed" from="TryAgain" to="TryAgain" method="_on_TryAgain_pressed"]
+
+[connection signal="pressed" from="BackToMenu" to="BackToMenu" method="_on_BackToMenu_pressed"]
 
 
