@@ -148,7 +148,6 @@ flat = true
 
 [node name="CreditsNormal1" type="Button" parent="."]
 
-visibility/visible = false
 anchor/left = 3
 anchor/right = 3
 focus_neighbour/left = NodePath(".")
