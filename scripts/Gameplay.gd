@@ -34,6 +34,8 @@ var allInvadersNames = []
 var STEP_LEFT =  -6
 var STEP_RIGHT = 6
 var STEP = STEP_RIGHT
+var VERTICAL_STEP_HIGHT = 24
+
 
 var stepNumber = 0
 var verticalStepNumber = 1
@@ -137,7 +139,7 @@ var ifExplode = false
 var explodeName
 
 var timer = null
-var stepDelayTime = 0.2
+var stepDelayTime = 0.2 # lsawicki
 var stepDelayReduction = 0.05
 var canStep = true
 
@@ -156,7 +158,7 @@ var noteNumber = 0
 var noteSoundDelayReduction = 0.3
 var previousNumberOfInvaders = 55
 var nuberOfInvadersToChangeSoundDelay = 6
-var previousPointsAfterIncreasingNumberOfShips = 0
+var previousPointsAfterIncreasingNumberOfShips = 0 
 
 var invasion = false
 
@@ -242,7 +244,8 @@ func _process(delta):
 			countShots()
 			#### TESTY TESTY
 			#get_node("/root/global").points = get_node("/root/global").points + 300
-
+			#AudioServer.set_stream_global_volume_scale(0)
+			#AudioServer.set_fx_global_volume_scale(0)
 			
 	if !rocket1Moving:
 		setPositionOfShootingInvader()
@@ -277,14 +280,10 @@ func _process(delta):
 		
 	get_node(laserBeamName).movingLaserBeam(delta)
 	canStep = false
-	
-	updateGraphicalUserInterface()
 	addShipForPoints()
-	
 	shipExplosion()
-	
-	#print(numberOfShots)
-	#print(numberOfInvaders)
+	updateGraphicalUserInterface()
+
 ############################# END GAME MAIN LOOP ###############################
 
 
@@ -448,7 +447,7 @@ func savePositions():
 ############### SET PREVIOUS INVADERS POSIOTIONS AS CURRENT ####################
 func setPreviousPositions():
 	for invaderName in allInvadersNames:
-		invadersAdditionalInfos[invaderName].y = invadersAdditionalInfos[invaderName].y + INVADERS_HIGHT+24
+		invadersAdditionalInfos[invaderName].y = invadersAdditionalInfos[invaderName].y + VERTICAL_STEP_HIGHT
 		if STEP > 0:
 			get_node(invaderName).set_pos(Vector2(invadersAdditionalInfos[invaderName].x-12,invadersAdditionalInfos[invaderName].y))
 		else:
@@ -953,17 +952,13 @@ func invadersProcess():
 					countInvadersLeft()
 					break
 	
-			
 	if shipLaserBeamHitInvader:
-		increaseStepSpeedWhenInvaderDie()
-	
-	playOneNote()
+		pass#increaseStepSpeedWhenInvaderDie() #lsawicki
 	
 	if !colidedWall:
 		savePositions()
-	
-	colidedWall = false
 		
+	colidedWall = false
 	if canDoVerticalStep:
 		setPreviousPositions()
 		numberOfCurrentVerticalStep = numberOfCurrentVerticalStep + 1
@@ -973,8 +968,10 @@ func invadersProcess():
 		wasVerticalStep = false
 	else:
 		wasVerticalStep = true
+	
+	playOneNote()
 ################################################################################
-
+	
 
 ################################# MYSTERY SHIP PROCESS #########################
 func mysteryProcess(delta):
@@ -1191,6 +1188,6 @@ func updateGraphicalUserInterface():
 		get_node("/root/global").goto_scene("res://scenes/GameOver.tscn")
 	if numberOfInvaders <= 0:
 		get_node("/root/global").goto_scene("res://scenes/EndGame.tscn")
-			
+		get_node("/root/global").points = 0
 		#get_tree().reload_current_scene()
 ################################################################################
