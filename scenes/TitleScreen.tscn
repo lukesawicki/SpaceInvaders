@@ -102,9 +102,9 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 226.0
+margin/left = 191.0
 margin/top = 527.0
-margin/right = 439.0
+margin/right = 477.0
 margin/bottom = 569.0
 custom_styles/hover = SubResource( 2 )
 custom_styles/pressed = SubResource( 3 )
@@ -115,7 +115,7 @@ custom_colors/font_color_hover = Color( 1, 0, 1, 1 )
 toggle_mode = true
 enabled_focus_mode = 2
 shortcut = null
-text = "START GAME"
+text = "ROZPOCZNIJ GRĘ"
 flat = true
 
 [connection signal="pressed" from="StartGame" to="." method="_on_StartGame_pressed"]
