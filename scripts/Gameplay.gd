@@ -132,6 +132,10 @@ var numberOfCurrentVerticalStep=0
 
 var player = preload("res://scenes/AllSoundsPlayer.tscn")
 
+var explode = preload("res://scenes/Explosion.tscn")
+var ifExplode = false
+var explodeName
+
 var timer = null
 var stepDelayTime = 0.2
 var stepDelayReduction = 0.05
@@ -156,9 +160,17 @@ var previousPointsAfterIncreasingNumberOfShips = 0
 
 var invasion = false
 
+var wasShipResetPosition = false
+
+var isPlayingAnimation = false
 
 func _ready():
 	get_node("/root/global").menuMusic.stop()
+	var explodeInstance = explode.instance()
+	explodeName = "blow"
+	explodeInstance.set_name(explodeName)
+	add_child(explodeInstance)
+	
 	initializeShelters()
 	
 	initializeTerranShip()
@@ -268,6 +280,9 @@ func _process(delta):
 	
 	updateGraphicalUserInterface()
 	addShipForPoints()
+	
+	shipExplosion()
+	
 	#print(numberOfShots)
 	#print(numberOfInvaders)
 ############################# END GAME MAIN LOOP ###############################
@@ -1092,6 +1107,7 @@ func rokcetShipProcess():
 		swapDestoryedRocketWithNewRandom(0)
 		get_node("/root/global").subtractShip()
 		rocketShipHit = true
+		ifExplode = true
 
 	poz = get_node(rocketMovingArray[1]).get_pos()
 	if rocketColideWithShip(poz,1,shipPosition):
@@ -1099,6 +1115,7 @@ func rokcetShipProcess():
 		swapDestoryedRocketWithNewRandom(1)
 		get_node("/root/global").subtractShip()
 		rocketShipHit = true
+		ifExplode = true
 
 	poz = get_node(rocketMovingArray[2]).get_pos()
 	if rocketColideWithShip(poz,2,shipPosition):
@@ -1106,6 +1123,7 @@ func rokcetShipProcess():
 		swapDestoryedRocketWithNewRandom(2)
 		get_node("/root/global").subtractShip()
 		rocketShipHit = true
+		ifExplode = true
 
 	poz = get_node(rocketMovingArray[3]).get_pos()
 	if rocketColideWithShip(poz,3,shipPosition):
@@ -1113,6 +1131,32 @@ func rokcetShipProcess():
 		swapDestoryedRocketWithNewRandom(3)
 		get_node("/root/global").subtractShip()
 		rocketShipHit = true
+		ifExplode = true
+	
+
+
+	#if !ifExplode:
+	#	get_node(explodeName).stopBlowing()
+func shipExplosion():
+	if ifExplode:
+
+		var shipPos = get_node("myShip").get_pos()
+		get_node("myShip").set_pos(Vector2(128, -1024))
+		get_node(explodeName).set_pos(Vector2(shipPos.x, shipPos.y))
+		get_node(explodeName).blowItUp()
+		print(str(get_node(explodeName).get_frame()))
+		resetShipPosition()
+	ifExplode = false
+	
+
+	#if ifExplode:
+	#	var shipPos = get_node("myShip").get_pos()
+	#	get_node("myShip").set_pos(Vector2(128, -1024))
+	#	get_node(explodeName).set_pos(Vector2(shipPos.x, shipPos.y))
+	#	get_node(explodeName).blowItUp()
+	#	ifExplode = false
+	#if !get_node(explodeName).is_playing():
+	#	resetShipPosition()
 ################################################################################
 
 
@@ -1128,7 +1172,8 @@ func _on_Exit_Game_pressed():
 func randomFromZeroTo(upperLimit):
 	var randomNumber = randi()%upperLimit
 	return randomNumber
-
+func resetShipPosition():
+	get_node("myShip").set_pos(Vector2(MARGIN_LEFT + SHIP_WIDTH/2+1,660))
 
 ############################## GUI OR HUD UPDATE ###############################
 func updateGraphicalUserInterface():
