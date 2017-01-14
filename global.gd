@@ -2,7 +2,7 @@ extends Node
 
 var current_scene = null
 var points = 0
-var hiscore = 66
+var hiscore = 0
 var shipsLeft = 3
 var menuMusic
 var mus
