@@ -9,11 +9,9 @@ var mus
 func _ready():
 	var root = get_tree().get_root()
 	current_scene = root.get_child( root.get_child_count() -1 )
-	
-#	mysteryMusicPlayer = get_node("/root/UfoStreamPlayerScene")
-#	mysteryMusicPlayer.play()
+
 	mus = get_node("/root/ufscpl")
-	#mus.play()
+
 	menuMusic = get_node("/root/MenuMusic")
 	menuMusic.play()
 	

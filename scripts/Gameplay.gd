@@ -1080,7 +1080,6 @@ func laserRocketProcess():
 			get_node(rocketMovingArray[0]).set_pos(rocketsPositionOutOfView)
 			get_node(rocketMovingArray[0]).shootingBy = "NoOne"
 			swapDestoryedRocketWithNewRandom(0)
-			shipLaserBeamHitShelter=true
 			get_node(laserBeamName).set_pos(laserBeamPositionOutOfView)
 
 	poz = get_node(rocketMovingArray[1]).get_pos()
