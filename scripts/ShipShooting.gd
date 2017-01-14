@@ -1,7 +1,7 @@
 extends Node2D
 
 
-const LASER_BEAM_VELOCITY = -250
+const LASER_BEAM_VELOCITY = -275
 var moving = false
 
 func movingLaserBeam(delta):

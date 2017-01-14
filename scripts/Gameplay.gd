@@ -152,7 +152,6 @@ var invExplodeName
 
 var timer = null
 var stepDelayTime = 0.2 # lsawicki
-var stepDelayReduction = 0.05
 var canStep = true
 
 var playSound1 = false
@@ -163,7 +162,7 @@ var playSound4 = false
 var colidedWall = false
 
 var noteSoundTimer = null
-var noteSoundDelayTime = 0.8
+var noteSoundDelayTime = 0.9
 var noteCanPlayNote = true
 var noteNumber = 0
 
@@ -674,7 +673,7 @@ func invaderShootingCondition(shootingInvaderPosition):
 #################### PLAYING SOUNDS OF MUSIC(FOUR SOUNDS) ######################
 func playingMusicProcess():
 	if previousNumberOfInvaders - numberOfInvaders == 6:
-		noteSoundDelayTime = noteSoundDelayTime - noteSoundDelayReduction
+		noteSoundDelayTime = noteSoundDelayTime*0.9
 		noteSoundTimer.set_wait_time(noteSoundDelayTime)
 		previousNumberOfInvaders = numberOfInvaders
 ################################################################################
@@ -690,7 +689,7 @@ func addShipForPoints():
 ################################# INCREASING INVADERS SPEED ####################
 func increaseStepSpeedWhenInvaderDie():
 	if previousNumberOfInvadersForSteps - numberOfInvaders == 6:
-		stepDelayTime = stepDelayTime - stepDelayReduction
+		stepDelayTime = stepDelayTime*0.75
 		timer.set_wait_time(stepDelayTime)
 		previousNumberOfInvadersForSteps = numberOfInvaders
 	
