@@ -120,6 +120,7 @@ flat = true
 
 [node name="CreditsNormal" type="Button" parent="."]
 
+visibility/opacity = 0.561193
 anchor/left = 3
 anchor/right = 3
 focus_neighbour/left = NodePath(".")
@@ -176,6 +177,7 @@ flat = true
 
 [node name="EndingNormal" type="Button" parent="."]
 
+visibility/opacity = 0.0611932
 anchor/left = 3
 anchor/right = 3
 focus_neighbour/left = NodePath(".")

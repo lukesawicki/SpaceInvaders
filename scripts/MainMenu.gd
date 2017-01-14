@@ -11,7 +11,7 @@ func _ready():
 #add to scene_a.gd
 
 func _on_StartNormal_pressed():
-	get_node("/root/global").goto_scene("res://scenes/Gameplay.tscn")
+	get_node("/root/global").goto_scene("res://scenes/ScoreTable.tscn")
 
 func _on_CreditsNormal_pressed():
 	get_node("/root/global").goto_scene("res://scenes/Credits.tscn")
