@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=1]
+[gd_scene load_steps=15 format=1]
 
 [ext_resource path="res://scripts/Gameplay.gd" type="Script" id=1]
 [ext_resource path="res://backgrounds/bg.png" type="Texture" id=2]
@@ -12,7 +12,6 @@
 [ext_resource path="res://buttons/EndingNormal.png" type="Texture" id=10]
 [ext_resource path="res://buttons/EndingPressed.png" type="Texture" id=11]
 [ext_resource path="res://sounds/invader_hit.wav" type="Sample" id=12]
-[ext_resource path="res://fonts/Roboto Regular 12px.fnt" type="BitmapFont" id=13]
 
 [sub_resource type="Animation" id=1]
 
@@ -213,22 +212,6 @@ margin/bottom = 761.0
 custom_fonts/font = ExtResource( 6 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "3"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="Label" type="Label" parent="ShipsLeft"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 539.0
-margin/top = 11.0
-margin/right = 638.0
-margin/bottom = 25.0
-custom_fonts/font = ExtResource( 13 )
-text = "Version 0.1 Beta"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1

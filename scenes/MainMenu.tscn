@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=1]
+[gd_scene load_steps=10 format=1]
 
 [ext_resource path="res://scripts/MainMenu.gd" type="Script" id=1]
 [ext_resource path="res://backgrounds/bg.png" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://scenes/stars.tres" type="Animation" id=5]
 [ext_resource path="res://fonts/Roboto Thin 34px.fnt" type="BitmapFont" id=6]
 [ext_resource path="res://backgrounds/logo.png" type="Texture" id=7]
+[ext_resource path="res://fonts/Roboto Regular 12px.fnt" type="BitmapFont" id=8]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -147,34 +148,6 @@ shortcut = null
 text = "TWÓRCY"
 flat = true
 
-[node name="CreditsNormal1" type="Button" parent="."]
-
-anchor/left = 3
-anchor/right = 3
-focus_neighbour/left = NodePath(".")
-focus_neighbour/top = NodePath(".")
-focus_neighbour/right = NodePath(".")
-focus_neighbour/bottom = NodePath(".")
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = -175.0
-margin/top = 679.0
-margin/right = -435.0
-margin/bottom = 721.0
-custom_styles/hover = SubResource( 1 )
-custom_styles/pressed = SubResource( 1 )
-custom_styles/focus = SubResource( 1 )
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
-custom_colors/font_color_hover = Color( 1, 0, 1, 1 )
-toggle_mode = true
-enabled_focus_mode = 2
-shortcut = null
-text = "endgame"
-flat = true
-
 [node name="EndingNormal" type="Button" parent="."]
 
 visibility/opacity = 0.0611932
@@ -209,13 +182,28 @@ flat = true
 transform/pos = Vector2( 334.545, 300 )
 texture = ExtResource( 7 )
 
+[node name="wersja" type="Label" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 565.0
+margin/top = 747.0
+margin/right = 664.0
+margin/bottom = 761.0
+custom_fonts/font = ExtResource( 8 )
+text = "Wersja 1.0"
+align = 2
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
 [connection signal="pressed" from="StartNormal" to="." method="_on_StartNormal_pressed"]
 
 [connection signal="pressed" from="StartNormal1" to="." method="_on_StartNormal1_pressed"]
 
 [connection signal="pressed" from="CreditsNormal" to="." method="_on_CreditsNormal_pressed"]
-
-[connection signal="pressed" from="CreditsNormal1" to="." method="_on_CreditsNormal1_pressed"]
 
 [connection signal="pressed" from="EndingNormal" to="." method="_on_EndingNormal_pressed"]
 
