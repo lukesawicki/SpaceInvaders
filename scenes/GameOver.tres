@@ -30,5 +30,10 @@ tracks/4/type = "value"
 tracks/4/path = NodePath("Label:visibility/opacity")
 tracks/4/interp = 1
 tracks/4/imported = false
-tracks/4/keys = { "times":FloatArray( 2, 3 ), "transitions":FloatArray( 1, 1 ), "update":0, "values":[ 0.0, 1.0 ] }
+tracks/4/keys = { "times":FloatArray( 1.5, 2 ), "transitions":FloatArray( 1, 1 ), "update":0, "values":[ 0.0, 1.0 ] }
+tracks/5/type = "value"
+tracks/5/path = NodePath("Sprite:visibility/opacity")
+tracks/5/interp = 1
+tracks/5/imported = false
+tracks/5/keys = { "times":FloatArray( 2, 2.4 ), "transitions":FloatArray( 1, 1 ), "update":0, "values":[ 1.0, 0.0 ] }
 

@@ -52,7 +52,7 @@ texture = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="."]
 
-visibility/opacity = 0.1
+visibility/opacity = 0.8
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -101,7 +101,7 @@ autoplay = "New Anim"
 [node name="TryAgain" type="Button" parent="."]
 
 visibility/visible = false
-visibility/opacity = 0.0
+visibility/opacity = 0.3
 focus_neighbour/left = NodePath(".")
 focus_neighbour/top = NodePath(".")
 focus_neighbour/right = NodePath(".")
@@ -179,7 +179,7 @@ stream/buffering_ms = 500
 
 [node name="Sprite" type="Sprite" parent="."]
 
-visibility/opacity = 0.666666
+visibility/opacity = 0.0
 transform/pos = Vector2( 334.892, 454.001 )
 transform/scale = Vector2( 1, 0.0800995 )
 texture = ExtResource( 1 )
