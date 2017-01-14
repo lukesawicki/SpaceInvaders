@@ -685,8 +685,11 @@ func addShipForPoints():
 
 ################################# INCREASING INVADERS SPEED ####################
 func increaseStepSpeedWhenInvaderDie():
-	stepDelayTime = stepDelayTime - stepDelayReduction
-	timer.set_wait_time(stepDelayTime)
+	if previousNumberOfInvaders - numberOfInvaders == 6:
+		stepDelayTime = stepDelayTime - stepDelayReduction
+		timer.set_wait_time(stepDelayTime)
+		previousNumberOfInvaders = numberOfInvaders
+	
 ################################################################################
 
 ################### CREATE SET OF RANDOM ROCKETS TO SHOTING ####################
