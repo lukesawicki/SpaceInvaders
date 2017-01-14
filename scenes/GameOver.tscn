@@ -11,14 +11,14 @@
 
 script/source = ""
 
-[sub_resource type="StyleBoxEmpty" id=1]
+[sub_resource type="StyleBoxEmpty" id=4]
 
 content_margin/left = -1.0
 content_margin/right = -1.0
 content_margin/top = -1.0
 content_margin/bottom = -1.0
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=5]
 
 script/source = "func _on_TryAgain_pressed():\n\tget_node(\"/root/global\").goto_scene(\"res://scenes/Gameplay.tscn\")"
 
@@ -47,9 +47,9 @@ margin/left = 149.0
 margin/top = 559.0
 margin/right = 526.0
 margin/bottom = 601.0
-custom_styles/hover = SubResource( 1 )
-custom_styles/pressed = SubResource( 1 )
-custom_styles/focus = SubResource( 1 )
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 4 )
+custom_styles/focus = SubResource( 4 )
 custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0, 1, 1 )
@@ -58,7 +58,7 @@ enabled_focus_mode = 2
 shortcut = null
 text = "SPRÓBUJ JESZCZE RAZ"
 flat = true
-script/script = SubResource( 2 )
+script/script = SubResource( 5 )
 
 [node name="BackToMenu" type="Button" parent="."]
 
@@ -75,9 +75,9 @@ margin/left = 119.0
 margin/top = 618.0
 margin/right = 549.0
 margin/bottom = 660.0
-custom_styles/hover = SubResource( 1 )
-custom_styles/pressed = SubResource( 1 )
-custom_styles/focus = SubResource( 1 )
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 4 )
+custom_styles/focus = SubResource( 4 )
 custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0, 1, 1 )
