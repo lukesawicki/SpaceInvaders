@@ -136,6 +136,7 @@ var numberOfShots = 0
 var numberOfInvaders = 55
 var numberOfCurrentVerticalStep=0
 
+
 #OTHER VARIABLES
 
 var player = preload("res://scenes/AllSoundsPlayer.tscn")
@@ -176,6 +177,9 @@ var invasion = false
 var wasShipResetPosition = false
 
 var isPlayingAnimation = false
+
+var previousNumberOfInvadersForSteps = 55
+var nuberOfInvadersToChangeStepDelay = 6
 
 func _ready():
 	get_node("/root/global").menuMusic.stop()
@@ -685,10 +689,10 @@ func addShipForPoints():
 
 ################################# INCREASING INVADERS SPEED ####################
 func increaseStepSpeedWhenInvaderDie():
-	if previousNumberOfInvaders - numberOfInvaders == 6:
+	if previousNumberOfInvadersForSteps - numberOfInvaders == 6:
 		stepDelayTime = stepDelayTime - stepDelayReduction
 		timer.set_wait_time(stepDelayTime)
-		previousNumberOfInvaders = numberOfInvaders
+		previousNumberOfInvadersForSteps = numberOfInvaders
 	
 ################################################################################
 
