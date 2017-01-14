@@ -14,7 +14,7 @@
 [ext_resource path="res://sounds/invader_hit.wav" type="Sample" id=12]
 [ext_resource path="res://fonts/Roboto Regular 12px.fnt" type="BitmapFont" id=13]
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=1]
 
 resource/name = "New Anim"
 length = 1.0
@@ -26,7 +26,7 @@ tracks/0/interp = 1
 tracks/0/imported = false
 tracks/0/keys = { "times":FloatArray( 0, 1 ), "transitions":FloatArray( 1, 1 ), "update":0, "values":[ 0.0, 1.0 ] }
 
-[sub_resource type="SampleLibrary" id=1]
+[sub_resource type="SampleLibrary" id=2]
 
 samples/invader_hit = { "db":0.0, "pitch":1.0, "sample":ExtResource( 12 ) }
 
@@ -51,7 +51,7 @@ texture = ExtResource( 2 )
 playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
-"anims/New Anim" = SubResource( 2 )
+"anims/New Anim" = SubResource( 1 )
 playback/active = true
 playback/speed = 1.0
 blend_times = [  ]
@@ -179,7 +179,7 @@ params/attenuation/min_distance = 1.0
 params/attenuation/max_distance = 2048.0
 params/attenuation/distance_exp = 1.0
 config/polyphony = 4
-config/samples = SubResource( 1 )
+config/samples = SubResource( 2 )
 config/pitch_random = 0.0
 
 [node name="HightScore" type="Label" parent="."]

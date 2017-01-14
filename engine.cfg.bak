@@ -12,8 +12,6 @@ global="*res://global.gd"
 
 [display]
 
-stretch_mode="2d"
-stretch_aspect="keep"
 text_edit_idle_detect_sec=3
 width=672
 height=768

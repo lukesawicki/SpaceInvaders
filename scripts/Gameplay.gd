@@ -144,6 +144,11 @@ var explode = preload("res://scenes/Explosion.tscn")
 var ifExplode = false
 var explodeName
 
+var invExplode = preload("res://scenes/InvaderExplosion.tscn")
+var ifInvExplode = false
+var invExplodeName
+
+
 var timer = null
 var stepDelayTime = 0.2 # lsawicki
 var stepDelayReduction = 0.05
@@ -178,8 +183,13 @@ func _ready():
 	explodeName = "blow"
 	explodeInstance.set_name(explodeName)
 	add_child(explodeInstance)
+
+	var invExplodeInstance = invExplode.instance()
+	invExplodeName = "blow"
+	explodeInstance.set_name(invExplodeName)
+	add_child(invExplodeInstance)
 	
-		
+
 	initializeShelters()
 	
 	initializeTerranShip()
@@ -872,11 +882,12 @@ func initializeGraphicalUserInterface():
 
 ################################ INVADERS PROCESS ##############################
 func invadersProcess():
+	var invaderNow
 	for i in range(55):
 		var laserPos = get_node(laserBeamName).get_pos()
 		var someInvader = get_node(allInvadersNames[i]).get_pos()
 		var isAlive = get_node(allInvadersNames[i]).isAlive
-
+		invaderNow = someInvader
 		if isAlive:
 			if someInvader.y+INVADERS_HIGHT/2 >= INVASION_POSITION:
 				invasion = true
@@ -899,6 +910,7 @@ func invadersProcess():
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(gPoints)
 					countInvadersLeft()
+					ifInvExplode = true
 					break
 			elif i>10 && i<22:#F
 				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_F_WIDTH):
@@ -918,6 +930,7 @@ func invadersProcess():
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(fPoints)
 					countInvadersLeft()
+					ifInvExplode = true
 					break
 			elif i>21 && i<33:#F
 				if invaderColideRightWall(someInvader.x, INVADERS_F_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_F_WIDTH):
@@ -937,6 +950,7 @@ func invadersProcess():
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(fPoints)
 					countInvadersLeft()
+					ifInvExplode = true
 					break
 			elif i>32 && i<44:#E
 				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_E_WIDTH):
@@ -956,6 +970,7 @@ func invadersProcess():
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(ePoints)
 					countInvadersLeft()
+					ifInvExplode = true
 					break
 			elif i>43 && i<55:#E
 				if invaderColideRightWall(someInvader.x, INVADERS_E_WIDTH)||invaderColideLeftWall(someInvader.x, INVADERS_E_WIDTH):
@@ -974,8 +989,9 @@ func invadersProcess():
 					get_node(allInvadersNames[i]).isAlive = false
 					addPoints(ePoints)
 					countInvadersLeft()
+					ifInvExplode = true
 					break
-	
+	# lsawicki
 	if shipLaserBeamHitInvader:
 		increaseStepSpeedWhenInvaderDie()
 	
@@ -992,10 +1008,16 @@ func invadersProcess():
 		wasVerticalStep = false
 	else:
 		wasVerticalStep = true
-	
+	invaderExplosion(invaderNow)
 	playOneNote()
+#################################################################################################################
+func invaderExplosion(invaderPosition):
+	if ifInvExplode:
+		get_node(invExplodeName).set_pos(Vector2(invaderPosition.x, invaderPosition.y))
+		get_node(invExplodeName).blowItUp()
+	ifInvExplode = false
 ################################################################################
-	
+
 
 ################################# MYSTERY SHIP PROCESS #########################
 func mysteryProcess(delta):
@@ -1261,7 +1283,7 @@ func updateGraphicalUserInterface():
 		get_node("/root/global").shipsLeft = 3
 		get_node("/root/global").goto_scene("res://scenes/GameOver.tscn")
 	if numberOfInvaders <= 0:
-		get_node("/root/global").goto_scene("res://scenes/EndGame.tscn")
 		get_node("/root/global").points = 0
+		get_node("/root/global").goto_scene("res://scenes/EndGame.tscn")
 		#get_tree().reload_current_scene()
 ################################################################################
