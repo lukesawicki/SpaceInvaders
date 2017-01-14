@@ -32,6 +32,12 @@ transform/pos = Vector2( 336, 384 )
 texture = ExtResource( 1 )
 modulate = Color( 0, 0, 0, 1 )
 
+[node name="Sprite1" type="Sprite" parent="."]
+
+transform/pos = Vector2( 336, 384 )
+texture = ExtResource( 1 )
+modulate = Color( 0, 0, 0, 1 )
+
 [node name="TryAgain" type="Button" parent="."]
 
 visibility/opacity = 0.0
