@@ -1288,7 +1288,6 @@ func updateGraphicalUserInterface():
 		get_node("/root/global").shipsLeft = 3
 		get_node("/root/global").goto_scene("res://scenes/GameOver.tscn")
 	if numberOfInvaders <= 0:
-		get_node("/root/global").points = 0
 		get_node("/root/global").goto_scene("res://scenes/EndGame.tscn")
 		#get_tree().reload_current_scene()
 ################################################################################
