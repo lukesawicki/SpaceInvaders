@@ -609,10 +609,10 @@ func createListOfRockets():
 
 ############################# MYSTERY SHIP MOVING CONDITION ####################
 func mysteryMovingCondition():
-	if numberOfShots == 15:
+	if numberOfShots == 22:
 		mysteryRun = true
 		mysteryPlay = true
-		numberOfShots = 0
+		numberOfShots = 7
 ################################################################################
 
 
