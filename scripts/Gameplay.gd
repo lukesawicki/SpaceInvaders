@@ -5,7 +5,7 @@ extends Node2D
 const MARGIN_LEFT = 0
 const MARGIN_RIGHT = 672
 const MARGIN_TOP = 168
-const MARGIN_BOTTOM = 768
+const MARGIN_BOTTOM = 710
 const SCREEN_WIDTH = 672
 const SCREEN_HIGHT = 768
 const INVADERS_ROWS_SPACE = 24
@@ -53,7 +53,7 @@ var invadersAdditionalInfos = {}
 # MYSTERY
 var MYSTERY_WIDTH = 48
 var MYSTERY_HIGHT = 24
-var MYSTERY_Y_POSITION = 110
+var MYSTERY_Y_POSITION = 145
 var mysteryPositionOutOfView = Vector2(256, -512)
 var mysteryInvader = preload("res://scenes/MysteryScene.tscn")
 var mysteryRun = false
