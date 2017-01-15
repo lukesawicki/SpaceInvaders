@@ -4,7 +4,7 @@ extends Node2D
 
 const MARGIN_LEFT = 0
 const MARGIN_RIGHT = 672
-const MARGIN_TOP = 168
+const MARGIN_TOP = 128
 const MARGIN_BOTTOM = 710
 const SCREEN_WIDTH = 672
 const SCREEN_HIGHT = 768
@@ -753,7 +753,7 @@ func swapDestoryedRocketWithNewRandom(destroyed):
 func initializeInvaders():
 	var invaderPosition = Vector2(0, 0)
 	positionX = MARGIN_LEFT
-	positionY = MARGIN_TOP + (INVADERS_HIGHT/2) * verticalStepNumber
+	positionY = MARGIN_TOP + 40 + (INVADERS_HIGHT/2) * verticalStepNumber
 	
 	for i in range(55):
 		if i < 11:
